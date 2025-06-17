@@ -1,0 +1,21 @@
+<table class="table table-bordered table-hover align-middle">
+    <tr>
+        <!-- <th>ID</th> -->
+        <th>Name</th>
+        <th>Active Ingredient</th>
+        <th>Actions</th>
+    </tr>
+    {% for c in chemicals %}
+    <tr>
+        <!-- <td>{{ c.id }}</td> -->
+        <td>{{ c.name }}</td>
+        <td>{{ c.active_ingredient }}</td>
+        <td>
+            <a href="/chemicals/{{ c.id }}" class="btn btn-sm btn-outline-primary me-1">Edit</a>
+            <form method="post" action="/chemicals/{{ c.id }}/delete" class="d-inline" onsubmit="return confirm('Delete?');">
+                <button class="btn btn-sm btn-outline-danger" type="submit">Delete</button>
+            </form>
+        </td>
+    </tr>
+    {% endfor %}
+</table>

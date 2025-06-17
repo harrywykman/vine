@@ -1,0 +1,26 @@
+
+<div class="table-responsive">
+<table class="table table-bordered table-hover align-middle">
+    <thead class="table-light">
+        <tr>
+            <th>Name</th>
+            <!-- <th>Address</th> -->
+            <th style="width: 160px;">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for v in vineyards %}
+        <tr>
+            <td>{{ v.name }}</td>
+            <!-- <td>{{ v.address }}</td> -->
+            <td>
+                <a href="/vineyards/{{ v.id }}" class="btn btn-sm btn-outline-primary me-1">Edit</a>
+                <form method="post" action="/vineyards/{{ v.id }}/delete" class="d-inline" onsubmit="return confirm('Delete?');">
+                    <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>

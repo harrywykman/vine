@@ -1,0 +1,14 @@
+    <div class="mb-3">
+      <label class="form-label">Name:</label><br>
+      <input type="text" name="name" class="form-control" required value="{{ chemical.name if chemical else '' }}">
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Active Ingredient:</label><br>
+      <input type="text" name="active_ingredient" class="form-control" required value="{{ chemical.active_ingredient if chemical else '' }}">
+    </div>
+
+    <button type="submit" class="btn btn-primary">{{ chemical and 'Update' or 'Add' }}</button>
+    {% if chemical %}
+        <a href="/chemicals" class="btn btn-secondary">Cancel</a>
+    {% endif %}

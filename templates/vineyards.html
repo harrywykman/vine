@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %}Vineyards{% endblock %}
+
+{% block content %}
+
+
+<h1>All Vineyards</h1>
+{% include 'partials/vineyard_list.html' %}
+
+<hr class="my-5">
+
+<h2 class="mb-4">{{ vineyard and 'Edit' or 'Add' }} Vineyard</h2>
+
+<form method="post" action="{{ vineyard and '/vineyards/' ~ vineyard.id or '/vineyards' }}" class="mb-4">
+    {% include 'partials/vineyard_form.html' %}
+</form>
+
+{% if vineyard %}
+    <hr class="my-5">
+    <h2 class="mb-3">Spray Units for "{{ vineyard.name }}"</h2>
+    {% include 'partials/spray_units_table.html' %}
+    {% include 'partials/spray_unit_form.html' %}
+{% endif %}
+
+{% endblock %}

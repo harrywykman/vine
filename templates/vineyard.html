@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% block title %}Vineyards{% endblock %}
+
+{% block content %}
+
+<h2 class="mb-4">{{ vineyard and 'Edit' or 'Add' }} Vineyard</h2>
+
+<form method="post" action="{{ vineyard and '/vineyards/' ~ vineyard.id or '/vineyards' }}" class="mb-4">
+    {% include 'partials/vineyard_form.html' %}
+</form>
+
+<hr class="my-5">
+
+{% if vineyard %}
+    <hr class="my-5">
+    <h2 class="mb-3">Spray Units for "{{ vineyard.name }}"</h2>
+    {% include 'partials/spray_units_table.html' %}
+    {% include 'partials/spray_unit_form.html' %}
+
+<h2>Spray Records</h2>
+<a href="/vineyards/{{ vineyard.id }}/spray_records/new" class="btn btn-primary mb-2">+ New Spray Record</a>
+
+{% if vineyard.spray_records %}
+<div class="table-responsive">
+<table class="table table-sm table-bordered">
+  <thead>
+    <tr>
+      <th>Date</th>
+      <th>Operator</th>
+      <th>Spray Unit</th>
+      <th>Program Details</th>
+      <th>Complete?</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for record in vineyard.spray_records %}
+    <tr>
+      <td>{{ record.date }}</td>
+      <td>{{ record.operator }}</td>
+      <td>{{ record.spray_unit.name if record.spray_unit else 'N/A' }}</td>
+      <td>
+        {% if record.spray_program %}
+          <strong>Program {{ record.spray_program.number }}</strong><br>
+          <small>{{ record.spray_program.date }}</small>
+          {% if record.spray_program.program_chemicals %}
+            <ul class="mb-0">
+              {% for pc in record.spray_program.program_chemicals %}
+              <li>
+                {{ pc.chemical.name }} —
+                {{ "%.2f"|format(pc.mix_rate_per_100L) }}/100L,
+                {{ "%.2f"|format(pc.water_spray_rate_per_hectare) }} L/ha
+              </li>
+              {% endfor %}
+            </ul>
+          {% else %}
+            <em>No chemicals listed</em>
+          {% endif %}
+        {% else %}
+          <em>No program assigned</em>
+        {% endif %}
+      </td>
+      <td>{{ '✅' if record.complete else '❌' }}</td>
+      <td>
+        <a href="/spray_records/{{ record.id }}/edit">Edit</a> |
+        <a href="/spray_records/{{ record.id }}/delete" onclick="return confirm('Delete this record?')">Delete</a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+{% else %}
+  <p>No spray records yet.</p>
+{% endif %}
+
+{% endif %}
+
+{% endblock %}
