@@ -1,0 +1,248 @@
+Vineyard,Variety,Area,Block,"Total Rows","Rows Numbers","Row Width","Vine Spacing",VinesHa,"Total Vines",Clone,"Source Vineyard","Plant Date"
+Amarok,,20.409377186843948,,,,,,,29165,,,
+Amarok:,Shiraz,1.4254723582925122,1,17,"1 to 17",3.5,2,1429,2037,,,
+Amarok:,Merlot,2.013296011196641,2,24,"1 to 24",3.5,2,1429,2877,,,
+Amarok:,"Chenin Blanc",1.13296011196641,3,19,"1 to 19",3.5,2,1429,1619,,,
+Amarok:,"Sauv Blanc",1.8866340097970609,4,18,"1 to 18",3.5,2,1429,2696,,,
+Amarok:,Semillon,2.4555633310007,5,16,"1 to 16",3.5,2,1429,3509,,,
+Amarok:,Shiraz,2.6466060181945417,6,40,"1 to 40",3.5,2,1429,3782,,,
+Amarok:,Shiraz,2.277816655003499,7,28,"1 to 28",3.5,2,1429,3255,,,
+Amarok:,"Cab Sauv",1.3596920923722884,8,16,"1 to 16",3.5,2,1429,1943,,,
+Amarok:,"Cab Sauv",5.211336599020294,9,43,"1 to 43",3.5,2,1429,7447,,,
+Brambles,,3.8418978034439317,,,,,,,#REF!,,,
+Brambles,"Cab Sauv",0.102,EB1,,,1.4,0.75,9524,975,"Sheena Houghton",Wagtail,2024
+Brambles,"Cab Sauv",0.065,EB1,,,1.4,0.75,9524,621," Houghton Woodlands",Wagtail,2024
+Brambles,"Cab Sauv",0.214,EB2,,,1.4,0.75,9524,2034,M412,ARM,2024
+Brambles,"Cab Sauv",0.108,EB2,,,1.4,0.75,9524,1028,M337,ARM,2025
+Brambles,"Cab Sauv",0.276,EB2,,,1.4,0.75,9524,2624,M337,ARM,2024
+Brambles,"Cab Sauv",0.23,EB3,,,1.4,0.75,9524,2192.6666666666665,Houghtons,ARM,2024
+Brambles,"Cab Sauv",0.23,EB3,,,1.4,0.75,9524,2192.6666666666665,M337,ARM,2024
+Brambles,"Cab Sauv",0.23,EB3,,,1.4,0.75,9524,2192.6666666666665,M191,ARM,2025
+Brambles,Merlot,0.20719999999999997,EB4,,,1.4,0.75,9524,1973.3333333333333,181,ARM,2024
+Brambles,Merlot,0.09323813523729525,EB4,,,1.4,0.75,9524,888,181,ARM,2025
+Brambles,"Pinot Noir",0.10359792804143916,EB4,,,1.4,0.75,9524,986.6666666666666,MV6,ARM,2025
+Brambles,"Petit Verdot",0.08259999999999999,"RB 1",,,1.4,0.75,9524,786.6666666666666,"Petrus CH8",ARM,2025
+Brambles,"Cab Franc",0.053689999999999995,"RB 1",,,1.4,0.75,9524,511.3333333333333,M214,ARM,2024
+Brambles,"Cab Sauv ",0.12802999999999998,"RB 1",,,1.4,0.75,9524,1219.3333333333333,M337,ARM,2025
+Brambles,"Cab Sauv ",0.15694,"RB 1",,,1.4,0.75,9524,1494.6666666666667,"Houghtons ","Vic Point",2025
+Brambles,"Cab Sauv ",0.09911801763964721,"RB 1",,,1.4,0.75,9524,944,"Houghtons Willespie",Wagtail,2025
+Brambles,"Cab Sauv ",0.3138737225255495,"RB 1",,,1.4,0.75,9524,2989.3333333333335,"Houghtons Mosswood",Wagtail,2025
+Brambles,"Cab Sauv ",0.04564,RB2,,,1.4,0.75,9524,434.6666666666667,M337,ARM,2025
+Brambles,"Cab Sauv ",0.19396999999999998,RB2,,,1.4,0.75,9524,1847.3333333333333,M412,ARM,2025
+Brambles,Malbec,0.342,RB3,,,1.4,0.75,9524,3260,Cl1056,ARM,2025
+Brambles,Chardonnay,0.20635999999999996,WB1,,,1.4,0.75,9524,1965.3333333333333,Gingin,ARM,2024
+Brambles,Chardonnay,0.36063999999999996,WB1,,,1.4,0.75,9524,3434.6666666666665,Gingin,ARM,2024
+Buckingham,,0.2549490101979604,,,,,,,,,,
+Buckingham,"Cab Sauv",0.14997000599880023,1,12,,3,2,1667,250,,,2007
+Buckingham,Shiraz,0.07978404319136173,2,7,,3,2,1667,133,,,2007
+Buckingham,Merlot,0.02519496100779844,3,2,,3,2,1667,42,,,2007
+Burnside,,3.8936999999999995,,,,,,,33222.0044,,,
+Burnside,Chardonnay,0.496,1,41,"1 to 41",1.3,1,7692,3815.232,95,"Victory Point",2020
+Burnside,"Pinot Noir",0.185,2,9,"42 to 50",1.3,0.75,10256,1897.36,777,"Glen Harding",
+Burnside,"Pinot Noir",0.187,3,8,"51 to 58",1.3,0.75,10256,1917.872,115,"Glen Harding",
+Burnside,Chardonnay,1.342,4,60,"59 to 118",1.3,1,7692,10322.664,Gingin,Forrest,2020
+Burnside,Chardonnay,0.295,5,17,"119 to 135",1.3,1,7692,2269.14,96,"Victory Point",2021/2021
+Burnside,Chardonnay,0.323,6,23,"136 to 155",1.3,1,7692,2484.516,277,"Victory Point",2021/2022
+Burnside,"Pinot Noir",0.201,7,30,"156 to 188",1.3,0.75,10256,2061.456,MV6,"Glen Harding",2022
+Burnside,"Pinot Noir",0.0477,8,12,"189 to 200",1.3,0.75,7692,366.9084,Droopy,"Glen Harding",
+Burnside,"Pinot Noir",0.05399999999999999,9,18,"201 to 218",1.3,0.75,10256,553.824,386,Kerfuffle,2022
+Burnside,Chardonnay,0.114,10,19,"1 to 19",1.3,1,7692,876.888,95,"Vic Pt/ARM",2020/2022
+Burnside,"Pinot Noir",0.10400000000000001,11,10,"1 to 10",1.3,0.75,10256,1066.624,115,"Victory Point",2021
+Burnside,"Pinot Noir",0.11000000000000001,12,9,"1 to 9",1.3,0.75,10256,1128.16,777,"Victory Point",2021
+Burnside,Chardonnay,0.43499999999999994,13,37,"1 to 37",1.3,1,10256,4461.36,Gingin,Forrest,2020
+"Cape Falls",,5.1336,,,,,,,22899,,,
+"Cape Falls",Chardonnay,0.663,B11-Chard,46,"1 to 45",2,1,5000,3315,Gingin,ARM,
+"Cape Falls",Chardonnay,1.1478,B12-Chard,41,"1 to 41",2,1,5000,5739,Gingin,ARM,
+"Cape Falls","Cab Sauv",1.30704,"B17-Cab Sauv",58,"1 to 58",2,1.2,4166.666666666667,5446,337,ARM,
+"Cape Falls","Cab Franc",0.5131199999999999,"B17-Cab Franc",38,"59 - 95",2,1.2,4166.666666666667,2138,214,ARM,
+"Cape Falls",Merlot,0.8853599999999999,B18-Merlot,49,"1 to 49",2,1.2,4166.666666666667,3689,181,ARM,
+"Cape Falls","Cab Sauv",0.6172799999999999,"B18-Cab Sauv",49,"50 - 99",2,1.2,4166.666666666667,2572,337,ARM,
+Collins,,0.14397120575884825,,,,,,,240,,,
+Collins,Merlot,0.04799040191961608,2,,,3,2,1667,80,,,
+Collins,"Cab Sauv",0.09598080383923216,1,,,3,2,1667,160,,,
+"Chapman Creek/Yelverton",,20.148863023172737,,,7.556999999999999,,,,44474,,,
+"Chapman Creek","Cab Franc",0.34743474347434744,1,19,"1 to 19",3,1.5,2222,772,,,
+"Chapman Creek","Chenin Blanc",0.9846269216347957,2a,19,"1 to 19",2.5,1.5,2667,2626,,,
+"Chapman Creek","Chardonnay (New)",1.0678665166854142,2b,20,"1 to 20",2.5,1.5,2667,2848,Gingin,Forrest,2020
+"Chapman Creek",Chardonnay,1.5500562429696287,3,39,"1 to 39",2.5,1.5,2667,4134,,,
+"Chapman Creek",Chardonnay,2.1184851893513312,4,50,"40 to 89",2.5,1.5,2667,5650,,,
+"Chapman Creek",Merlot,0.9595050618672666,5,27,"1 to 27",2.5,1.5,2667,2559,,,
+"Chapman Creek","Cab Sauv",1.9392575928009,6,63,"1 to 63",2.5,1.5,2667,5172,,,
+"Chapman Creek","Merlot (New)",0.5898012748406449,7,9,"1 to 9",2.5,1.5,2667,1573,,,
+"Chapman Creek","Sauv Blanc",1.485939257592801,8,29,"1 to 29",2.5,1.5,2667,3963,,,
+"Chapman Creek (Yelverton)",Chardonnay,2.5991999999999997,9,55,"1-11,1-44",3,2,1666.6666666666667,4332,,,
+"Chapman Creek (Yelverton)","Cab Sauv",2.0694,10,35,"1 to 35",3,2,1666.6666666666667,3449,,,
+"Chapman Creek (Yelverton)","Sauv Blanc",1.6092,11,24,"1 to 24",3,2,1666.6666666666667,2682,,,
+"Chapman Creek (Yelverton)",Malbec,1.5488902219556089,12,20,"1 to 20",3,2,1667,2582,,"Victory Point",2018
+"Chapman Creek (Yelverton)",Fallow,0,13,20,"1 to 20",3,2,1666.6666666666667,,,,
+"Chapman Creek (Yelverton)",Semillon,1.2792,14,24,"1 to 24",3,2,1666.6666666666667,2132,,,
+Crane,,10.20995800839832,,,,,,,17020,,,
+Crane,"Sauv Blanc",10.20995800839832,1,85,"1 to 85",3,2,1667,17020,,,
+"Forest Springs",,1.59,,,,,,,2541,,,
+"Forest Springs","Chardonnay (grafts)",0.79,"MU 1",12,"1 to 12",3.3,1.8,1684,1200,Gingin,Forrest,
+"Forest Springs",Chardonnay,0.8,"MU 2",24,"13 to 36",3.3,1.8,1684,1341,Gingin,"Cullens- Treeton",2019
+Hannaford,,1.86993699369937,,,,,,,4155,,,
+"Hannaford ","Cab Sauv",0.9401440144014401,"1 east",21,"1 to 21",2.8,1.6,2222,2089,,,1996
+"Hannaford ","Cab Sauv",0.9297929792979298,"2 west",23,"1 to 23",2.8,1.6,2222,2066,,,2012
+Kaards,,6.201262548596112,,,,,,,11916.6,,,
+Kaards,"Cab Sauv",4.55,1,67,"1 to 67",3,1.8,1852,8426.6,,,2002
+Kaards,Chardonnay,0.9331200000000001,2,15,"68 to 82",3,1.44,2314.814814814815,2160,Gingin,Forrest,2022
+Kaards,"Cab Sauv",0.38930885529157666,3a,7,"83 to 90",3,1.8,1852,721,"Houghton- super","Moss Wood",2019
+Kaards,Fallow,0.32883369330453566,3b,9,"91 to 99",3,1.8,1852,609,"Houghton- super","Moss Wood",2020
+"Krek Mueller (Peccavi)",,16.53274139182714,,,,,,,26400,,,
+"Krek Mueller  ",Chardonnay,1.5402379286214136,1a,16,"1 to 16",3.5,2,1429,2201,Gingin,Gingin,1998
+"Krek Mueller  ",Chardonnay,0.6159014557670772,1b,5,"1 to 5",3.5,1.6,1786,1100,Gingin,Gingin,2018
+"Krek Mueller  ",Chardonnay,1.6798655211057154,1b,8,"6 to 21",2.8,1.33,2677,4497,,,
+"Krek Mueller  ","Cab Sauv - west",1.6473058082575227,3,25,"1 to 25",3.5,2,1429,2354,126,126,1998
+"Krek Mueller  ","Cab Sauv - east",1.7851644506648006,4,49,"1 to 49",3.5,2,1429,2551,126,126,1998
+"Krek Mueller  ","Sauv Blanc",2.5997200839748076,5,22,"15 to 36",3.5,2,1429,3715,,,1998
+"Krek Mueller  ","Cab Sauv",1.079776067179846,6,14,"1 to 14",3.5,2,1429,1543,"Mercier 191/337","Mercier 191/337",1998
+"Krek Mueller  ","Merlot Bottom and Top",0.7914625612316305,7,20,"1 to 20",3.5,2,1429,1131,181,181,1998
+"Krek Mueller  ","Merlot (Grafts)",0.6717984604618614,8,12,"21 to 32 ",3.5,2,1429,960,"Houghton 5","Houghton 5",2016
+"Krek Mueller  ",Shiraz,2.118964310706788,9,42,"1 to 42",3.5,2,1429,3028,,,2020
+"Krek Mueller  ","Cab Sauv (New)",0.5106382978723404,10,7,"43 to 49",3.5,1.6,1786,912,"QA 45","QA 45",2016
+"Krek Mueller  ","Malbec (New)",0.5003498950314905,11,7,"50 to 57",3.5,2,1429,715,"QA 45","QA 45",2016
+"Krek Mueller  ","Merlot (New)",0.7715565509518477,12,16,"58 to 73 ",3.5,1.6,1786,1378,233,233,2012
+"Krek Mueller  ","Petit Verdot",0.22,13,10,"74 to 83",3.5,2,1428.5714285714287,315,233,233,2012
+Mairs,,0.29983792544570503,,,,,,,555,,,
+Mairs,"Cab Sauv",0.29983792544570503,,17,"1 to 17",3,1.8,1851,555,,,
+"Moses Rock",,5.310494876722225,,,,,,,2515,,,
+"Moses Rock",Shiraz,1.131863186318632,"MU 1",31,"1 to 31",3,1.5,2222,2515,,,2000
+"Moses Rock","Cab Sauv",2.0580558055805582,"MU 2",39,"1 to 39",3,1.5,2222,4573,,,2000
+"Moses Rock",Chardonnay,1.0857828434313137,"MU 3",21,"1 to 21",3,2,1667,1810,,,2007
+"Moses Rock","Sauv Blanc",1.0347930413917217,"MU 4",15,"1 to 15",3,2,1667,1725,,,2007
+Paganin,,6.463205645161291,,,,,,,12823,,,
+Paganin,Tempranillo,1.5902217741935485,1,32,"1 to 32",2.8,1.8,1984,3155,,,
+Paganin,Tempranillo,1.5997983870967742,1,51,"33 to 83",2.8,1.8,1984,3174,,,
+Paganin,Chardonnay,2.253024193548387,2,63,"1 to 63 ",2.8,1.8,1984,4470,,,
+Paganin,"Cab Sauv",1.0201612903225807,3,12,"1 to 12",2.8,1.8,1984,2024,,,
+"Roje (Firetail)",,4.635272675513083,,,,,,,9197,,,
+Roje,Malbec,0.22522499999999998,1b,8,"1 to 8",3,1.75,1904.7619047619048,429,"Sauv Blanc rootstock",,
+Roje,"Sauv Blanc",0.929775,1a,18,"1 to 18",3,1.75,1904.7619047619048,1771,,,
+Roje,Sémillon,0.5932499999999999,2a,10,"1 to 10",3,1.75,1904.7619047619048,1130,,,
+Roje,Malbec,0.238875,2b,4,"11 to 14",3,1.75,1904.7619047619048,455,,,2019
+Roje,Fallow,0.327075,2c,6,"15 to 20",3,1.75,1904.7619047619048,623,,,
+Roje,"Cab Sauv",0.8355205599300087,"MU 3",9,"1 to 9",5,1.75,2286,1910,,,
+Roje,Chardonnay,1.0810113519091846,4,31,"1-18, 1-13",3,1.72,1938,2095,277,,2007
+Roje,"young chard",0.40454076367389064,"MU 7",15,14-28,3,1.72,1938,784,,,2007
+"Rosa Park (Manju)",,17.103678,,,,,13.681244999999999,,34450,,,
+"Rosa Park","Cab Sauv",1.2798,1,23,"1 to 23",3.6,1.8,1543.20987654321,1975,Houghton,,1976
+"Rosa Park","Sauv Blanc",1.50975,2,28,"1 to 28",3,1.5,2222.222222222222,3355,,,2001
+"Rosa Park",Chardonnay,2.009265,3,40,"1 to 40",2.9,1.5,2298.8505747126437,4619,"Mixed (gingin and Davis 5)",Mixed,2008
+"Rosa Park","Cab Sauv",1.93995,4a,27,"1 to 27",3,1.5,2222.222222222222,4311,Houghton,,2001
+"Rosa Park",Shiraz,0.9999,4b,27,"1 to 27",3,1.5,2222.222222222222,2222,,,2001
+"Rosa Park",Shiraz,0.6804,5a,14,"1 to 14",3.6,1.8,1543.20987654321,1050,,,1976
+"Rosa Park","Cab Sauv",0.710208,5b,13,"1 to 13",3.6,1.8,1543.20987654321,1096,Houghton,,1976
+"Rosa Park",Merlot,0.96975,7,20,"1 to 20",3,1.5,2222.222222222222,2155,,,2001
+"Rosa Park","Cab Franc",0.40005,8a,14,"1 to 14",3,1.5,2222.222222222222,889,,,2001
+"Rosa Park",Semillon,0.96075,8b,12,"1 to 10,     1 to 2",3,1.5,2222.222222222222,2135,,,2001
+"Rosa Park",Fallow,0.752025,,10,"3 to 12",3,1.5,2222.222222222222,,,,
+"Rosa Park",Chardonnay,0.6723,8c,9,"13 to 21",3,1.5,2222.222222222222,1494,Gingin,"Own Block 8e",2018
+"Rosa Park",Chardonnay,1.6396799999999998,8d&e,19,1-4&1-15,3,1.6,2083.3333333333335,3416,"Davis 5","Davis 5",2001
+"Rosa Park","Cab Sauv",2.57985,9,56,"1 to 26,      1 to 30",3,1.5,2222.222222222222,5733,Houghton,,2001
+"Stellar Ridge",,7.83486,,,,,,,14215,,,
+"Stellar Ridge",Chardonnay,1.0400399999999999,1,12,"14 to 25",3.6,1.5,1851.851851851852,1926,,,1996
+"Stellar Ridge","Sauv Blanc",1.02762,2,13,"1 to 13",3.6,1.5,1851.851851851852,1903,,,1996
+"Stellar Ridge","Chard New",0.7776,3,18,"1 to 18",3,1.6,2083.3333333333335,1620,,,1996
+"Stellar Ridge","Chard New",1.0799999999999998,4,18,"1 to 18",3,1.6,2083.3333333333335,2250,,,1996
+"Stellar Ridge","Sauv Blanc",1.7795999999999998,5,39,"19 to 57",3,2,1666.6666666666667,2966,,,1996
+"Stellar Ridge ",Chardonnay,2.13,6,11,"19 to 57",3,2,1666.6666666666667,3550,,,1996
+"Thompson -Wily",,13.9635,,,,,,,41819,,,
+"Thompson -Wily",chardonnay,1.215,1,36,"1 to 36",2.5,1,4000,4860,Gingin,,1997
+"Thompson -Wily",chardonnay,1.164,2,36,"1 to 36",2.5,1,4000,4656,Gingin,,1997
+"Thompson -Wily",semillon,1.215,3,18,"1 to 18",2.5,2,2000,2430,,,1997
+"Thompson -Wily",malbec,1.215,4,18,"1 to 18",2.5,2,2000,2430,,,1997
+"Thompson -Wily","pinot noir",1.164,5,36,"1 to 36",2.5,1,4000,4656,Droopy,,1997
+"Thompson -Wily","Cab Sauv",2.6805,6,86,"1 to 86",2.5,2,2000,5361,Houghton,,1998
+"Thompson -Wily","Cab Sauv",1.0395,7,33,"1 to 33",2.5,1,4000,4158,Houghton,,1998
+"Thompson -Wily","cabernet franc",0.8505,8,27,"1 to 27",2.5,1,4000,3402,,,1998
+"Thompson -Wily",merlot,0.5595,9,19,"1 to 19",2.5,1,4000,2238,,,1998
+"Thompson -Wily",chardonnay,1.413375,10,48,"1 to 48",2.5,1.5,2666.6666666666665,3769,Dijon,,2005
+"Thompson -Wily","Cab Sauv",0.9480000000000001,11,34,"1 to 34",2.5,1.5,2666.6666666666665,2528,Houghton,,2006
+"Thompson -Wily","Cab Sauv",0.49912500000000004,12,22,"1 to 22",2.5,1.5,2666.6666666666665,1331,Houghton,,2006
+"Thompson -Donaldson Rd",,18.738374459913587,,,,,,,31788.666666666668,,,
+"Thompson -Donaldson Rd",Merlot,1.62,3,25,"55 to 79",3,2,1666.6666666666667,2700.0000000000005,,,1996
+"Thompson -Donaldson Rd","Cab Sauv",2.565,"4 & 5",44,"80 to 101",3,2,1666.6666666666667,4275,,,"1996 and 1995"
+"Thompson -Donaldson Rd",Shiraz,2.933,"6 & 7 ",51,"102 to 130",3,2,1666.6666666666667,4888.333333333333,,,"1996 and 1997"
+"Thompson -Donaldson Rd",Shiraz,2.37,"8 &9",49,"131 to 151",3,2,1666.6666666666667,3950.0000000000005,,,1997
+"Thompson -Donaldson Rd","Sauv Blanc",1.39,10,30,"152 to 185",3,2,1666.6666666666667,2316.6666666666665,,,1996
+"Thompson -Donaldson Rd",Chardonnay,5.88,"11& 12& 13",61,"182 to 243",3,2,1666.6666666666667,9800,,,"1996 and 1997"
+"Thompson -Donaldson Rd","Fallow Chard",1.3403744599135863,14,19,"244 to 262",3,1.6,2083,2792,,,
+"Thompson -Donaldson Rd",Semillon,0.64,15,12,"263 to 274",3,2,1666.6666666666667,1066.6666666666667,,,1998
+"Thompson -Rickett Rd",,3.2556,,,,,,,2754,,,
+"Thompson -Rickett Rd","Cab Sauv",1.6523999999999999,1,25,"1 to 25",3,2,1666.6666666666667,2754,Houghton,,1998
+"Thompson -Rickett Rd","Cab Sauv",1.6032,2,29,"26 to 54",3,2,1666.6666666666667,2672,Houghton,,1998
+"Victory Point",,13.764499999999998,,,,,,,23269,,,
+"Victory Point ","Cab Sauv ",2.197,1,57,"1 to 57",2.5,2,2000,4394,"Houghton selection",MossW,2000
+"Victory Point ","Cab Sauv",2.324,2,55,58-112,2.5,2,2000,4648,"Houghton selection",MossW,2000
+"Victory Point ","Cab Sauv",1.702,3,39,113-151,2.5,2,2000,3404,"Houghton selection","MossW ",2000
+"Victory Point ","Cab Sauv",0,4,10,70-79,2.5,2,2000,,337,337,2000
+"Victory Point ",Malbec,0.803,4,11,59-69,2.5,2,2000,1606,,Own,2016
+"Victory Point ",Malbec,0.4845,5,8,51-58,2.5,2,2000,969,,Various,2000
+"Victory Point ","Petit Verdot",0.729,6,19,32-50,2.5,2,2000,1458,Various,Various,2000
+"Victory Point ","Malbec (Graft)",0.3955,5,10,22-31,2.5,2,2000,791,Various,Various,2000
+"Victory Point ","Cab Franc",0.514,7,21,"1 to 21",2.5,2,2000,1028,Various,Various,2000
+"Victory Point ",Chardonnay,2.066,8,73,"1 to 22",2.5,2,2000,4132,76,76,2000
+"Victory Point ","Pinot Noir",0.4195,9,11,"74 to 84",2.5,2,2000,839,Various,Various,2000
+"Victory Point ",Chardonnay,2.13,15,43,"85 to 127",2.5,2,2000,4260,Gingin,Gingin,2000
+"Vintage Unit (Maggies Farm)",,9.220788466707468,,,,,,,14081,,,
+"Vintage Unit ","Sauv Blanc",2.9587123862841147,1,56,"1 to 56",3.5,2,1429,4228,,,1996
+"Vintage Unit ",Shiraz,3.728481455563331,2,50,"1 to 50",3.5,2,1429,5328,,,1996
+"Vintage Unit ",Chardonnay,2.5335946248600223,3,62,"1 to 62",3.5,1.6,1786,4525,Gingin,"Cullens- Treeton/ ARM",2019
+Wagtail,,4.18608,,,,,,,7351,,,
+Wagtail,Malbec,0.1548,1,5,"1 to 5",3,2,1666.6666666666667,258,,,1998
+Wagtail,"Cab Franc",0.1536,2,5,"6 to 10",3,2,1666.6666666666667,256,,,1998
+Wagtail,"Cab Sauv",0.9882,"3, 6 and 6",50,"11 to 33 & 41 to 67",3,2,1666.6666666666667,1647,,,1998
+Wagtail,"Petit Verdot",0.14579999999999999,4,7,"34 to 40",3,2,1666.6666666666667,243,,,1998
+Wagtail,"Cab Sauv",1.3901999999999999,"7 &8",34,"1 to 34",3,2,1666.6666666666667,2317,,,1998
+Wagtail,Merlot,0.45539999999999997,9,12,"35 to 46",3,2,1666.6666666666667,759,,,1998
+Wagtail,Chardonnay,0.89808,10,23,"47 to 69",3,1.6,2083.3333333333335,1871,,,1998
+"Wilyabrup Investments (Di Latte/ Cheeky Monkey)",,3.7800000000000002,,,,,,,7499.52,,,
+"Wilyabrup Investments  ","Cab Sauv",3.12,1,,,2.8,1.8,1984,6190.08,,,
+"Wilyabrup Investments  ",Chardonnay,0.66,2,,,3,2,1984,1309.44,,,
+"Woodlands- Home",,9.41,,,,,,,16642,,,
+"Woodlands- Home","Cab Sauv",1.31,1,44,1-44,3.3,2,1515.1515151515152,2216,,,
+"Woodlands- Home","Cab Franc",0.39,2,6,1-6,3.3,2,1515.1515151515152,307,,,
+"Woodlands- Home","Cab Sauv",0.45,3,12,7-18,3.3,2,1515.1515151515152,720,,,
+"Woodlands- Home",Merlot,0.15,4,4,19-22,3.3,2,1515.1515151515152,240,,,
+"Woodlands- Home",Chardonnay,0.08,5,2,23-24,3.3,2,1515.1515151515152,120,,,
+"Woodlands- Home",Merlot,0.15,6,4,25-28,3.3,2,1515.1515151515152,240,,,
+"Woodlands- Home","Pinot Noir",0.15,7,4,29-32,3.3,2,1515.1515151515152,240,,,
+"Woodlands- Home",Malbec,0.23,8,8,33-40,3.3,2,1515.1515151515152,480,,,
+"Woodlands- Home","Cab Sauv",0.52,9,16,41-56,3.3,2,1515.1515151515152,838,,,
+"Woodlands- Home",Chardonnay,0.48,10,37,1-37,3.3,1.2,2525.2525252525256,1090,,,
+"Woodlands- Home","Cab Sauv",0.61,11,22,38-59,3.3,1.2,2525.2525252525256,1436,,,
+"Woodlands- Home",Malbec,0.61,12,10,1-10,3.5,1.8,1587.3015873015875,1215,,,
+"Woodlands- Home",Merlot,0.61,13,7,11-17,3.5,1.8,1587.3015873015875,763,,,
+"Woodlands- Home","Petit Verdot",0.08,14,3,18-20,3.5,1.8,1587.3015873015875,80,,,
+"Woodlands- Home","Cab Sauv",3.59,15,64,1-64,3,1.8,1851.851851851852,6657,,,
+"Woodlands- Pusey",,16.64,,,,,,,61588,,,
+"Woodlands- Pusey",Chardonnay,6.9,"1 to 10",,,2,1,5000,34500,,,
+"Woodlands- Pusey",Merlot,2.53,11,,,2,1.5,3333,8433,,,
+"Woodlands- Pusey","Cabernet Franc",0.85,12,,,2,1.5,3333,2833,,,
+"Woodlands- Pusey",Malbec,1.52,"13 & 14",,,2,1.5,3333,5067,,,
+"Woodlands- Pusey","Cab Sauv",4.84,15,,,3,1.5,2222,10755,,,
+Woodman,,24.38,,,,,,,54468.549999999996,,,
+Woodman,"Cab Sauv",1.03,1,,,3,1.6,2083,2145.4900000000002,,,1998
+Woodman,Semillon,2.91,2,,,3,1.6,2083,6071,,,1998
+Woodman,Chardonnay,2.62,3,,,3,1.6,2083,5458,,,1998
+Woodman,"Cab Sauv",3.82,4,,,3,1.6,2083,7957.0599999999995,,,1998
+Woodman,Chardonnay,2.11,5,,,3,1.6,2083,4395.13,,,1998
+Woodman,"Cab Sauv",3.03,6,,,3,1.6,2083,6311.49,,,1998
+Woodman,"Cab Sauv",0.28,7,,,3,1.6,2083,583.24,,,1978
+Woodman,Shiraz,3.01,8,,,3,1.6,2083,6269.83,,,1998
+Woodman,Chardonnay,2.94,9,,,3,1,3333,9799.02,,,1998
+Woodman,"Sauv Blanc",2.63,10,,,3,1.6,2083,5478.29,,,1998
+"Wood Sea (Osmington RD)",,12.16,,,,,,,22517,,,
+"Wood Sea ",shiraz,2.4778617710583153,1,54,"20 to 53",3,1.8,1852,4589,,,
+"Wood Sea ","sauvignon blanc",4.42548596112311,2,121,"1 to 121",3,1.8,1852,8196,,,
+"Wood Sea ",chardonnay,0.8617710583153347,3,16,"1 to 19",3,1.8,1852,1596,"174 & 470",,
+"Wood Sea ",shiraz,0,4,49,"1 to 49",3,1.8,1852,5026,,,
+"Wood Sea ",chardonnay,1.6792656587473003,5,46,"1 to 46",3,1.8,1852,3110,,,
+Wrights,,8.877892763404574,,,,,,,19662,,,
+Wrights,"Sauv Blanc",2.31,1,33,"1 to 33",2.5,2,2000,4620,,,
+Wrights,Chardonnay,2.1199850018747655,2a,27,"1 to 27",2.5,1.5,2667,5654,,,
+Wrights,Cabernet,1.79,3,41,"1 to 41",2.5,2,2000,3580,,,
+Wrights,Semillon,1.92,4,43,"1 to 43",2.5,2,2000,3840,,,
+Wrights,Heritage,0.7379077615298087,5a,7,"1 to 7 ",2.5,1.5,2667,1968,,,
+Totals:,Area,268.89653420942807,,,,,,,,,,

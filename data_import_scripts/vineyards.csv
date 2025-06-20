@@ -1,0 +1,217 @@
+"Vineyard Name","Variety Name","WineColour Name","Management Unit Variety Name Modifier","Management Unit Area","Management Unit Name","Management Unit Rows Total","Rows Numbers","Management Unit Row Width","Vine Spacing",VinesHa,"Total Vines",Clone,"Source Vineyard","Plant Date",Status
+Amarok:,"Cabernet Sauvignon",red,,1.3596920923722884,8,16,"1 to 16",3.5,2,1429,1943,,,,Active
+Amarok:,"Cabernet Sauvignon",red,,5.211336599020294,9,43,"1 to 43",3.5,2,1429,7447,,,,Active
+Amarok:,"Chenin Blanc",white,,1.13296011196641,3,19,"1 to 19",3.5,2,1429,1619,,,,Active
+Amarok:,Merlot,red,,2.013296011196641,2,24,"1 to 24",3.5,2,1429,2877,,,,Active
+Amarok:,"Sauvignon blanc",white,,1.8866340097970609,4,18,"1 to 18",3.5,2,1429,2696,,,,Active
+Amarok:,Semillon,white,,2.4555633310007,5,16,"1 to 16",3.5,2,1429,3509,,,,Active
+Amarok:,Shiraz,red,,1.4254723582925122,1,17,"1 to 17",3.5,2,1429,2037,,,,Active
+Amarok:,Shiraz,red,,2.277816655003499,7,28,"1 to 28",3.5,2,1429,3255,,,,Active
+Amarok:,Shiraz,red,,2.6466060181945417,6,40,"1 to 40",3.5,2,1429,3782,,,,Active
+Brambles,"Cabernet Franc",red,,0.053689999999999995,"RB 1",,,1.4,0.75,9524,511.3333333333333,M214,ARM,2024,Active
+Brambles,"Cabernet Sauvignon",red,,0.065,EB1,,,1.4,0.75,9524,621," Houghton Woodlands",Wagtail,2024,Active
+Brambles,"Cabernet Sauvignon",red,,0.102,EB1,,,1.4,0.75,9524,975,"Sheena Houghton",Wagtail,2024,Active
+Brambles,"Cabernet Sauvignon",red,,0.108,EB2,,,1.4,0.75,9524,1028,M337,ARM,2025,Active
+Brambles,"Cabernet Sauvignon",red,,0.214,EB2,,,1.4,0.75,9524,2034,M412,ARM,2024,Active
+Brambles,"Cabernet Sauvignon",red,,0.23,EB3,,,1.4,0.75,9524,2192.6666666666665,Houghtons,ARM,2024,Active
+Brambles,"Cabernet Sauvignon",red,,0.23,EB3,,,1.4,0.75,9524,2192.6666666666665,M337,ARM,2024,Active
+Brambles,"Cabernet Sauvignon",red,,0.23,EB3,,,1.4,0.75,9524,2192.6666666666665,M191,ARM,2025,Active
+Brambles,"Cabernet Sauvignon",red,,0.276,EB2,,,1.4,0.75,9524,2624,M337,ARM,2024,Active
+Brambles,"Cabernet Sauvignon ",red,,0.04564,RB2,,,1.4,0.75,9524,434.6666666666667,M337,ARM,2025,Active
+Brambles,"Cabernet Sauvignon ",red,,0.09911801763964721,"RB 1",,,1.4,0.75,9524,944,"Houghtons Willespie",Wagtail,2025,Active
+Brambles,"Cabernet Sauvignon ",red,,0.12802999999999998,"RB 1",,,1.4,0.75,9524,1219.3333333333333,M337,ARM,2025,Active
+Brambles,"Cabernet Sauvignon ",red,,0.15694,"RB 1",,,1.4,0.75,9524,1494.6666666666667,"Houghtons ","Vic Point",2025,Active
+Brambles,"Cabernet Sauvignon ",red,,0.19396999999999998,RB2,,,1.4,0.75,9524,1847.3333333333333,M412,ARM,2025,Active
+Brambles,"Cabernet Sauvignon ",red,,0.3138737225255495,"RB 1",,,1.4,0.75,9524,2989.3333333333335,"Houghtons Mosswood",Wagtail,2025,Active
+Brambles,Chardonnay,white,,0.20635999999999996,WB1,,,1.4,0.75,9524,1965.3333333333333,Gingin,ARM,2024,Active
+Brambles,Chardonnay,white,,0.36063999999999996,WB1,,,1.4,0.75,9524,3434.6666666666665,Gingin,ARM,2024,Active
+Brambles,Malbec,red,,0.342,RB3,,,1.4,0.75,9524,3260,Cl1056,ARM,2025,Active
+Brambles,Merlot,red,,0.09323813523729525,EB4,,,1.4,0.75,9524,888,181,ARM,2025,Active
+Brambles,Merlot,red,,0.20719999999999997,EB4,,,1.4,0.75,9524,1973.3333333333333,181,ARM,2024,Active
+Brambles,"Petit Verdot",red,,0.08259999999999999,"RB 1",,,1.4,0.75,9524,786.6666666666666,"Petrus CH8",ARM,2025,Active
+Brambles,"Pinot Noir",red,,0.10359792804143916,EB4,,,1.4,0.75,9524,986.6666666666666,MV6,ARM,2025,Active
+Buckingham,"Cabernet Sauvignon",red,,0.14997000599880023,1,12,,3,2,1667,250,,,2007,Active
+Buckingham,Merlot,red,,0.02519496100779844,3,2,,3,2,1667,42,,,2007,Active
+Buckingham,Shiraz,red,,0.07978404319136173,2,7,,3,2,1667,133,,,2007,Active
+Burnside,Chardonnay,white,,0.114,10,19,"1 to 19",1.3,1,7692,876.888,95,"Vic Pt/ARM",2020/2022,Active
+Burnside,Chardonnay,white,,0.295,5,17,"119 to 135",1.3,1,7692,2269.14,96,"Victory Point",2021/2021,Active
+Burnside,Chardonnay,white,,0.323,6,23,"136 to 155",1.3,1,7692,2484.516,277,"Victory Point",2021/2022,Active
+Burnside,Chardonnay,white,,0.43499999999999994,13,37,"1 to 37",1.3,1,10256,4461.36,Gingin,Forrest,2020,Active
+Burnside,Chardonnay,white,,0.496,1,41,"1 to 41",1.3,1,7692,3815.232,95,"Victory Point",2020,Active
+Burnside,Chardonnay,white,,1.342,4,60,"59 to 118",1.3,1,7692,10322.664,Gingin,Forrest,2020,Active
+Burnside,"Pinot Noir",red,,0.0477,8,12,"189 to 200",1.3,0.75,7692,366.9084,Droopy,"Glen Harding",,Active
+Burnside,"Pinot Noir",red,,0.05399999999999999,9,18,"201 to 218",1.3,0.75,10256,553.824,386,Kerfuffle,2022,Active
+Burnside,"Pinot Noir",red,,0.10400000000000001,11,10,"1 to 10",1.3,0.75,10256,1066.624,115,"Victory Point",2021,Active
+Burnside,"Pinot Noir",red,,0.11000000000000001,12,9,"1 to 9",1.3,0.75,10256,1128.16,777,"Victory Point",2021,Active
+Burnside,"Pinot Noir",red,,0.185,2,9,"42 to 50",1.3,0.75,10256,1897.36,777,"Glen Harding",,Active
+Burnside,"Pinot Noir",red,,0.187,3,8,"51 to 58",1.3,0.75,10256,1917.872,115,"Glen Harding",,Active
+Burnside,"Pinot Noir",red,,0.201,7,30,"156 to 188",1.3,0.75,10256,2061.456,MV6,"Glen Harding",2022,Active
+"Cape Falls","Cabernet Franc",red,,0.5131199999999999,"B17-Cabernet Franc",38,"59 - 95",2,1.2,4166.666666666667,2138,214,ARM,,Active
+"Cape Falls","Cabernet Sauvignon",red,,0.6172799999999999,"B18-Cabernet Sauvignon",49,"50 - 99",2,1.2,4166.666666666667,2572,337,ARM,,Active
+"Cape Falls","Cabernet Sauvignon",red,,1.30704,"B17-Cabernet Sauvignon",58,"1 to 58",2,1.2,4166.666666666667,5446,337,ARM,,Active
+"Cape Falls",Chardonnay,white,,0.663,B11-Chard,46,"1 to 45",2,1,5000,3315,Gingin,ARM,,Active
+"Cape Falls",Chardonnay,white,,1.1478,B12-Chard,41,"1 to 41",2,1,5000,5739,Gingin,ARM,,Active
+"Cape Falls",Merlot,red,,0.8853599999999999,B18-Merlot,49,"1 to 49",2,1.2,4166.666666666667,3689,181,ARM,,Active
+"Chapman Creek","Cabernet Franc",red,,0.34743474347434744,1,19,"1 to 19",3,1.5,2222,772,,,,Active
+"Chapman Creek","Cabernet Sauvignon",red,,1.9392575928009,6,63,"1 to 63",2.5,1.5,2667,5172,,,,Active
+"Chapman Creek",Chardonnay,white,New,1.0678665166854142,2b,20,"1 to 20",2.5,1.5,2667,2848,Gingin,Forrest,2020,Active
+"Chapman Creek",Chardonnay,white,,1.5500562429696287,3,39,"1 to 39",2.5,1.5,2667,4134,,,,Active
+"Chapman Creek",Chardonnay,white,,2.1184851893513312,4,50,"40 to 89",2.5,1.5,2667,5650,,,,Active
+"Chapman Creek","Chenin Blanc",white,,0.9846269216347957,2a,19,"1 to 19",2.5,1.5,2667,2626,,,,Active
+"Chapman Creek",Merlot,red,New,0.5898012748406449,7,9,"1 to 9",2.5,1.5,2667,1573,,,,Active
+"Chapman Creek",Merlot,red,,0.9595050618672666,5,27,"1 to 27",2.5,1.5,2667,2559,,,,Active
+"Chapman Creek","Sauvignon blanc",white,,1.485939257592801,8,29,"1 to 29",2.5,1.5,2667,3963,,,,Active
+"Chapman Creek (Yelverton)","Cabernet Sauvignon",red,,2.0694,10,35,"1 to 35",3,2,1666.6666666666667,3449,,,,Active
+"Chapman Creek (Yelverton)",Chardonnay,white,,2.5991999999999997,9,55,"1-11,1-44",3,2,1666.6666666666667,4332,,,,Active
+"Chapman Creek (Yelverton)",Malbec,red,,1.5488902219556089,12,20,"1 to 20",3,2,1667,2582,,"Victory Point",2018,Active
+"Chapman Creek (Yelverton)","Sauvignon blanc",white,,1.6092,11,24,"1 to 24",3,2,1666.6666666666667,2682,,,,Active
+"Chapman Creek (Yelverton)",Semillon,white,,1.2792,14,24,"1 to 24",3,2,1666.6666666666667,2132,,,,Active
+"Chapman Creek (Yelverton)",,,,0,13,20,"1 to 20",3,2,1666.6666666666667,,,,,Fallow
+Collins,"Cabernet Sauvignon",red,,0.09598080383923216,1,,,3,2,1667,160,,,,Active
+Collins,Merlot,red,,0.04799040191961608,2,,,3,2,1667,80,,,,Active
+Crane,"Sauvignon blanc",white,,10.20995800839832,1,85,"1 to 85",3,2,1667,17020,,,,Active
+"Forest Springs",Chardonnay,white,Grafts,0.79,"MU 1",12,"1 to 12",3.3,1.8,1684,1200,Gingin,Forrest,,Active
+"Forest Springs",Chardonnay,white,,0.8,"MU 2",24,"13 to 36",3.3,1.8,1684,1341,Gingin,"Cullens- Treeton",2019,Active
+"Hannaford ","Cabernet Sauvignon",red,,0.9297929792979298,"2 west",23,"1 to 23",2.8,1.6,2222,2066,,,2012,Active
+"Hannaford ","Cabernet Sauvignon",red,,0.9401440144014401,"1 east",21,"1 to 21",2.8,1.6,2222,2089,,,1996,Active
+Kaards,"Cabernet Sauvignon",red,,0.38930885529157666,3a,7,"83 to 90",3,1.8,1852,721,"Houghton- super","Moss Wood",2019,Active
+Kaards,"Cabernet Sauvignon",red,,4.55,1,67,"1 to 67",3,1.8,1852,8426.6,,,2002,Active
+Kaards,Chardonnay,white,,0.9331200000000001,2,15,"68 to 82",3,1.44,2314.814814814815,2160,Gingin,Forrest,2022,Active
+Kaards,,,,0.32883369330453566,3b,9,"91 to 99",3,1.8,1852,609,"Houghton- super","Moss Wood",2020,Fallow
+"Krek Mueller  ","Cabernet Sauvignon",red,East,1.7851644506648006,4,49,"1 to 49",3.5,2,1429,2551,126,126,1998,Active
+"Krek Mueller  ","Cabernet Sauvignon",red,New,0.5106382978723404,10,7,"43 to 49",3.5,1.6,1786,912,"QA 45","QA 45",2016,Active
+"Krek Mueller  ","Cabernet Sauvignon",red,West,1.6473058082575227,3,25,"1 to 25",3.5,2,1429,2354,126,126,1998,Active
+"Krek Mueller  ","Cabernet Sauvignon",red,,1.079776067179846,6,14,"1 to 14",3.5,2,1429,1543,"Mercier 191/337","Mercier 191/337",1998,Active
+"Krek Mueller  ",Chardonnay,white,,0.6159014557670772,1b,5,"1 to 5",3.5,1.6,1786,1100,Gingin,Gingin,2018,Active
+"Krek Mueller  ",Chardonnay,white,,1.5402379286214136,1a,16,"1 to 16",3.5,2,1429,2201,Gingin,Gingin,1998,Active
+"Krek Mueller  ",Chardonnay,white,,1.6798655211057154,1b,8,"6 to 21",2.8,1.33,2677,4497,,,,Active
+"Krek Mueller  ","Malbec ",red,New,0.5003498950314905,11,7,"50 to 57",3.5,2,1429,715,"QA 45","QA 45",2016,Active
+"Krek Mueller  ",Merlot,red,"Bottom and Top",0.7914625612316305,7,20,"1 to 20",3.5,2,1429,1131,181,181,1998,Active
+"Krek Mueller  ",Merlot,red,Grafts,0.6717984604618614,8,12,"21 to 32 ",3.5,2,1429,960,"Houghton 5","Houghton 5",2016,Active
+"Krek Mueller  ",Merlot,red,New,0.7715565509518477,12,16,"58 to 73 ",3.5,1.6,1786,1378,233,233,2012,Active
+"Krek Mueller  ","Petit Verdot",red,,0.22,13,10,"74 to 83",3.5,2,1428.5714285714287,315,233,233,2012,Active
+"Krek Mueller  ","Sauvignon blanc",white,,2.5997200839748076,5,22,"15 to 36",3.5,2,1429,3715,,,1998,Active
+"Krek Mueller  ",Shiraz,red,,2.118964310706788,9,42,"1 to 42",3.5,2,1429,3028,,,2020,Active
+Mairs,"Cabernet Sauvignon",red,,0.29983792544570503,,17,"1 to 17",3,1.8,1851,555,,,,Active
+"Moses Rock","Cabernet Sauvignon",red,,2.0580558055805582,"MU 2",39,"1 to 39",3,1.5,2222,4573,,,2000,Active
+"Moses Rock",Chardonnay,white,,1.0857828434313137,"MU 3",21,"1 to 21",3,2,1667,1810,,,2007,Active
+"Moses Rock","Sauvignon blanc",white,,1.0347930413917217,"MU 4",15,"1 to 15",3,2,1667,1725,,,2007,Active
+"Moses Rock",Shiraz,red,,1.131863186318632,"MU 1",31,"1 to 31",3,1.5,2222,2515,,,2000,Active
+Paganin,"Cabernet Sauvignon",red,,1.0201612903225807,3,12,"1 to 12",2.8,1.8,1984,2024,,,,Active
+Paganin,Chardonnay,white,,2.253024193548387,2,63,"1 to 63 ",2.8,1.8,1984,4470,,,,Active
+Paganin,Tempranillo,red,,1.5902217741935485,1,32,"1 to 32",2.8,1.8,1984,3155,,,,Active
+Paganin,Tempranillo,red,,1.5997983870967742,1,51,"33 to 83",2.8,1.8,1984,3174,,,,Active
+Roje,"Cabernet Sauvignon",red,,0.8355205599300087,"MU 3",9,"1 to 9",5,1.75,2286,1910,,,,Active
+Roje,Chardonnay,white,Young,0.40454076367389064,"MU 7",15,14-28,3,1.72,1938,784,,,2007,Active
+Roje,Chardonnay,white,,1.0810113519091846,4,31,"1-18, 1-13",3,1.72,1938,2095,277,,2007,Active
+Roje,Malbec,red,,0.22522499999999998,1b,8,"1 to 8",3,1.75,1904.7619047619048,429,"Sauvignon blanc rootstock",,,Active
+Roje,Malbec,red,,0.238875,2b,4,"11 to 14",3,1.75,1904.7619047619048,455,,,2019,Active
+Roje,"Sauvignon blanc",white,,0.929775,1a,18,"1 to 18",3,1.75,1904.7619047619048,1771,,,,Active
+Roje,Sémillon,white,,0.5932499999999999,2a,10,"1 to 10",3,1.75,1904.7619047619048,1130,,,,Active
+Roje,,,,0.327075,2c,6,"15 to 20",3,1.75,1904.7619047619048,623,,,,Fallow
+"Rosa Park","Cabernet Franc",red,,0.40005,8a,14,"1 to 14",3,1.5,2222.222222222222,889,,,2001,Active
+"Rosa Park","Cabernet Sauvignon",red,,0.710208,5b,13,"1 to 13",3.6,1.8,1543.20987654321,1096,Houghton,,1976,Active
+"Rosa Park","Cabernet Sauvignon",red,,1.2798,1,23,"1 to 23",3.6,1.8,1543.20987654321,1975,Houghton,,1976,Active
+"Rosa Park","Cabernet Sauvignon",red,,1.93995,4a,27,"1 to 27",3,1.5,2222.222222222222,4311,Houghton,,2001,Active
+"Rosa Park","Cabernet Sauvignon",red,,2.57985,9,56,"1 to 26,      1 to 30",3,1.5,2222.222222222222,5733,Houghton,,2001,Active
+"Rosa Park",Chardonnay,white,,0.6723,8c,9,"13 to 21",3,1.5,2222.222222222222,1494,Gingin,"Own Block 8e",2018,Active
+"Rosa Park",Chardonnay,white,,1.6396799999999998,8d&e,19,1-4&1-15,3,1.6,2083.3333333333335,3416,"Davis 5","Davis 5",2001,Active
+"Rosa Park",Chardonnay,white,,2.009265,3,40,"1 to 40",2.9,1.5,2298.8505747126437,4619,"Mixed (gingin and Davis 5)",Mixed,2008,Active
+"Rosa Park",Merlot,red,,0.96975,7,20,"1 to 20",3,1.5,2222.222222222222,2155,,,2001,Active
+"Rosa Park","Sauvignon blanc",white,,1.50975,2,28,"1 to 28",3,1.5,2222.222222222222,3355,,,2001,Active
+"Rosa Park",Semillon,white,,0.96075,8b,12,"1 to 10,     1 to 2",3,1.5,2222.222222222222,2135,,,2001,Active
+"Rosa Park",Shiraz,red,,0.6804,5a,14,"1 to 14",3.6,1.8,1543.20987654321,1050,,,1976,Active
+"Rosa Park",Shiraz,red,,0.9999,4b,27,"1 to 27",3,1.5,2222.222222222222,2222,,,2001,Active
+"Rosa Park",,,,0.752025,,10,"3 to 12",3,1.5,2222.222222222222,,,,,Fallow
+"Stellar Ridge",Chardonnay,white,New,0.7776,3,18,"1 to 18",3,1.6,2083.3333333333335,1620,,,1996,Active
+"Stellar Ridge",Chardonnay,white,New,1.0799999999999998,4,18,"1 to 18",3,1.6,2083.3333333333335,2250,,,1996,Active
+"Stellar Ridge",Chardonnay,white,,1.0400399999999999,1,12,"14 to 25",3.6,1.5,1851.851851851852,1926,,,1996,Active
+"Stellar Ridge","Sauvignon blanc",white,,1.02762,2,13,"1 to 13",3.6,1.5,1851.851851851852,1903,,,1996,Active
+"Stellar Ridge","Sauvignon blanc",white,,1.7795999999999998,5,39,"19 to 57",3,2,1666.6666666666667,2966,,,1996,Active
+"Stellar Ridge ",Chardonnay,white,,2.13,6,11,"19 to 57",3,2,1666.6666666666667,3550,,,1996,Active
+"Thompson -Donaldson Rd","Cabernet Sauvignon",red,,2.565,"4 & 5",44,"80 to 101",3,2,1666.6666666666667,4275,,,"1996 and 1995",Active
+"Thompson -Donaldson Rd",Chardonnay,white,,1.3403744599135863,14,19,"244 to 262",3,1.6,2083,2792,,,,Fallow
+"Thompson -Donaldson Rd",Chardonnay,white,,5.88,"11& 12& 13",61,"182 to 243",3,2,1666.6666666666667,9800,,,"1996 and 1997",Active
+"Thompson -Donaldson Rd",Merlot,red,,1.62,3,25,"55 to 79",3,2,1666.6666666666667,2700.0000000000005,,,1996,Active
+"Thompson -Donaldson Rd","Sauvignon blanc",white,,1.39,10,30,"152 to 185",3,2,1666.6666666666667,2316.6666666666665,,,1996,Active
+"Thompson -Donaldson Rd",Semillon,white,,0.64,15,12,"263 to 274",3,2,1666.6666666666667,1066.6666666666667,,,1998,Active
+"Thompson -Donaldson Rd",Shiraz,red,,2.37,"8 &9",49,"131 to 151",3,2,1666.6666666666667,3950.0000000000005,,,1997,Active
+"Thompson -Donaldson Rd",Shiraz,red,,2.933,"6 & 7 ",51,"102 to 130",3,2,1666.6666666666667,4888.333333333333,,,"1996 and 1997",Active
+"Thompson -Rickett Rd","Cabernet Sauvignon",red,,1.6032,2,29,"26 to 54",3,2,1666.6666666666667,2672,Houghton,,1998,Active
+"Thompson -Rickett Rd","Cabernet Sauvignon",red,,1.6523999999999999,1,25,"1 to 25",3,2,1666.6666666666667,2754,Houghton,,1998,Active
+"Thompson -Wily","cabernet franc",red,,0.8505,8,27,"1 to 27",2.5,1,4000,3402,,,1998,Active
+"Thompson -Wily","Cabernet Sauvignon",red,,0.49912500000000004,12,22,"1 to 22",2.5,1.5,2666.6666666666665,1331,Houghton,,2006,Active
+"Thompson -Wily","Cabernet Sauvignon",red,,0.9480000000000001,11,34,"1 to 34",2.5,1.5,2666.6666666666665,2528,Houghton,,2006,Active
+"Thompson -Wily","Cabernet Sauvignon",red,,1.0395,7,33,"1 to 33",2.5,1,4000,4158,Houghton,,1998,Active
+"Thompson -Wily","Cabernet Sauvignon",red,,2.6805,6,86,"1 to 86",2.5,2,2000,5361,Houghton,,1998,Active
+"Thompson -Wily",chardonnay,white,,1.164,2,36,"1 to 36",2.5,1,4000,4656,Gingin,,1997,Active
+"Thompson -Wily",chardonnay,white,,1.215,1,36,"1 to 36",2.5,1,4000,4860,Gingin,,1997,Active
+"Thompson -Wily",chardonnay,white,,1.413375,10,48,"1 to 48",2.5,1.5,2666.6666666666665,3769,Dijon,,2005,Active
+"Thompson -Wily",malbec,red,,1.215,4,18,"1 to 18",2.5,2,2000,2430,,,1997,Active
+"Thompson -Wily",merlot,red,,0.5595,9,19,"1 to 19",2.5,1,4000,2238,,,1998,Active
+"Thompson -Wily","pinot noir",red,,1.164,5,36,"1 to 36",2.5,1,4000,4656,Droopy,,1997,Active
+"Thompson -Wily",semillon,white,,1.215,3,18,"1 to 18",2.5,2,2000,2430,,,1997,Active
+"Victory Point ","Cabernet Franc",red,,0.514,7,21,"1 to 21",2.5,2,2000,1028,Various,Various,2000,Active
+"Victory Point ","Cabernet Sauvignon",red,,0,4,10,70-79,2.5,2,2000,,337,337,2000,Active
+"Victory Point ","Cabernet Sauvignon",red,,1.702,3,39,113-151,2.5,2,2000,3404,"Houghton selection","MossW ",2000,Active
+"Victory Point ","Cabernet Sauvignon",red,,2.324,2,55,58-112,2.5,2,2000,4648,"Houghton selection",MossW,2000,Active
+"Victory Point ","Cabernet Sauvignon ",red,,2.197,1,57,"1 to 57",2.5,2,2000,4394,"Houghton selection",MossW,2000,Active
+"Victory Point ",Chardonnay,white,,2.066,8,73,"1 to 22",2.5,2,2000,4132,76,76,2000,Active
+"Victory Point ",Chardonnay,white,,2.13,15,43,"85 to 127",2.5,2,2000,4260,Gingin,Gingin,2000,Active
+"Victory Point ",Malbec,red," Graft",0.3955,5,10,22-31,2.5,2,2000,791,Various,Various,2000,Active
+"Victory Point ",Malbec,red,,0.4845,5,8,51-58,2.5,2,2000,969,,Various,2000,Active
+"Victory Point ",Malbec,red,,0.803,4,11,59-69,2.5,2,2000,1606,,Own,2016,Active
+"Victory Point ","Petit Verdot",red,,0.729,6,19,32-50,2.5,2,2000,1458,Various,Various,2000,Active
+"Victory Point ","Pinot Noir",red,,0.4195,9,11,"74 to 84",2.5,2,2000,839,Various,Various,2000,Active
+"Vintage Unit ",Chardonnay,white,,2.5335946248600223,3,62,"1 to 62",3.5,1.6,1786,4525,Gingin,"Cullens- Treeton/ ARM",2019,Active
+"Vintage Unit ","Sauvignon blanc",white,,2.9587123862841147,1,56,"1 to 56",3.5,2,1429,4228,,,1996,Active
+"Vintage Unit ",Shiraz,red,,3.728481455563331,2,50,"1 to 50",3.5,2,1429,5328,,,1996,Active
+Wagtail,"Cabernet Franc",red,,0.1536,2,5,"6 to 10",3,2,1666.6666666666667,256,,,1998,Active
+Wagtail,"Cabernet Sauvignon",red,,0.9882,"3, 6 and 6",50,"11 to 33 & 41 to 67",3,2,1666.6666666666667,1647,,,1998,Active
+Wagtail,"Cabernet Sauvignon",red,,1.3901999999999999,"7 &8",34,"1 to 34",3,2,1666.6666666666667,2317,,,1998,Active
+Wagtail,Chardonnay,white,,0.89808,10,23,"47 to 69",3,1.6,2083.3333333333335,1871,,,1998,Active
+Wagtail,Malbec,red,,0.1548,1,5,"1 to 5",3,2,1666.6666666666667,258,,,1998,Active
+Wagtail,Merlot,red,,0.45539999999999997,9,12,"35 to 46",3,2,1666.6666666666667,759,,,1998,Active
+Wagtail,"Petit Verdot",red,,0.14579999999999999,4,7,"34 to 40",3,2,1666.6666666666667,243,,,1998,Active
+"Wilyabrup Investments  ","Cabernet Sauvignon",red,,3.12,1,,,2.8,1.8,1984,6190.08,,,,Active
+"Wilyabrup Investments  ",Chardonnay,white,,0.66,2,,,3,2,1984,1309.44,,,,Active
+"Woodlands- Home","Cabernet Franc",red,,0.39,2,6,1-6,3.3,2,1515.1515151515152,307,,,,Active
+"Woodlands- Home","Cabernet Sauvignon",red,,0.45,3,12,7-18,3.3,2,1515.1515151515152,720,,,,Active
+"Woodlands- Home","Cabernet Sauvignon",red,,0.52,9,16,41-56,3.3,2,1515.1515151515152,838,,,,Active
+"Woodlands- Home","Cabernet Sauvignon",red,,0.61,11,22,38-59,3.3,1.2,2525.2525252525256,1436,,,,Active
+"Woodlands- Home","Cabernet Sauvignon",red,,1.31,1,44,1-44,3.3,2,1515.1515151515152,2216,,,,Active
+"Woodlands- Home","Cabernet Sauvignon",red,,3.59,15,64,1-64,3,1.8,1851.851851851852,6657,,,,Active
+"Woodlands- Home",Chardonnay,white,,0.08,5,2,23-24,3.3,2,1515.1515151515152,120,,,,Active
+"Woodlands- Home",Chardonnay,white,,0.48,10,37,1-37,3.3,1.2,2525.2525252525256,1090,,,,Active
+"Woodlands- Home",Malbec,red,,0.23,8,8,33-40,3.3,2,1515.1515151515152,480,,,,Active
+"Woodlands- Home",Malbec,red,,0.61,12,10,1-10,3.5,1.8,1587.3015873015875,1215,,,,Active
+"Woodlands- Home",Merlot,red,,0.15,4,4,19-22,3.3,2,1515.1515151515152,240,,,,Active
+"Woodlands- Home",Merlot,red,,0.15,6,4,25-28,3.3,2,1515.1515151515152,240,,,,Active
+"Woodlands- Home",Merlot,red,,0.61,13,7,11-17,3.5,1.8,1587.3015873015875,763,,,,Active
+"Woodlands- Home","Petit Verdot",red,,0.08,14,3,18-20,3.5,1.8,1587.3015873015875,80,,,,Active
+"Woodlands- Home","Pinot Noir",red,,0.15,7,4,29-32,3.3,2,1515.1515151515152,240,,,,Active
+"Woodlands- Pusey","Cabernet Franc",red,,0.85,1900/01/12,,,2,1.5,3333,2833,,,,Active
+"Woodlands- Pusey","Cabernet Sauvignon",red,,4.84,15,,,3,1.5,2222,10755,,,,Active
+"Woodlands- Pusey",Chardonnay,white,,6.9,"1 to 10",,,2,1,5000,34500,,,,Active
+"Woodlands- Pusey",Malbec,red,,1.52,"13 & 14",,,2,1.5,3333,5067,,,,Active
+"Woodlands- Pusey",Merlot,red,,2.53,11,,,2,1.5,3333,8433,,,,Active
+Woodman,"Cabernet Sauvignon",red,,0.28,7,,,3,1.6,2083,583.24,,,1978,Active
+Woodman,"Cabernet Sauvignon",red,,1.03,1,,,3,1.6,2083,2145.4900000000002,,,1998,Active
+Woodman,"Cabernet Sauvignon",red,,3.03,6,,,3,1.6,2083,6311.49,,,1998,Active
+Woodman,"Cabernet Sauvignon",red,,3.82,4,,,3,1.6,2083,7957.0599999999995,,,1998,Active
+Woodman,Chardonnay,white,,2.11,5,,,3,1.6,2083,4395.13,,,1998,Active
+Woodman,Chardonnay,white,,2.62,3,,,3,1.6,2083,5458,,,1998,Active
+Woodman,Chardonnay,white,,2.94,9,,,3,1,3333,9799.02,,,1998,Active
+Woodman,"Sauvignon blanc",white,,2.63,10,,,3,1.6,2083,5478.29,,,1998,Active
+Woodman,Semillon,white,,2.91,2,,,3,1.6,2083,6071,,,1998,Active
+Woodman,Shiraz,red,,3.01,8,,,3,1.6,2083,6269.83,,,1998,Active
+"Wood Sea ",chardonnay,white,,0.8617710583153347,3,16,"1 to 19",3,1.8,1852,1596,"174 & 470",,,Active
+"Wood Sea ",chardonnay,white,,1.6792656587473003,5,46,"1 to 46",3,1.8,1852,3110,,,,Active
+"Wood Sea ","sauvignon blanc",white,,4.42548596112311,2,121,"1 to 121",3,1.8,1852,8196,,,,Active
+"Wood Sea ",shiraz,red,,0,4,49,"1 to 49",3,1.8,1852,5026,,,,Active
+"Wood Sea ",shiraz,red,,2.4778617710583153,1,54,"20 to 53",3,1.8,1852,4589,,,,Active
+Wrights,"Cabernet Sauvignon",red,,1.79,3,41,"1 to 41",2.5,2,2000,3580,,,,Active
+Wrights,Chardonnay,white,,2.1199850018747655,2a,27,"1 to 27",2.5,1.5,2667,5654,,,,Active
+Wrights,"Sauvignon blanc",white,,2.31,1,33,"1 to 33",2.5,2,2000,4620,,,,Active
+Wrights,Semillon,white,,1.92,4,43,"1 to 43",2.5,2,2000,3840,,,,Active
+Wrights,,,Heritage,0.7379077615298087,5a,7,"1 to 7 ",2.5,1.5,2667,1968,,,,Fallow

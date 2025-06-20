@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Vine</title>
+
+  <link rel="stylesheet" href="/static/css/site.css" />
+  <link rel="stylesheet" href="/static/css/nav.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css" />
+
+  <div metal:define-slot="additional-css" tal:omit-tag="True"></div>
+</head>
+
+<body>
+  <nav class="navbar" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="/">
+        <img src="/static/img/logo.png" />
+      </a>
+
+      <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
+    </div>
+
+    <div id="navbarBasicExample" class="navbar-menu">
+      <div class="navbar-start">
+        <a class="navbar-item"> Home </a>
+
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link"> More </a>
+
+          <div class="navbar-dropdown">
+            <a class="navbar-item"> About </a>
+            <a class="navbar-item is-selected"> Jobs </a>
+            <a class="navbar-item"> Contact </a>
+            <hr class="navbar-divider" />
+            <a class="navbar-item"> Report an issue </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="navbar-end">
+        <div class="navbar-item">
+          <div class="buttons">
+            <div tal:condition="not is_logged_in">
+              <a class="button is-primary">
+                <strong>Sign up</strong>
+              </a>
+            </div>
+            <div tal:condition="not is_logged_in">
+              <a class="button is-light"> Log in </a>
+            </div>
+            <div tal:condition="is_logged_in">
+              <a class="button is-primary">
+                <strong>Account</strong>
+              </a>
+            </div>
+            <div tal:condition="is_logged_in">
+              <a class="button is-light"> Log out </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="columns">
+    <div class="column">
+      <section class="section">
+        <div class="container">
+          <h1 class="title">Hello World</h1>
+          <p class="subtitle">
+            My first website with <strong>Bulma</strong>!
+          </p>
+        </div>
+      </section>
+    </div>
+    <div class="column is-three-quarters">
+      <div class="container main_content">
+        <div metal:define-slot="content" tal:omit-tag="True">No content</div>
+      </div>
+    </div>
+    <div class="column"></div>
+  </div>
+
+  <footer class="footer">
+    <div class="content has-text-centered copyright">
+      <p>
+        <strong>Copyright &copy;
+          <a href="http://www.ahaviticulture.com.au/">AHA Viticulture</a></strong>
+      </p>
+    </div>
+  </footer>
+
+  <div metal:define-slot="additional-js" tal:omit-tag="True"></div>
+</body>
+
+</html>

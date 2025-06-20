@@ -1,0 +1,32 @@
+<div metal:use-macro="load: ../shared/_layout.pt">
+    <div metal:fill-slot="content" tal:omit-tag="True">
+        <div class="section content">
+            <div class="container vineyard">
+                <div class="vineyard container">
+                    <h1 class="title">${vineyard.name}</h1>
+
+
+                    <section class="content">
+                        <container class="managements_unit_list">
+                            <h2 class="title"> ${vineyard.name} Management Units</h2>
+                            <table>
+                                <thead>
+                                    <th>Name</th>
+                                </thead>
+                                <tbody>
+                                    <tr tal:repeat="mu management_units">
+                                        <th class="name"><a href="#">${mu.name}</a></th>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </container>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div metal:fill-slot="additional-css" tal:omit-tag="True">
+        <!-- additional css from the page -->
+    </div>
+</div>

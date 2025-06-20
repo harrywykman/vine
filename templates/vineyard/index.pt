@@ -1,0 +1,36 @@
+<div metal:use-macro="load: ../shared/_layout.pt">
+    <div metal:fill-slot="content" tal:omit-tag="True">
+        <div class="section content">
+            <div class="container vineyard-list">
+                <div class="vineyard-list container">
+                    <h2 class="title">Vineyards</h2>
+
+                    <table class="table is-striped is-hoverable is-fullwidth">
+                        <thead>
+                            <th>Name</th>
+                            <th>Address</th>
+                            <th>Actions</th>
+                        </thead>
+                        <tbody>
+                            <tr tal:repeat="v vineyards">
+                                <th class="name"><a href="/vineyards/${v.id}">${v.name}</a></th>
+                                <td class="address">${v.address}</td>
+                                <td>
+                                    <a href="/vineyards/${v.id}" class="button is-primary is-outlined">Edit</a>
+                                    <form method="post" action="/vineyards/${ v.id }/delete" class="inline"
+                                        onsubmit="return confirm('Delete?');">
+                                        <button class="button is-danger is-outlined" type="submit">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div metal:fill-slot="additional-css" tal:omit-tag="True">
+        <!-- additional css from the page -->
+    </div>
+</div>
