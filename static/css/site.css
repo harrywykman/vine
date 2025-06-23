@@ -1,98 +1,20 @@
-/* body {
-    color: #222;
-    margin: 0px;
-    padding: 0px;
-    font-family: Helvetica, Arial, sans-serif;
-    font-size: 17px;
-    background-color: #666666;
+
+
+#map { height: 500px; }
+
+.marker-label {
+    background-color: white;
+    border: 1px solid #555;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 12px;
 }
 
-.main_content {
-    background: #fff;
-    margin: 0px;
-    padding: 0px 0px 50px;
-}
-
-.form-control {
-    display: inline-block;
-    border-radius: 2px;
-    font-size: 20px;
-    padding: 20px;
-}
-
-.vineyard-list h2 {
-    font-size: 24px;
-    font-weight: bold;
-}
-
-.vineyard-list .vineyard {
-    border: 1px solid #d3d3d3;
-    padding: 10px;
-    background-color: #ececec;
-    min-height: 45px;
-    margin-top: 15px;
-    color: black;
-    margin-bottom: 15px;
-}
-
-.vineyard-list .vineyard .name {
-    font-size: 20px;
-}
-
-.vineyard-list .vineyard a {
-    color: #006dad;
-}
-
-.vineyard-list .vineyard .address {
-    font-size: 16px;
-    font-weight: normal;
-    font-style: italic;
-}
-
-
-footer {
-    margin-top: 50px;
-    padding: 30px;
-    text-align: center;
-    color: white;
-}
-
-footer a {
-    color: #006dad;
-}
-
-.error-msg {
-    color: #b30000;
-}
-
-.page-core {
-    padding: 20px;
-} */
-
-/* ############################################################################################################ */
- 
-/* * {
-  margin: 0;
-  box-sizing: border-box;
-}
-
-.grid-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    grid-gap: 1rem;
-    padding: 1rem;
-}
-
-.grid-item {
-    background-color: #ccc;
-    padding: 2rem;
-    text-align: center;
-    border: 1px solid #fff; /* Added border for better visual separation */
-}
-
-@media (min-width: 600px) {
-    .grid-item {
-        padding: 2rem;
-        font-size: 1.2rem; /* Larger text in larger views */
+    .polygon-label {
+        font-size: 10px;
+        font-weight: bold;
+        color: #222;
+        background: rgba(160, 12, 12, 0);
+        padding: 0px 0px;
+        border-radius: 0px;
     }
-} */

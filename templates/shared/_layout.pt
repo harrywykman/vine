@@ -29,7 +29,7 @@
 
     <div id="navbarBasicExample" class="navbar-menu">
       <div class="navbar-start">
-        <a class="navbar-item"> Home </a>
+        <a href="/" class="navbar-item"> Home </a>
 
         <div class="navbar-item has-dropdown is-hoverable">
           <a class="navbar-link"> More </a>
@@ -48,20 +48,20 @@
         <div class="navbar-item">
           <div class="buttons">
             <div tal:condition="not is_logged_in">
-              <a class="button is-primary">
+              <a href="/account/register/" class="button is-primary">
                 <strong>Sign up</strong>
               </a>
             </div>
             <div tal:condition="not is_logged_in">
-              <a class="button is-light"> Log in </a>
+              <a href="/account/login/" class="button is-light"> Log in </a>
             </div>
             <div tal:condition="is_logged_in">
-              <a class="button is-primary">
+              <a href="/account/" class="button is-primary">
                 <strong>Account</strong>
               </a>
             </div>
             <div tal:condition="is_logged_in">
-              <a class="button is-light"> Log out </a>
+              <a href="/account/logout/" class="button is-light"> Log out </a>
             </div>
           </div>
         </div>
@@ -71,14 +71,6 @@
 
   <div class="columns">
     <div class="column">
-      <section class="section">
-        <div class="container">
-          <h1 class="title">Hello World</h1>
-          <p class="subtitle">
-            My first website with <strong>Bulma</strong>!
-          </p>
-        </div>
-      </section>
     </div>
     <div class="column is-three-quarters">
       <div class="container main_content">

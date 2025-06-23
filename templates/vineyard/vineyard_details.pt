@@ -8,14 +8,26 @@
 
                     <section class="content">
                         <container class="managements_unit_list">
-                            <h2 class="title"> ${vineyard.name} Management Units</h2>
+                            <h2 class="title">Management Units</h2>
                             <table>
                                 <thead>
-                                    <th>Name</th>
+                                    <th>Management Unit</th>
+                                    <th>Variety</th>
+                                    <th>Area (ha) </th>
+                                    <th>Row Width (m)</th>
+                                    <th># Rows</th>
+                                    <th>Row Numbering</th>
+                                    <th>Vine Spacing (m)</th>
                                 </thead>
                                 <tbody>
                                     <tr tal:repeat="mu management_units">
                                         <th class="name"><a href="#">${mu.name}</a></th>
+                                        <td>${mu.variety.name}</td>
+                                        <td>${mu.area} ha</td>
+                                        <td>${mu.row_width} m</td>
+                                        <td>${mu.rows_total}</td>
+                                        <td>${mu.rows_start_number} - ${mu.rows_end_number}</td>
+                                        <td>${mu.vine_spacing}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -24,9 +36,194 @@
                 </div>
             </div>
         </div>
+        <div class="section content">
+            <div class="container vineyard">
+                <section class="content">
+                    <container class="${vineyard.name}-map">
+                        <h2 class="title">${vineyard.name} Map</h2>
+                        <div id="map"></div>
+                    </container>
+                </section>
+            </div>
+        </div>
     </div>
 
     <div metal:fill-slot="additional-css" tal:omit-tag="True">
-        <!-- additional css from the page -->
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+            integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    </div>
+    <div metal:fill-slot="additional-js" tal:omit-tag="True">
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+        <script>
+            var map = L.map('map').setView([-33.741525, 115.019020], 16);
+            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            }).addTo(map);
+
+            googleSat = L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+                maxZoom: 20,
+                subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+            }).addTo(map)
+
+            /* TODO - Get polygons from database*/
+
+            var amarok_boundary = L.polygon([
+                [-33.74544, 115.021],
+                [-33.74137, 115.021],
+                [-33.74136, 115.02194],
+                [-33.7404, 115.02196],
+                [-33.73866, 115.01974],
+                [-33.73737, 115.01977],
+                [-33.73738, 115.01684],
+                [-33.74543, 115.01679]
+            ]).addTo(map);
+
+            map.fitBounds(amarok_boundary.getBounds());
+
+            var shi1_poly = L.polygon([
+                [-33.73739, 115.01695],
+                [- 33.73793, 115.01694],
+                [- 33.73792, 115.0196],
+                [- 33.73739, 115.0196]
+            ], { color: 'red' }).addTo(map);
+            var mer2_poly = L.polygon([
+                [-33.73794, 115.01694],
+                [-33.73793, 115.0196],
+                [-33.73869, 115.0196],
+                [-33.73869, 115.01694]
+            ], { color: 'red' }).addTo(map);
+            var che3_poly = L.polygon([
+                [-33.73877, 115.01903],
+                [-33.74041, 115.01902],
+                [-33.74041, 115.01975],
+                [-33.73916, 115.01975],
+                [-33.73906, 115.0196],
+                [-33.73877, 115.0196]
+            ], { color: 'white' }).addTo(map);
+            var sav4_poly = L.polygon([
+                [-33.74102, 115.01697],
+                [- 33.741, 115.02176],
+                [- 33.74133, 115.02177],
+                [- 33.74133, 115.01858],
+                [- 33.74157, 115.01822],
+                [- 33.74158, 115.01698]
+            ], { color: 'white' }).addTo(map);
+            var sem5_poly = L.polygon([
+                [-33.74101, 115.01697],
+                [- 33.74098, 115.02177],
+                [- 33.74051, 115.02177],
+                [- 33.74051, 115.01698]
+            ], { color: 'white' }).addTo(map);
+            var shi6_poly = L.polygon([
+                [-33.74135, 115.02091],
+                [- 33.74265, 115.02091],
+                [- 33.74265, 115.01838],
+                [- 33.74239, 115.01859],
+                [- 33.74219, 115.01878],
+                [- 33.74194, 115.01893],
+                [- 33.74172, 115.01899],
+                [- 33.74136, 115.01899]
+            ], { color: 'red' }).addTo(map);
+            var shi7_poly = L.polygon([
+                [-33.74353, 115.02023],
+                [- 33.74353, 115.018],
+                [- 33.74267, 115.01837],
+                [- 33.74266, 115.02091],
+                [- 33.74328, 115.02091],
+                [- 33.74328, 115.02043]
+            ], { color: 'red' }).addTo(map);
+            var cab8_poly = L.polygon([
+                [-33.74355, 115.02022],
+                [- 33.74397, 115.02025],
+                [- 33.744, 115.01718],
+                [- 33.74379, 115.01717],
+                [- 33.74371, 115.01787],
+                [- 33.74355, 115.01801]
+            ], { color: 'red' }).addTo(map);
+            var cab9_poly = L.polygon([
+                [-33.74398, 115.02027],
+                [- 33.74409, 115.02038],
+                [- 33.7441, 115.02092],
+                [- 33.74526, 115.02093],
+                [- 33.74536, 115.02077],
+                [- 33.74536, 115.01715],
+                [- 33.74523, 115.01699],
+                [- 33.74472, 115.01699],
+                [- 33.74437, 115.01715],
+                [- 33.74401, 115.01715]
+            ], { color: 'red' }).addTo(map);
+
+            shi1_poly.bindTooltip("Shiraz 1", {
+                permanent: true,
+                direction: "center",
+                className: "polygon-label"
+            });
+
+            mer2_poly.bindTooltip("Merlot 2", {
+                permanent: true,
+                direction: "center",
+                className: "polygon-label"
+            });
+
+            che3_poly.bindTooltip("Chenin Blanc 3", {
+                permanent: true,
+                direction: "center",
+                className: "polygon-label"
+            });
+
+            sav4_poly.bindTooltip("Sauvignon blanc 4", {
+                permanent: true,
+                direction: "center",
+                className: "polygon-label"
+            });
+
+            sem5_poly.bindTooltip("Semillon 5", {
+                permanent: true,
+                direction: "center",
+                className: "polygon-label"
+            });
+
+            shi6_poly.bindTooltip("Shiraz 6", {
+                permanent: true,
+                direction: "center",
+                className: "polygon-label"
+            });
+
+            shi7_poly.bindTooltip("Shiraz 7", {
+                permanent: true,
+                direction: "center",
+                className: "polygon-label"
+            });
+
+            cab8_poly.bindTooltip("Cabernet Sauvignon 8", {
+                permanent: true,
+                direction: "center",
+                className: "polygon-label"
+            });
+
+            cab9_poly.bindTooltip("Cabernet Sauvignon 9", {
+                permanent: true,
+                direction: "center",
+                className: "polygon-label"
+            });
+
+            /*             var popup = L.popup()
+                            .setLatLng([-33.737659, 115.018249])
+                            .setContent("Shiraz - Management Unit 1")
+                            .openOn(map);
+            
+                        var popup = L.popup();
+            
+                        function onMapClick(e) {
+                            popup
+                                .setLatLng(e.latlng)
+                                .setContent("You clicked the map at " + e.latlng.toString())
+                                .openOn(map);
+                        }
+                        map.on('click', onMapClick); */
+
+        </script>
     </div>
 </div>

@@ -1,0 +1,40 @@
+<div metal:use-macro="load: ../shared/_layout.pt">
+    <div metal:fill-slot="content" tal:omit-tag="True">
+        <h1 class="title">Login to PyPI</h1>
+        <form action="" method="POST">
+
+            <div class="field">
+                <label class="label">Email</label>
+                <div class="control has-icons-left has-icons-right">
+                    <input name="email" class="input" type="email" placeholder="Your Email Address">
+                    <span class="icon is-small is-left">
+                        <i class="fas fa-envelope"></i>
+                    </span>
+                    <span class="icon is-small is-right">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </span>
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="label">Password</label>
+                <div class="control">
+                    <input name="password" class="input" type="password" placeholder="Password">
+                </div>
+            </div>
+
+            <div class="field is-grouped">
+                <div class="control">
+                    <button class="button is-link">Log In</button>
+                </div>
+            </div>
+
+            <div class="help is-danger" tal:condition="error">${ error }</div>
+
+        </form>
+    </div>
+
+    <div metal:fill-slot="additional_css" tal:omit-tag="True">
+        <link rel="stylesheet" href="/static/css/account.css">
+    </div>
+</div>

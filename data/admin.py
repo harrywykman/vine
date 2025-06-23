@@ -1,6 +1,16 @@
 from sqladmin import ModelView
 
-from data.vineyard import ManagementUnit, Variety, Vineyard, WineColour, Status
+from data.user import User
+from data.vineyard import ManagementUnit, Status, Variety, Vineyard, WineColour
+
+# User Admin
+
+
+class UserAdmin(ModelView, model=User):
+    column_list = [User.name, User.email]
+
+
+# Vineyard Admin
 
 
 class VineyardAdmin(ModelView, model=Vineyard):
@@ -8,7 +18,7 @@ class VineyardAdmin(ModelView, model=Vineyard):
 
 
 class VarietyAdmin(ModelView, model=Variety):
-    column_list = [Variety.id, Variety.name, Variety.clone_name]
+    column_list = [Variety.id, Variety.name]
 
 
 class WineColourAdmin(ModelView, model=WineColour):
@@ -17,6 +27,7 @@ class WineColourAdmin(ModelView, model=WineColour):
 
 class ManagementUnitAdmin(ModelView, model=ManagementUnit):
     column_list = [ManagementUnit.id, ManagementUnit.name]
+
 
 class StatusAdmin(ModelView, model=Status):
     column_list = [Status.id, Status.status]

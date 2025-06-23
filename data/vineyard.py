@@ -26,6 +26,7 @@ class Variety(SQLModel, table=True):
 class Status(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     status: str = Field(default="Active")
+
     management_units: list["ManagementUnit"] = Relationship(back_populates="status")
 
 
@@ -41,7 +42,7 @@ class ManagementUnit(SQLModel, table=True):
     rows_total: Optional[int] = Field(default=None)
     rows_start_number: Optional[int] = Field(default=None)
     rows_end_number: Optional[int] = Field(default=None)
-    date_planted: datetime.datetime = Field(sa_column=Column(Date))
+    date_planted: datetime.datetime | None = Field(sa_column=Column(Date))
 
     variety_id: int | None = Field(default=None, foreign_key="variety.id")
     vineyard_id: int | None = Field(default=None, foreign_key="vineyard.id")

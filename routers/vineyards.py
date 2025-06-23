@@ -1,14 +1,14 @@
+import fastapi_chameleon
 from fastapi import APIRouter, Depends, Form, HTTPException, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 from starlette.status import HTTP_303_SEE_OTHER
-import fastapi_chameleon
 
-from dependencies import get_session
 from data.vineyard import Vineyard
-from viewmodels.vineyards.list_viewmodel import ListViewModel
+from dependencies import get_session
 from viewmodels.vineyards.details_viewmodel import DetailsViewModel
+from viewmodels.vineyards.list_viewmodel import ListViewModel
 
 router = APIRouter()
 templates = Jinja2Templates(directory="templates")
@@ -18,18 +18,18 @@ templates = Jinja2Templates(directory="templates")
 
 
 @router.get("/", response_class=HTMLResponse)
-@fastapi_chameleon.template('vineyard/index.pt')
-def vineyard_index(request: Request):
-    vm = ListViewModel(request)
+@fastapi_chameleon.template("vineyard/index.pt")
+def vineyard_index(request: Request, session: Session = Depends(get_session)):
+    vm = ListViewModel(request, session)
     return vm.to_dict()
 
 
 @router.get("/vineyards/{vineyard_id}", response_class=HTMLResponse)
-@fastapi_chameleon.template('vineyard/vineyard_details.pt')
+@fastapi_chameleon.template("vineyard/vineyard_details.pt")
 def vineyard_details(
     request: Request, vineyard_id: int, session: Session = Depends(get_session)
 ):
-    vm = DetailsViewModel(vineyard_id, request)
+    vm = DetailsViewModel(vineyard_id, request, session)
     print("DETAILS VIEW")
 
     return vm.to_dict()
@@ -97,7 +97,6 @@ def update_vineyard_html(
 
 @router.post("/vineyards/{vineyard_id}/delete")
 def delete_vineyard_html(
-    
     vineyard_id: int,
     session: Session = Depends(get_session),
 ):
