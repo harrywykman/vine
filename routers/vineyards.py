@@ -8,6 +8,7 @@ from starlette.status import HTTP_303_SEE_OTHER
 from data.vineyard import Vineyard
 from dependencies import get_session
 from viewmodels.vineyards.details_viewmodel import DetailsViewModel
+from viewmodels.vineyards.edit_mu_viewmodel import EditMUViewModel
 from viewmodels.vineyards.list_viewmodel import ListViewModel
 
 router = APIRouter()
@@ -30,7 +31,26 @@ def vineyard_details(
     request: Request, vineyard_id: int, session: Session = Depends(get_session)
 ):
     vm = DetailsViewModel(vineyard_id, request, session)
-    print("DETAILS VIEW")
+
+    return vm.to_dict()
+
+
+@router.get("/management_unit/{management_unit_id}/edit", response_class=HTMLResponse)
+@fastapi_chameleon.template("management_unit/edit_inline.pt")
+def mangement_unit_edit_inline(
+    request: Request, management_unit_id: int, session: Session = Depends(get_session)
+):
+    vm = EditMUViewModel(management_unit_id, request, session)
+
+    return vm.to_dict()
+
+
+@router.get("/management_unit/{management_unit_id}/view", response_class=HTMLResponse)
+@fastapi_chameleon.template("management_unit/display_row.pt")
+def mangement_unit_view_inline(
+    request: Request, management_unit_id: int, session: Session = Depends(get_session)
+):
+    vm = EditMUViewModel(management_unit_id, request, session)
 
     return vm.to_dict()
 
@@ -100,10 +120,12 @@ def delete_vineyard_html(
     vineyard_id: int,
     session: Session = Depends(get_session),
 ):
-    vineyard = session.query(Vineyard).get(vineyard_id)
+    vineyard = session.get(Vineyard, vineyard_id)
     if vineyard:
         print(f"About to delete vineyard {vineyard_id}.")
         session.delete(vineyard)
         session.commit()
         print(f"Delete vineyard {vineyard_id}.")
-    return RedirectResponse(url="/vineyards", status_code=HTTP_303_SEE_OTHER)
+
+    response = RedirectResponse(url="/", status_code=HTTP_303_SEE_OTHER)
+    return response

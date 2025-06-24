@@ -1,7 +1,16 @@
 from sqladmin import ModelView
 
 from data.user import User
-from data.vineyard import ManagementUnit, Status, Variety, Vineyard, WineColour
+from data.vineyard import (
+    Chemical,
+    ManagementUnit,
+    SprayProgram,
+    SprayRecord,
+    Status,
+    Variety,
+    Vineyard,
+    WineColour,
+)
 
 # User Admin
 
@@ -31,3 +40,19 @@ class ManagementUnitAdmin(ModelView, model=ManagementUnit):
 
 class StatusAdmin(ModelView, model=Status):
     column_list = [Status.id, Status.status]  # type: ignore
+
+
+class SprayProgramAdmin(ModelView, model=SprayProgram):
+    column_list = [
+        SprayProgram.id,
+        SprayProgram.name,
+        SprayProgram.water_spray_rate_per_hectare,
+    ]  # type: ignore
+
+
+class SprayRecordAdmin(ModelView, model=SprayRecord):
+    column_list = [SprayRecord.id, SprayRecord.operator]  # type: ignore
+
+
+class ChemicalAdmin(ModelView, model=Chemical):
+    column_list = [Chemical.id, Chemical.name, Chemical.active_ingredient]  # type: ignore

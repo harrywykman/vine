@@ -1,0 +1,52 @@
+<tr id="management_unit_row_${mu.id}">
+    <form hx-put="/management_unit/${mu.id}" hx-target="#management_unit_row_${mu.id}" hx-swap="outerHTML">
+        <td>
+            <input class="input" type="text" name="name" value="${mu.name}">
+        </td>
+
+        <td>
+            <div class="select is-fullwidth">
+                <select name="variety_id">
+                    <option value="">Select a variety</option>
+                    <option tal:repeat="variety varieties"
+                        tal:attributes="value variety.id; selected python: variety.id == mu.variety_id">
+                        ${variety.name}
+                    </option>
+                </select>
+            </div>
+        </td>
+
+        <td>
+            <input class="input" type="number" step="0.01" name="area" value="${mu.area}">
+        </td>
+
+        <td>
+            <input class="input " type="number" step="0.01" name="row_width" value="${mu.row_width}">
+        </td>
+
+        <td>
+            <input class="input " type="number" name="rows_total" value="${mu.rows_total}">
+        </td>
+
+        <td class="is-flex is-align-items-center">
+            <input class="input mr-1" style="width: 4em;" type="number" name="rows_start_number"
+                value="${mu.rows_start_number}">
+            <span class="mr-1">–</span>
+            <input class="input" style="width: 4em;" type="number" name="rows_end_number" value="${mu.rows_end_number}">
+        </td>
+
+        <td>
+            <input class="input" type="number" step="0.01" name="vine_spacing" value="${mu.vine_spacing}">
+        </td>
+
+        <td>
+            <div class="buttons">
+                <button type="submit" class="button is-success is-small">Save</button>
+                <button type="button" class="button is-light is-small" hx-get="/management_unit/${mu.id}/view"
+                    hx-target="#management_unit_row_${mu.id}" hx-swap="outerHTML">
+                    Cancel
+                </button>
+            </div>
+        </td>
+    </form>
+</tr>

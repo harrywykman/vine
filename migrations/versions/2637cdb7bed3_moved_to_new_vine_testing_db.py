@@ -1,8 +1,8 @@
-"""added user table
+"""moved to new vine_testing db
 
-Revision ID: 86ca7c0d2204
-Revises: f429b02c5abd
-Create Date: 2025-06-23 13:04:37.473243
+Revision ID: 2637cdb7bed3
+Revises: 
+Create Date: 2025-06-24 10:33:21.243953
 
 """
 from typing import Sequence, Union
@@ -13,8 +13,8 @@ import sqlmodel
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision: str = '86ca7c0d2204'
-down_revision: Union[str, Sequence[str], None] = 'f429b02c5abd'
+revision: str = '2637cdb7bed3'
+down_revision: Union[str, Sequence[str], None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 

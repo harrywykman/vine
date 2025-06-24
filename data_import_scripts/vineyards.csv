@@ -1,13 +1,13 @@
 "Vineyard Name","Variety Name","WineColour Name","Management Unit Variety Name Modifier","Management Unit Area","Management Unit Name","Management Unit Rows Total","Rows Numbers","Management Unit Row Width","Vine Spacing",VinesHa,"Total Vines",Clone,"Source Vineyard","Plant Date",Status
-Amarok:,"Cabernet Sauvignon",red,,1.3596920923722884,8,16,"1 to 16",3.5,2,1429,1943,,,,Active
-Amarok:,"Cabernet Sauvignon",red,,5.211336599020294,9,43,"1 to 43",3.5,2,1429,7447,,,,Active
-Amarok:,"Chenin Blanc",white,,1.13296011196641,3,19,"1 to 19",3.5,2,1429,1619,,,,Active
-Amarok:,Merlot,red,,2.013296011196641,2,24,"1 to 24",3.5,2,1429,2877,,,,Active
-Amarok:,"Sauvignon blanc",white,,1.8866340097970609,4,18,"1 to 18",3.5,2,1429,2696,,,,Active
-Amarok:,Semillon,white,,2.4555633310007,5,16,"1 to 16",3.5,2,1429,3509,,,,Active
-Amarok:,Shiraz,red,,1.4254723582925122,1,17,"1 to 17",3.5,2,1429,2037,,,,Active
-Amarok:,Shiraz,red,,2.277816655003499,7,28,"1 to 28",3.5,2,1429,3255,,,,Active
-Amarok:,Shiraz,red,,2.6466060181945417,6,40,"1 to 40",3.5,2,1429,3782,,,,Active
+Amarok,"Cabernet Sauvignon",red,,1.3596920923722884,8,16,"1 to 16",3.5,2,1429,1943,,,,Active
+Amarok,"Cabernet Sauvignon",red,,5.211336599020294,9,43,"1 to 43",3.5,2,1429,7447,,,,Active
+Amarok,"Chenin Blanc",white,,1.13296011196641,3,19,"1 to 19",3.5,2,1429,1619,,,,Active
+Amarok,Merlot,red,,2.013296011196641,2,24,"1 to 24",3.5,2,1429,2877,,,,Active
+Amarok,"Sauvignon blanc",white,,1.8866340097970609,4,18,"1 to 18",3.5,2,1429,2696,,,,Active
+Amarok,Semillon,white,,2.4555633310007,5,16,"1 to 16",3.5,2,1429,3509,,,,Active
+Amarok,Shiraz,red,,1.4254723582925122,1,17,"1 to 17",3.5,2,1429,2037,,,,Active
+Amarok,Shiraz,red,,2.277816655003499,7,28,"1 to 28",3.5,2,1429,3255,,,,Active
+Amarok,Shiraz,red,,2.6466060181945417,6,40,"1 to 40",3.5,2,1429,3782,,,,Active
 Brambles,"Cabernet Franc",red,,0.053689999999999995,"RB 1",,,1.4,0.75,9524,511.3333333333333,M214,ARM,2024,Active
 Brambles,"Cabernet Sauvignon",red,,0.065,EB1,,,1.4,0.75,9524,621," Houghton Woodlands",Wagtail,2024,Active
 Brambles,"Cabernet Sauvignon",red,,0.102,EB1,,,1.4,0.75,9524,975,"Sheena Houghton",Wagtail,2024,Active

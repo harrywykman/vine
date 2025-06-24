@@ -9,6 +9,8 @@ from sqlmodel import Field, Relationship, SQLModel
 
 
 class Vineyard(SQLModel, table=True):
+    __tablename__ = "vineyards"
+
     id: Optional[int] = Field(default=None, primary_key=True)
     name: str = Field(index=True, unique=True)
     address: Optional[str] = Field(default=None)
@@ -17,15 +19,19 @@ class Vineyard(SQLModel, table=True):
 
 
 class Variety(SQLModel, table=True):
+    __tablename__ = "varieties"
+
     id: Optional[int] = Field(default=None, primary_key=True)
     name: str = Field(index=True, unique=True)  # e.g. "Cabernet Sauvignon"
-    wine_colour_id: int = Field(foreign_key="winecolour.id")
+    wine_colour_id: int = Field(foreign_key="wine_colours.id")
 
     wine_colour: "WineColour" = Relationship(back_populates="varieties")
     management_units: list["ManagementUnit"] = Relationship(back_populates="variety")
 
 
 class Status(SQLModel, table=True):
+    __tablename__ = "states"
+
     id: Optional[int] = Field(default=None, primary_key=True)
     status: str = Field(default="Active")
 
@@ -33,6 +39,8 @@ class Status(SQLModel, table=True):
 
 
 class ManagementUnit(SQLModel, table=True):
+    __tablename__ = "management_units"
+
     id: Optional[int] = Field(default=None, primary_key=True)
     name: str = Field(index=True, unique=True)
     variety_name_modifier: Optional[str] = Field(default=None)
@@ -48,9 +56,9 @@ class ManagementUnit(SQLModel, table=True):
 
     spray_records: list["SprayRecord"] = Relationship(back_populates="management_unit")
 
-    variety_id: int | None = Field(default=None, foreign_key="variety.id")
-    vineyard_id: int | None = Field(default=None, foreign_key="vineyard.id")
-    status_id: int | None = Field(default=None, foreign_key="status.id")
+    variety_id: int | None = Field(default=None, foreign_key="varieties.id")
+    vineyard_id: int | None = Field(default=None, foreign_key="vineyards.id")
+    status_id: int | None = Field(default=None, foreign_key="states.id")
 
     variety: Variety | None = Relationship(back_populates="management_units")
     vineyard: Vineyard | None = Relationship(back_populates="management_units")
@@ -58,6 +66,8 @@ class ManagementUnit(SQLModel, table=True):
 
 
 class WineColour(SQLModel, table=True):
+    __tablename__ = "wine_colours"
+
     id: Optional[int] = Field(default=None, primary_key=True)
     name: str = Field(index=True, unique=True)  # e.g. "Red", "White"
 
@@ -96,7 +106,7 @@ class SprayRecord(SQLModel, table=True):
     )
     # TODO: Add Growth Stage
 
-    management_unit_id: int = Field(foreign_key="managementunit.id", nullable=False)
+    management_unit_id: int = Field(foreign_key="management_units.id", nullable=False)
     spray_program_id: int = Field(foreign_key="spray_programs.id", nullable=False)
 
     management_unit: ManagementUnit = Relationship(back_populates="spray_records")

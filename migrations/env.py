@@ -4,13 +4,27 @@ from alembic import context
 from sqlalchemy import engine_from_config, pool
 from sqlmodel import SQLModel
 
-from data.vineyard import ManagementUnit, Vineyard, Status, Variety, WineColour
+from data.vineyard import (
+    Chemical,
+    ManagementUnit,
+    SprayProgram,
+    SprayProgramChemical,
+    SprayRecord,
+    Status,
+    Variety,
+    Vineyard,
+    WineColour,
+)
 
 vineyard = Vineyard
 mu = ManagementUnit
 status = Status
 variety = Variety
 wine_colour = WineColour
+spray_program = SprayProgram
+spray_record = SprayRecord
+spray_program_chemical = SprayProgramChemical
+chemical = Chemical
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

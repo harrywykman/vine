@@ -1,0 +1,48 @@
+<div metal:use-macro="load: ../shared/_layout.pt">
+    <div metal:fill-slot="content" tal:omit-tag="True">
+        <section class="section">
+            <div class="container">
+                <h1 class="title">Add Spray Program</h1>
+
+                <form method="post" action="/spray_program">
+                    <div class="field">
+                        <label class="label">Name</label>
+                        <div class="control">
+                            <input class="input" type="text" name="name" placeholder="e.g. Summer Fungicide Program"
+                                required>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label class="label">Water Spray Rate per Hectare (L)</label>
+                        <div class="control">
+                            <input class="input" type="number" step="0.01" name="water_spray_rate_per_hectare"
+                                placeholder="e.g. 100.00" required>
+                        </div>
+                    </div>
+
+                    <h3 class="title is-5">Chemicals</h3>
+                    <div id="chemical-list">
+                        <!-- Dynamic rows will appear here -->
+                    </div>
+
+                    <div class="field">
+                        <button class="button is-link is-small" type="button" hx-get="/spray_program/chemical_row"
+                            hx-target="#chemical-list" hx-swap="beforeend">
+                            + Add Chemical
+                        </button>
+                    </div>
+
+                    <div class="field is-grouped">
+                        <div class="control">
+                            <button type="submit" class="button is-primary">Create</button>
+                        </div>
+                        <div class="control">
+                            <a href="/spray_programs" class="button is-light">Cancel</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </div>
+</div>

@@ -1,0 +1,35 @@
+<div metal:use-macro="load: ../shared/_layout.pt">
+    <div metal:fill-slot="content" tal:omit-tag="True">
+        <div class="section content">
+            <div class="container spray_program-list">
+                <div class="spray_program-list container">
+                    <h2 class="title">Spray Program</h2>
+
+                    <table class="table is-striped is-hoverable is-fullwidth">
+                        <thead>
+                            <th>Name</th>
+                            <th>Water Spray Rate / ha</th>
+                        </thead>
+                        <tbody>
+                            <tr tal:repeat="sp spray_programs">
+                                <th class="name"><a href="/spray_program/${sp.id}">${sp.name}</a></th>
+                                <td class="rate">${sp.water_spray_rate_per_hectare} L</td>
+                                <td>
+                                    <a href="/spray_program/${sp.id}" class="button is-primary is-outlined">Edit</a>
+                                    <form method="post" action="/chemicals/${ sp.id }/delete" class="inline"
+                                        onsubmit="return confirm('Delete?');">
+                                        <button class="button is-danger is-outlined" type="submit">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div metal:fill-slot="additional-css" tal:omit-tag="True">
+        <!-- additional css from the page -->
+    </div>
+</div>

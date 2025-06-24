@@ -8,7 +8,10 @@ from sqladmin import Admin
 from sqlmodel import SQLModel
 
 from data.admin import (
+    ChemicalAdmin,
     ManagementUnitAdmin,
+    SprayProgramAdmin,
+    SprayRecordAdmin,
     StatusAdmin,
     UserAdmin,
     VarietyAdmin,
@@ -16,7 +19,7 @@ from data.admin import (
     WineColourAdmin,
 )
 from database import engine
-from routers import account, vineyards
+from routers import account, chemicals, spray_programs, vineyards
 
 # Initialise Fast API app
 app = FastAPI()
@@ -34,7 +37,8 @@ fastapi_chameleon.global_init(template_folder, auto_reload=dev_mode)
 # routers
 
 app.include_router(vineyards.router)
-
+app.include_router(chemicals.router)
+app.include_router(spray_programs.router)
 app.include_router(account.router)
 
 # create db
@@ -50,3 +54,6 @@ admin.add_view(ManagementUnitAdmin)
 admin.add_view(VarietyAdmin)
 admin.add_view(WineColourAdmin)
 admin.add_view(StatusAdmin)
+admin.add_view(SprayProgramAdmin)
+admin.add_view(SprayRecordAdmin)
+admin.add_view(ChemicalAdmin)

@@ -11,7 +11,7 @@
                             <h2 class="title">Management Units</h2>
                             <table>
                                 <thead>
-                                    <th>Management Unit</th>
+                                    <th>Name</th>
                                     <th>Variety</th>
                                     <th>Area (ha) </th>
                                     <th>Row Width (m)</th>
@@ -20,7 +20,7 @@
                                     <th>Vine Spacing (m)</th>
                                 </thead>
                                 <tbody>
-                                    <tr tal:repeat="mu management_units">
+                                    <tr tal:repeat="mu management_units" id="management_unit_row_${mu.id}">
                                         <th class="name"><a href="#">${mu.name}</a></th>
                                         <td>${mu.variety.name}</td>
                                         <td>${mu.area} ha</td>
@@ -28,6 +28,13 @@
                                         <td>${mu.rows_total}</td>
                                         <td>${mu.rows_start_number} - ${mu.rows_end_number}</td>
                                         <td>${mu.vine_spacing}</td>
+                                        <td tal:condition="is_logged_in">
+                                            <button class="button is-info is-small"
+                                                hx-get="/management_unit/${mu.id}/edit"
+                                                hx-target="#management_unit_row_${mu.id}" hx-swap="outerHTML">
+                                                Edit
+                                            </button>
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>
