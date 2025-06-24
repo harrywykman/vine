@@ -18,16 +18,16 @@ class VineyardAdmin(ModelView, model=Vineyard):
 
 
 class VarietyAdmin(ModelView, model=Variety):
-    column_list = [Variety.id, Variety.name]
+    column_list = [Variety.id, Variety.name]  # type: ignore
 
 
 class WineColourAdmin(ModelView, model=WineColour):
-    column_list = [WineColour.id, WineColour.name]
+    column_list = [WineColour.id, WineColour.name]  # type: ignore
 
 
 class ManagementUnitAdmin(ModelView, model=ManagementUnit):
-    column_list = [ManagementUnit.id, ManagementUnit.name]
+    column_list = [ManagementUnit.id, ManagementUnit.name]  # type: ignore
 
 
 class StatusAdmin(ModelView, model=Status):
-    column_list = [Status.id, Status.status]
+    column_list = [Status.id, Status.status]  # type: ignore

@@ -5,7 +5,7 @@ from sqlmodel import Field, SQLModel
 
 
 class User(SQLModel, table=True):
-    __tablename__ = "users"
+    __tablename__ = "users"  # type: ignore
 
     id: int = Field(default=None, primary_key=True)
     name: str = Field(default=None)
@@ -17,3 +17,4 @@ class User(SQLModel, table=True):
     last_login: datetime.datetime = Field(
         sa_column=sa.Column(sa.DateTime, default=datetime.datetime.now, index=True)
     )
+    # TODO: Update last_login on login
