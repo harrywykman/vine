@@ -9,7 +9,7 @@ from starlette import status
 from data.vineyard import SprayProgram, SprayProgramChemical
 
 
-def eagerly_get_all_spray_programs(session: Session):
+def eagerly_get_all_spray_programs(session: Session) -> list[SprayProgram]:
     statement = select(SprayProgram).options(
         selectinload(SprayProgram.spray_program_chemicals).selectinload(
             SprayProgramChemical.chemical
@@ -20,6 +20,24 @@ def eagerly_get_all_spray_programs(session: Session):
     if not spray_programs:
         raise HTTPException(status_code=404, detail="No Spray Programs Found")
     return spray_programs
+
+
+def eagerly_get_spray_program_by_id(id: int, session: Session) -> SprayProgram:
+    statement = (
+        select(SprayProgram)
+        .where(SprayProgram.id == id)
+        .options(
+            selectinload(SprayProgram.spray_program_chemicals).selectinload(
+                SprayProgramChemical.chemical
+            )
+        )
+    )
+
+    spray_program = session.exec(statement).first()
+    if not spray_program:
+        raise HTTPException(status_code=404, detail="Spray Program not found")
+
+    return spray_program
 
 
 def create_spray_program(
@@ -57,7 +75,7 @@ def create_spray_program(
 
 
 def delete_spray_program(session: Session, id: int):
-    spray_program = session.query(SprayProgram).get(id)
+    spray_program = session.exec(SprayProgram).get(id)
 
     if not spray_program:
         raise HTTPException(

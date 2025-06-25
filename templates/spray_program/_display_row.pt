@@ -1,0 +1,35 @@
+<tr id="spray_program_row_${sp.id}">
+    <td>
+        <strong><a href=" /spray_program/${sp.id}">${sp.name}</a></strong>
+    </td>
+    <td>${sp.water_spray_rate_per_hectare} L</td>
+
+    <td>
+        <table class="table is-narrow is-fullwidth is-bordered is-striped">
+            <thead>
+                <tr>
+                    <th>Chemical</th>
+                    <th class="has-text-right">Mix Rate (per 100L)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr tal:repeat="spc sp.spray_program_chemicals">
+                    <td>${spc.chemical.name}</td>
+                    <td class="has-text-right">${spc.mix_rate_per_100L}</td>
+                </tr>
+            </tbody>
+        </table>
+    </td>
+
+    <td class="buttons">
+        <a href="/spray_program/${sp.id}" class="button is-small is-primary is-light">Edit</a>
+        <button class="button is-info is-small" hx-get="/spray_program/${sp.id}/edit"
+            hx-target="#spray_program_row_${sp.id}" hx-swap="outerHTML">
+            Edit
+        </button>
+        <form method="post" action="/spray_program/${ sp.id }/delete" class="is-inline-block"
+            onsubmit="return confirm('Delete Spray Program ${sp.name}?');">
+            <button class="button is-small is-danger is-light" type="submit">Delete</button>
+        </form>
+    </td>
+</tr>

@@ -1,0 +1,63 @@
+<tr id="spray_program_row_${sp.id}">
+    <td colspan="4">
+        <form method="post" action="/spray_program/${sp.id}/edit" hx-post="/spray_program/${sp.id}/edit"
+            hx-target="#spray_program_row_${sp.id}" hx-swap="outerHTML">
+
+            <div class="columns is-multiline is-vcentered">
+                <div class="column is-3">
+                    <input class="input is-small" type="text" name="name" value="${sp.name}" required>
+                </div>
+
+                <div class="column is-2">
+                    <div class="control has-icons-right">
+                        <input class="input is-small" type="number" name="water_spray_rate_per_hectare" step="0.01"
+                            value="${sp.water_spray_rate_per_hectare}" required>
+                        <span class="icon is-small is-right">L</span>
+                    </div>
+                </div>
+
+                <div class="column is-5">
+                    <table class="table is-narrow is-fullwidth is-bordered is-striped">
+                        <thead>
+                            <tr>
+                                <th>Chemical</th>
+                                <th class="has-text-right">Mix Rate (per 100L)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr tal:repeat="spc sp.spray_program_chemicals">
+                                <td>
+                                    <div class="select is-small is-fullwidth">
+                                        <select name="chemical_ids">
+                                            <option value="">Select</option>
+                                            <option tal:repeat="chem chemicals"
+                                                tal:attributes="value chem.id; selected chem.id == spc.chemical.id">
+                                                ${chem.name}
+                                            </option>
+                                        </select>
+                                    </div>
+                                </td>
+                                <td>
+                                    <input class="input is-small has-text-right" type="number" step="0.01"
+                                        name="mix_rates" value="${spc.mix_rate_per_100L}" required>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="column is-2">
+                    <div class="buttons">
+                        <button type="submit" class="button is-small is-success is-light">Save</button>
+                        <button type="button" class="button is-small is-warning is-light"
+                            hx-get="/spray_program/${sp.id}/view" hx-target="#spray_program_row_${sp.id}"
+                            hx-swap="outerHTML">
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+    </td>
+</tr>
