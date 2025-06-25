@@ -17,5 +17,16 @@ class ViewModelBase:
 
         self.is_logged_in = self.user_id is not None
 
+    # def to_dict(self) -> dict:
+    #    return self.__dict__
+
     def to_dict(self) -> dict:
-        return self.__dict__
+        return {
+            key: value
+            for key, value in self.__dict__.items()
+            if key
+            not in {
+                "session",
+                "request",
+            }  # exclude non-serializable or recursive fields
+        }

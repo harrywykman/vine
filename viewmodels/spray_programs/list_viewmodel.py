@@ -2,7 +2,7 @@ from sqlmodel import Session
 from starlette.requests import Request
 
 from data.vineyard import SprayProgram
-from services import vineyard_service
+from services import spray_program_service
 from viewmodels.shared.viewmodel import ViewModelBase
 
 
@@ -11,5 +11,5 @@ class ListViewModel(ViewModelBase):
         super().__init__(request, session)
 
         self.spray_programs: list[SprayProgram] = (
-            vineyard_service.eagerly_get_all_spray_programs(session)
+            spray_program_service.eagerly_get_all_spray_programs(session)
         )

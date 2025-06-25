@@ -4,21 +4,42 @@
             <div class="container spray_program-list">
                 <div class="spray_program-list container">
                     <h2 class="title">Spray Program</h2>
-
+                    <a href="/spray_program/new" class="button is-link is-small" type="button">
+                        + Add Spray Program
+                    </a>
                     <table class="table is-striped is-hoverable is-fullwidth">
                         <thead>
-                            <th>Name</th>
-                            <th>Water Spray Rate / ha</th>
+                            <tr>
+                                <th>Name</th>
+                                <th>Water Spray Rate / ha</th>
+                                <th>Chemicals</th>
+                                <th>Actions</th>
+                            </tr>
                         </thead>
                         <tbody>
                             <tr tal:repeat="sp spray_programs">
-                                <th class="name"><a href="/spray_program/${sp.id}">${sp.name}</a></th>
-                                <td class="rate">${sp.water_spray_rate_per_hectare} L</td>
                                 <td>
-                                    <a href="/spray_program/${sp.id}" class="button is-primary is-outlined">Edit</a>
-                                    <form method="post" action="/chemicals/${ sp.id }/delete" class="inline"
-                                        onsubmit="return confirm('Delete?');">
-                                        <button class="button is-danger is-outlined" type="submit">Delete</button>
+                                    <strong><a href="/spray_program/${sp.id}">${sp.name}</a></strong>
+                                </td>
+                                <td>${sp.water_spray_rate_per_hectare} L</td>
+                                <td>
+                                    <div class="content">
+                                        <ul>
+                                            <li tal:repeat="spc sp.spray_program_chemicals">
+                                                <span class="has-text-weight-medium">${spc.chemical.name}</span>
+                                                <span class="is-size-7 has-text-grey">(${spc.mix_rate_per_100L} /
+                                                    100L)</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </td>
+                                <td class="buttons">
+                                    <a href="/spray_program/${sp.id}"
+                                        class="button is-small is-primary is-light">Edit</a>
+                                    <form method="post" action="/spray_program/${ sp.id }/delete"
+                                        class="is-inline-block"
+                                        onsubmit="return confirm('Delete Spray Program ${sp.name}?');">
+                                        <button class="button is-small is-danger is-light" type="submit">Delete</button>
                                     </form>
                                 </td>
                             </tr>

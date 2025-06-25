@@ -43,12 +43,6 @@ async def register(request: Request, session: Session = Depends(get_session)):
 
     account = user_service.create_account(session, vm.name, vm.email, vm.password)
 
-    if not account:
-        print("NO ACCOUNT RETRIEVED FROM CREATE ACCOUNT METHOD")
-
-    print(account.name)
-    print(account.email)
-
     # Login user
     response = fastapi.responses.RedirectResponse(
         url="/account", status_code=status.HTTP_302_FOUND
