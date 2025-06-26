@@ -7,9 +7,9 @@ from sqlalchemy.orm import Session, selectinload
 from sqlmodel import select
 from starlette import status
 
-from data.vineyard import Chemical, SprayProgram, SprayProgramChemical
+from data.vineyard import Chemical, SprayProgram, SprayProgramChemical, Target
 from dependencies import get_session
-from services import spray_program_service
+from services import spray_program_service, spray_record_service, vineyard_service
 from viewmodels.spray_programs.create_viewmodel import CreateViewModel
 from viewmodels.spray_programs.details_viewmodel import DetailsViewModel
 from viewmodels.spray_programs.list_viewmodel import ListViewModel
@@ -35,9 +35,10 @@ def spray_program_index(request: Request, session: Session = Depends(get_session
 def get_chemical_row(session: Session = Depends(get_session)):
     statement = select(Chemical)
     chemicals = session.exec(statement).all()
+    targets = [target.value for target in Target]
     if not chemicals:
         raise HTTPException(status_code=404, detail="No chemicals found")
-    return {"chemicals": chemicals}
+    return {"chemicals": chemicals, "targets": targets}
 
 
 ## GET Editable Spray Program Row
@@ -191,3 +192,27 @@ async def update_spray_program(
     ).first()
 
     return {"sp": updated_sp}
+
+
+@router.post("/spray_programs/{spray_program_id}/add_to_all_units")
+def add_program_to_all_units(
+    spray_program_id: int, session: Session = Depends(get_session)
+):
+    spray_program = spray_program_service.eagerly_get_spray_program_by_id(
+        spray_program_id, session
+    )
+
+    if not spray_program:
+        raise HTTPException(status_code=404, detail="SprayProgram not found")
+
+    all_management_units = vineyard_service.get_all_management_units(session)
+
+    for mu in all_management_units:
+        spray_record = spray_record_service.create_or_update_spray_record(
+            session, mu.id, spray_program_id
+        )
+        session.add(spray_record)
+
+    session.commit()
+
+    return {"message": f"Program {spray_program.name} added to all management units."}

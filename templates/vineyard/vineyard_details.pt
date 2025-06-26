@@ -40,6 +40,54 @@
                             </table>
                         </container>
                     </section>
+                    <section class="content">
+                        <container class="spray_record_list">
+                            <h2 class="title">Spray Records</h2>
+                            <table class="table is-striped is-hoverable is-fullwidth">
+                                <thead>
+                                    <tr>
+                                        <th>Management Unit</th>
+                                        <th>Spray Program</th>
+                                        <!-- <th>Operator</th> -->
+                                        <!-- <th>Date</th> -->
+                                        <th>Program Details</th>
+                                        <th>Complete</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr tal:repeat="mu management_units">
+                                    <tr tal:repeat="sr mu.spray_records">
+                                        <td>${mu.name} &mdash; ${mu.variety.name}</td>
+                                        <td>${sr.spray_program.name}</td>
+                                        <!-- <td>${sr.operator}</td> -->
+                                        <!-- <td>${sr.date_created.strftime('%Y-%m-%d')}</td> -->
+                                        <td>
+                                            <table class="table is-narrow is-fullwidth is-bordered is-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Chemical</th>
+                                                        <th class="has-text-right">Mix Rate (per 100L)</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr tal:repeat="spc sr.spray_program.spray_program_chemicals">
+                                                        <td>${spc.chemical.name}</td>
+                                                        <td class="has-text-right">${spc.mix_rate_per_100L}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <span class="tag is-small" tal:condition="sr.complete">✅ Complete</span>
+                                            <span class="tag is-small is-warning" tal:condition="not sr.complete">⏳
+                                                Incomplete</span>
+                                        </td>
+                                    </tr>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </container>
+                    </section>
                 </div>
             </div>
         </div>

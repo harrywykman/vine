@@ -13,13 +13,13 @@
                         </thead>
                         <tbody>
                             <tr tal:repeat="v vineyards">
-                                <th class="name"><a href="/vineyard/${v.id}">${v.name}</a></th>
+                                <th class="name"><a href="/vineyards/${v.id}">${v.name}</a></th>
                                 <td class="address">${v.address}</td>
                                 <td>
-                                    <a href="/vineyards/${v.id}" class="button is-primary is-outlined">Edit</a>
+                                    <a href="/vineyards/${v.id}" class="button is-info is-small">Edit</a>
                                     <form method="post" action="/vineyards/${ v.id }/delete" class="inline"
                                         onsubmit="return confirm('Delete?');">
-                                        <button class="button is-danger is-outlined" type="submit">Delete</button>
+                                        <button class="button is-small is-danger is-light" type="submit">Delete</button>
                                     </form>
                                 </td>
                             </tr>

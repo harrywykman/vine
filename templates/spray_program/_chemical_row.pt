@@ -15,6 +15,17 @@
         <input class="input" type="number" step="0.01" name="mix_rates" placeholder="Mix rate / 100L" required>
     </div>
 
+    <!-- Target select -->
+    <div class="control">
+        <div class="select">
+            <select name="targets">
+                <option value="">Target</option>
+                <option tal:repeat="t targets" tal:attributes="value t" tal:content="t">Target</option>
+            </select>
+        </div>
+    </div>
+
+
     <div class="control">
         <button hx-get="/empty" hx-target="closest .field" hx-swap="outerHTML" type="button"
             class="button is-danger is-light">

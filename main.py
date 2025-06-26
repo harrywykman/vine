@@ -9,6 +9,8 @@ from sqlmodel import SQLModel
 
 from data.admin import (
     ChemicalAdmin,
+    ChemicalGroupAdmin,
+    GrowthStageAdmin,
     ManagementUnitAdmin,
     SprayProgramAdmin,
     SprayRecordAdmin,
@@ -57,3 +59,5 @@ admin.add_view(StatusAdmin)
 admin.add_view(SprayProgramAdmin)
 admin.add_view(SprayRecordAdmin)
 admin.add_view(ChemicalAdmin)
+admin.add_view(GrowthStageAdmin)
+admin.add_view(ChemicalGroupAdmin)

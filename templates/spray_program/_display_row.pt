@@ -22,7 +22,6 @@
     </td>
 
     <td class="buttons">
-        <a href="/spray_program/${sp.id}" class="button is-small is-primary is-light">Edit</a>
         <button class="button is-info is-small" hx-get="/spray_program/${sp.id}/edit"
             hx-target="#spray_program_row_${sp.id}" hx-swap="outerHTML">
             Edit

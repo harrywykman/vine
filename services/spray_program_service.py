@@ -10,10 +10,14 @@ from data.vineyard import SprayProgram, SprayProgramChemical
 
 
 def eagerly_get_all_spray_programs(session: Session) -> list[SprayProgram]:
-    statement = select(SprayProgram).options(
-        selectinload(SprayProgram.spray_program_chemicals).selectinload(
-            SprayProgramChemical.chemical
+    statement = (
+        select(SprayProgram)
+        .options(
+            selectinload(SprayProgram.spray_program_chemicals).selectinload(
+                SprayProgramChemical.chemical
+            )
         )
+        .order_by(SprayProgram.name)
     )
 
     spray_programs = session.exec(statement)
@@ -75,7 +79,9 @@ def create_spray_program(
 
 
 def delete_spray_program(session: Session, id: int):
-    spray_program = session.exec(SprayProgram).get(id)
+    spray_program = eagerly_get_spray_program_by_id(id, session)
+
+    print(spray_program)
 
     if not spray_program:
         raise HTTPException(

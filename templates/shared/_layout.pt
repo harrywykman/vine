@@ -35,6 +35,9 @@
     <div id="navbarBasicExample" class="navbar-menu">
       <div class="navbar-start">
         <a href="/" class="navbar-item"> Home </a>
+        <a href="/vineyards" class="navbar-item"> Vineyards </a>
+        <a href="/spray_programs" class="navbar-item"> Spray Programs </a>
+
 
         <div class="navbar-item has-dropdown is-hoverable">
           <a class="navbar-link"> More </a>

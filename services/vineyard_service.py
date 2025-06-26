@@ -1,4 +1,4 @@
-from fastapi import HTTPException
+from fastapi import HTTPException, status
 from sqlalchemy import func
 from sqlalchemy.orm import selectinload
 from sqlmodel import Session, select
@@ -6,8 +6,6 @@ from sqlmodel import Session, select
 from data.vineyard import (
     Chemical,
     ManagementUnit,
-    SprayProgram,
-    SprayProgramChemical,
     Variety,
     Vineyard,
 )
@@ -49,6 +47,17 @@ def eagerly_get_vineyard_managment_units_by_id(session: Session, id: int):
     return management_units
 
 
+def get_all_management_units(session: Session):
+    query = select(ManagementUnit).order_by(ManagementUnit.name)
+
+    management_units = session.exec(query)
+    if not management_units:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="No management units found"
+        )
+    return management_units
+
+
 def eagerly_get_management_unit_by_id(session: Session, id: int):
     management_unit = session.exec(
         select(ManagementUnit)
@@ -77,16 +86,3 @@ def all_varieties(session: Session):
 
     varieties = session.exec(query)
     return varieties
-
-
-def eagerly_get_all_spray_programs(session: Session):
-    statement = select(SprayProgram).options(
-        selectinload(SprayProgram.spray_program_chemicals).selectinload(
-            SprayProgramChemical.chemical
-        )
-    )
-
-    spray_programs = session.exec(statement)
-    if not spray_programs:
-        raise HTTPException(status_code=404, detail="No Spray Programs Found")
-    return spray_programs
