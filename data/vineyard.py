@@ -96,7 +96,11 @@ class GrowthStage(SQLModel, table=True):
         description="Indicates whether the stage is a major phenological phase",
     )
 
+    spray_programs: List["SprayProgram"] = Relationship(back_populates="growth_stage")
 
+
+# TODO Should be Spray, where Spray Program is a Set of Sprays for a Year
+# ---- need to drop database and reimport dummy data to change
 class SprayProgram(SQLModel, table=True):
     __tablename__ = "spray_programs"
 
@@ -105,9 +109,16 @@ class SprayProgram(SQLModel, table=True):
     water_spray_rate_per_hectare: Decimal = Field(
         default=0, max_digits=5, decimal_places=2, nullable=False
     )
+    concentration_factor: Decimal = Field(
+        default=0, max_digits=3, decimal_places=2, nullable=False
+    )
     date_created: datetime.datetime = Field(
         sa_column=sa.Column(sa.DateTime, default=datetime.datetime.now, index=True)
     )
+
+    growth_stage_id: int | None = Field(foreign_key="growth_stages.id")
+
+    growth_stage: GrowthStage = Relationship(back_populates="spray_programs")
 
     spray_program_chemicals: List["SprayProgramChemical"] = Relationship(
         back_populates="spray_program", cascade_delete=True
