@@ -9,6 +9,7 @@ from data.vineyard import (
     GrowthStage,
     ManagementUnit,
     SprayProgram,
+    SprayProgramChemical,
     SprayRecord,
     Status,
     Variety,
@@ -211,4 +212,31 @@ class ChemicalGroupAdmin(ModelView, model=ChemicalGroup):
         "chemicals": {
             "fields": [Chemical.name],
         }
+    }
+
+
+class SprayProgramChemicalAdmin(ModelView, model=SprayProgramChemical):
+    column_list = [
+        SprayProgramChemical.id,
+        SprayProgramChemical.spray_program_id,
+        SprayProgramChemical.chemical_id,
+        SprayProgramChemical.concentration_factor,
+        SprayProgramChemical.target,
+    ]
+    column_searchable_list = []
+    column_filters = [
+        SprayProgramChemical.target,
+        SprayProgramChemical.spray_program_id,
+        SprayProgramChemical.chemical_id,
+    ]
+    form_columns = [
+        SprayProgramChemical.spray_program_id,
+        SprayProgramChemical.chemical_id,
+        SprayProgramChemical.concentration_factor,
+        SprayProgramChemical.target,
+    ]
+
+    form_ajax_refs = {
+        "spray_program": {"fields": [SprayProgram.name]},
+        "chemical": {"fields": [Chemical.name]},
     }

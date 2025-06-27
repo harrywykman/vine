@@ -18,6 +18,9 @@ class Vineyard(SQLModel, table=True):
 
     management_units: List["ManagementUnit"] = Relationship(back_populates="vineyard")
 
+    def __str__(self):
+        return f"{self.name}"
+
 
 class Variety(SQLModel, table=True):
     __tablename__ = "varieties"
@@ -29,6 +32,9 @@ class Variety(SQLModel, table=True):
     wine_colour: "WineColour" = Relationship(back_populates="varieties")
     management_units: List["ManagementUnit"] = Relationship(back_populates="variety")
 
+    def __str__(self):
+        return f"{self.name}"
+
 
 class Status(SQLModel, table=True):
     __tablename__ = "states"
@@ -37,6 +43,9 @@ class Status(SQLModel, table=True):
     status: str = Field(default="Active")
 
     management_units: List["ManagementUnit"] = Relationship(back_populates="status")
+
+    def __str__(self):
+        return f"{self.status}"
 
 
 class ManagementUnit(SQLModel, table=True):
@@ -65,6 +74,9 @@ class ManagementUnit(SQLModel, table=True):
     vineyard: Vineyard | None = Relationship(back_populates="management_units")
     status: Status | None = Relationship(back_populates="management_units")
 
+    def __str__(self):
+        return f"{self.name}"
+
 
 class WineColour(SQLModel, table=True):
     __tablename__ = "wine_colours"
@@ -73,6 +85,15 @@ class WineColour(SQLModel, table=True):
     name: str = Field(index=True, unique=True)  # e.g. "Red", "White"
 
     varieties: List["Variety"] = Relationship(back_populates="wine_colour")
+
+    def __str__(self):
+        return f"{self.name}"
+
+    def is_red(self):
+        return self.name == "Red"
+
+    def is_white(self):
+        return self.name == "White"
 
 
 ###### SPRAY RELATED MODELS ########
@@ -98,6 +119,9 @@ class GrowthStage(SQLModel, table=True):
 
     spray_programs: List["SprayProgram"] = Relationship(back_populates="growth_stage")
 
+    def __str__(self):
+        return f"{self.el_number} - {self.description}"
+
 
 # TODO Should be Spray, where Spray Program is a Set of Sprays for a Year
 # ---- need to drop database and reimport dummy data to change
@@ -109,9 +133,7 @@ class SprayProgram(SQLModel, table=True):
     water_spray_rate_per_hectare: Decimal = Field(
         default=0, max_digits=5, decimal_places=2, nullable=False
     )
-    concentration_factor: Decimal = Field(
-        default=0, max_digits=3, decimal_places=2, nullable=False
-    )
+
     date_created: datetime.datetime = Field(
         sa_column=sa.Column(sa.DateTime, default=datetime.datetime.now, index=True)
     )
@@ -126,6 +148,9 @@ class SprayProgram(SQLModel, table=True):
     spray_records: List["SprayRecord"] = Relationship(
         back_populates="spray_program", cascade_delete=True
     )
+
+    def __str__(self):
+        return f"{self.name}"
 
 
 class SprayRecord(SQLModel, table=True):
@@ -167,13 +192,19 @@ class SprayProgramChemical(SQLModel, table=True):
         foreign_key="spray_programs.id", nullable=False, ondelete="CASCADE"
     )
     chemical_id: int = Field(foreign_key="chemicals.id", nullable=False)
-    mix_rate_per_100L: Decimal = Field(
-        default=0, max_digits=5, decimal_places=2, nullable=False
+    concentration_factor: Decimal = Field(
+        default=1.00, max_digits=3, decimal_places=2, nullable=False
     )
     target: Optional[Target] = Field(default=None, sa_column=sa.Column(sa.Enum(Target)))
 
     spray_program: SprayProgram = Relationship(back_populates="spray_program_chemicals")
     chemical: "Chemical" = Relationship(back_populates="spray_program_chemicals")
+
+    def __str__(self):
+        return f"Targeting {self.target.value} with concentration factor: {self.concentration_factor}"
+
+    def calculated_mix_rate_per_100L(self):
+        return str(int(self.chemical.rate_per_100l * self.concentration_factor))
 
 
 class ChemicalGroupLink(SQLModel, table=True):
@@ -227,7 +258,7 @@ class ChemicalGroup(SQLModel, table=True):
 
 
 class MixRateUnit(str, enum.Enum):
-    MILLILITRES = "ml"
+    MILLILITRES = "mL"
     GRAMS = "g"
 
 
@@ -250,3 +281,6 @@ class Chemical(SQLModel, table=True):
     spray_program_chemicals: List["SprayProgramChemical"] = Relationship(
         back_populates="chemical"
     )
+
+    def __str__(self):
+        return f"{self.name}"

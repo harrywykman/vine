@@ -3,6 +3,7 @@ from decimal import Decimal
 from sqlmodel import Session
 from starlette.requests import Request
 
+from data.vineyard import Chemical
 from viewmodels.shared.viewmodel import ViewModelBase
 
 
@@ -14,20 +15,22 @@ class CreateViewModel(ViewModelBase):
         self.name: str = None
         self.water_spray_rate_per_hectare: Decimal = None
         self.chemicals: list[Chemical] = []
-        self.chemicals_mix_rates = []
+        self.growth_stage_id: int = None
+        self.chemical_ids: list = []
+        self.targets: list = []
 
     async def load(self):
         form = await self.request.form()
         self.name = form.get("name")
         self.water_spray_rate_per_hectare = form.get("water_spray_rate_per_hectare")
-        self.chemicals: list[Chemical] = []
+        self.growth_stage_id = form.get("growth_stage_id")
 
         self.chemical_ids = form.getlist("chemical_ids")
-        self.mix_rates = form.getlist("mix_rates")
-        self.chemicals_mix_rates = zip(self.chemical_ids, self.mix_rates)
+        self.targets = form.getlist("targets")
+        self.chemicals_targets = zip(self.chemical_ids, self.targets)
 
         print("################## ZIP ################")
-        print(self.chemicals_mix_rates)
+        print(self.chemicals_targets)
         print("################## ZIP ################")
 
         print("################## FORM ################")
@@ -38,6 +41,6 @@ class CreateViewModel(ViewModelBase):
             self.error = "A program name is required."
         elif not self.water_spray_rate_per_hectare:
             self.error = "A spray rate is required"
-        elif len(self.chemical_ids) != len(self.mix_rates):
-            self.error = "Mismatch between chemicals and rates."
+        elif len(self.chemical_ids) != len(self.targets):
+            self.error = "Mismatch between chemicals and targets."
         # TODO check whether program with that name already in DB

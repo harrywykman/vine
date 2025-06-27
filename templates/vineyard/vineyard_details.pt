@@ -1,104 +1,138 @@
 <div metal:use-macro="load: ../shared/_layout.pt">
     <div metal:fill-slot="content" tal:omit-tag="True">
         <div class="section content">
-            <div class="container vineyard">
-                <div class="vineyard container">
-                    <h1 class="title">${vineyard.name}</h1>
+            <div class="vineyard container">
+                <h1 class="title">${vineyard.name}</h1>
 
 
-                    <section class="content">
-                        <container class="managements_unit_list">
-                            <h2 class="title">Management Units</h2>
-                            <table>
-                                <thead>
-                                    <th>Name</th>
-                                    <th>Variety</th>
-                                    <th>Area (ha) </th>
-                                    <th>Row Width (m)</th>
-                                    <th># Rows</th>
-                                    <th>Row Numbering</th>
-                                    <th>Vine Spacing (m)</th>
-                                </thead>
-                                <tbody>
-                                    <tr tal:repeat="mu management_units" id="management_unit_row_${mu.id}">
-                                        <th class="name"><a href="#">${mu.name}</a></th>
-                                        <td>${mu.variety.name}</td>
-                                        <td>${mu.area} ha</td>
-                                        <td>${mu.row_width} m</td>
-                                        <td>${mu.rows_total}</td>
-                                        <td>${mu.rows_start_number} - ${mu.rows_end_number}</td>
-                                        <td>${mu.vine_spacing}</td>
-                                        <td tal:condition="is_logged_in">
-                                            <button class="button is-info is-small"
-                                                hx-get="/management_unit/${mu.id}/edit"
-                                                hx-target="#management_unit_row_${mu.id}" hx-swap="outerHTML">
-                                                Edit
-                                            </button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </container>
-                    </section>
-                    <section class="content">
-                        <container class="spray_record_list">
-                            <h2 class="title">Spray Records</h2>
-                            <table class="table is-striped is-hoverable is-fullwidth">
+                <div class="section content">
+                    <div class="container managements_unit_list">
+                        <h2 class="title">Management Units</h2>
+                        <table>
+                            <thead>
+                                <th>Name</th>
+                                <th>Variety</th>
+                                <th>Area</th>
+                                <th>Row Width</th>
+                                <th># Rows</th>
+                                <th>Row Numbering</th>
+                                <th>Vine Spacing</th>
+                            </thead>
+                            <tbody>
+                                <tr tal:repeat="mu management_units" id="management_unit_row_${mu.id}">
+                                    <th class="name"><a href="#">${mu.name}</a></th>
+                                    <td>${mu.variety.name}</td>
+                                    <td>${mu.area} ha</td>
+                                    <td>${mu.row_width} m</td>
+                                    <td>${mu.rows_total}</td>
+                                    <td>${mu.rows_start_number} - ${mu.rows_end_number}</td>
+                                    <td>${mu.vine_spacing} m</td>
+                                    <td tal:condition="is_logged_in">
+                                        <button class="button is-info is-small" hx-get="/management_unit/${mu.id}/edit"
+                                            hx-target="#management_unit_row_${mu.id}" hx-swap="outerHTML">
+                                            Edit
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="section content">
+                    <div class="container vineyard">
+                        <div class="content">
+                            <div class="${vineyard.name}-map">
+                                <h2 class="title">${vineyard.name} Map</h2>
+                                <div id="map"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section content">
+                    <div class="container spray_record_list">
+                        <h2 class="title">Spray Records</h2>
+                        <div class="section" tal:repeat="sp spray_programs" id="spray_program_container_${sp.id}">
+                            <table class="table is-fullwidth">
                                 <thead>
                                     <tr>
-                                        <th>Management Unit</th>
                                         <th>Spray Program</th>
-                                        <!-- <th>Operator</th> -->
-                                        <!-- <th>Date</th> -->
+                                        <th>Water Spray Rate / ha</th>
                                         <th>Program Details</th>
-                                        <th>Complete</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr tal:repeat="mu management_units">
-                                    <tr tal:repeat="sr mu.spray_records">
-                                        <td>${mu.name} &mdash; ${mu.variety.name}</td>
-                                        <td>${sr.spray_program.name}</td>
-                                        <!-- <td>${sr.operator}</td> -->
-                                        <!-- <td>${sr.date_created.strftime('%Y-%m-%d')}</td> -->
+                                    <tr>
+                                        <td>
+                                            <strong><a href=" /spray_programs">${sp.name}</a></strong>
+                                        </td>
+                                        <td>${sp.water_spray_rate_per_hectare} L</td>
                                         <td>
                                             <table class="table is-narrow is-fullwidth is-bordered is-striped">
                                                 <thead>
                                                     <tr>
                                                         <th>Chemical</th>
-                                                        <th class="has-text-right">Mix Rate (per 100L)</th>
+                                                        <th>Mix Rate / 100L</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <tr tal:repeat="spc sr.spray_program.spray_program_chemicals">
+                                                    <tr tal:repeat="spc sp.spray_program_chemicals">
                                                         <td>${spc.chemical.name}</td>
-                                                        <td class="has-text-right">${spc.mix_rate_per_100L}</td>
+                                                        <td>${spc.calculated_mix_rate_per_100L()}
+                                                            ${spc.chemical.rate_unit.value}
+                                                        </td>
                                                     </tr>
                                                 </tbody>
                                             </table>
                                         </td>
-                                        <td>
-                                            <span class="tag is-small" tal:condition="sr.complete">✅ Complete</span>
-                                            <span class="tag is-small is-warning" tal:condition="not sr.complete">⏳
-                                                Incomplete</span>
-                                        </td>
+
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <table class="table is-fullwidth">
+                                <thead>
+                                    <tr>
+                                        <th>Mangement Unit</th>
+                                        <th>Completed</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr tal:repeat="mu management_units">
+                                    <tr tal:repeat="sr mu.spray_records">
+                                        <div tal:condition="sr.spray_program.id == sp.id">
+                                            <td>
+                                                <i class="fas fa-wine-bottle"
+                                                    tal:attributes="class python:'fas fa-wine-bottle has-text-danger' if mu.variety.wine_colour.name == 'Red' else 'fas fa-wine-bottle has-text-grey'">
+                                                </i>&nbsp;
+                                                ${mu.name} &mdash; ${mu.variety.name}
+                                            </td>
+                                            <!-- <td>${sr.operator}</td> -->
+                                            <!-- <td>${sr.date_created.strftime('%Y-%m-%d')}</td> -->
+                                            <td>
+                                                <span class="tag is-small" tal:condition="sr.complete">✅
+                                                    Complete</span>
+                                                <span class="tag is-small is-warning" tal:condition="not sr.complete">⏳
+                                                    Incomplete</span>
+                                            </td>
+                                        </div>
                                     </tr>
                                     </tr>
                                 </tbody>
                             </table>
-                        </container>
-                    </section>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
         <div class="section content">
             <div class="container vineyard">
-                <section class="content">
-                    <container class="${vineyard.name}-map">
+                <div class="content">
+                    <div class="${vineyard.name}-map">
                         <h2 class="title">${vineyard.name} Map</h2>
                         <div id="map"></div>
-                    </container>
-                </section>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

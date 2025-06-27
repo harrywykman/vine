@@ -1,0 +1,38 @@
+<div metal:use-macro="load: ../shared/_layout.pt">
+    <div metal:fill-slot="content">
+        <h2 class="title">Edit Vineyard</h2>
+        <form method="post">
+            <div class="field">
+                <label class="label">Name</label>
+                <div class="control"><input class="input" name="name" value="${vineyard.name|string}" required /></div>
+            </div>
+
+            <div class="field">
+                <label class="label">Address</label>
+                <div class="control"><input class="input" name="address" value="${vineyard.address or ''|string}" />
+                </div>
+            </div>
+
+            <h3 class="subtitle">Management Units</h3>
+            <table class="table is-fullwidth is-striped">
+                <thead>
+                    <th>Name</th>
+                    <th>Variety</th>
+                    <th>Area (ha)</th>
+                </thead>
+                <tbody tal:repeat="u units">
+                    <tr>
+                        <td><input class="input" name="unit_name_${u.id}" value="${u.name|string}" /></td>
+                        <td><input class="input" name="unit_area_${u.id}" value="${u.area or ''|string}" /></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="field">
+                <div class="control">
+                    <button type="submit" class="button is-primary">Save</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

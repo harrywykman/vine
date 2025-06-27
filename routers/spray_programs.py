@@ -11,7 +11,7 @@ from data.vineyard import Chemical, SprayProgram, SprayProgramChemical, Target
 from dependencies import get_session
 from services import spray_program_service, spray_record_service, vineyard_service
 from viewmodels.spray_programs.create_viewmodel import CreateViewModel
-from viewmodels.spray_programs.details_viewmodel import DetailsViewModel
+from viewmodels.spray_programs.form_viewmodel import FormViewModel
 from viewmodels.spray_programs.list_viewmodel import ListViewModel
 
 router = APIRouter()
@@ -78,8 +78,8 @@ def spray_program_view_inline(
 ## GET Spray Program Form
 @router.get("/spray_program/new", response_class=HTMLResponse)
 @fastapi_chameleon.template("spray_program/spray_program_form.pt")
-def spray_program_index(request: Request, session: Session = Depends(get_session)):
-    vm = DetailsViewModel(None, request, session)
+def spray_program_form(request: Request, session: Session = Depends(get_session)):
+    vm = FormViewModel(request, session)
     if not vm:
         raise HTTPException(status_code=404, detail="No view model.")
     return vm.to_dict()
@@ -103,7 +103,11 @@ async def create_spray_program(
     # Create the spray_program
 
     spray_program = spray_program_service.create_spray_program(
-        session, vm.name, vm.water_spray_rate_per_hectare, vm.chemicals_mix_rates
+        session,
+        vm.name,
+        vm.water_spray_rate_per_hectare,
+        vm.chemicals_targets,
+        vm.growth_stage_id,
     )
 
     if not spray_program:
@@ -216,3 +220,32 @@ def add_program_to_all_units(
     session.commit()
 
     return {"message": f"Program {spray_program.name} added to all management units."}
+
+
+@router.post("/spray_programs/{spray_program_id}/add_to_all_reds")
+def add_program_to_all_red(
+    spray_program_id: int, session: Session = Depends(get_session)
+):
+    spray_program = spray_program_service.eagerly_get_spray_program_by_id(
+        spray_program_id, session
+    )
+
+    if not spray_program:
+        raise HTTPException(status_code=404, detail="SprayProgram not found")
+
+    red_management_units = vineyard_service.get_red_management_units(session)
+
+    for mu in red_management_units:
+        spray_record = spray_record_service.create_or_update_spray_record(
+            session, mu.id, spray_program_id
+        )
+        session.add(spray_record)
+
+    session.commit()
+
+    return f"""
+        <div class="notification is-success is-light">
+        <button class="delete"></button>
+            ✅ Spray program <strong>{spray_program.name}</strong> applied to all red units.
+        </div>
+    """

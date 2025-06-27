@@ -3,7 +3,7 @@ from typing import Optional
 from sqlmodel import Session
 from starlette.requests import Request
 
-from data.vineyard import ManagementUnit, Vineyard
+from data.vineyard import ManagementUnit, SprayProgram, SprayRecord, Vineyard
 from services import vineyard_service
 from viewmodels.shared.viewmodel import ViewModelBase
 
@@ -23,4 +23,12 @@ class DetailsViewModel(ViewModelBase):
             vineyard_service.eagerly_get_vineyard_managment_units_by_id(
                 self.session, self.id
             )
+        )
+
+        self.spray_programs: list[SprayProgram] = (
+            vineyard_service.eagerly_get_vineyard_spray_programs(self.session, self.id)
+        )
+
+        self.spray_records: list[SprayRecord] = (
+            vineyard_service.eagerly_get_vineyard_spray_records(self.session, self.id)
         )

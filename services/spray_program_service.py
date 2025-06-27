@@ -48,28 +48,32 @@ def create_spray_program(
     session: Session,
     name: Optional[str],
     water_spray_rate_per_hectare: Optional[Decimal],
-    chemicals_mix_rates: list,
+    chemicals_targets: list,
+    growth_stage_id: int,
 ) -> SprayProgram:
     if not name:
-        raise Exception("password is required")
+        raise Exception("name is required")
     if not water_spray_rate_per_hectare:
         raise Exception("spray rate is required")
+    if not growth_stage_id:
+        raise Exception("A growth rate is required")
 
     spray_program = SprayProgram()
     spray_program.name = name
     spray_program.water_spray_rate_per_hectare = water_spray_rate_per_hectare
+    spray_program.growth_stage_id = growth_stage_id  # check if growth stage exists
 
     session.add(spray_program)
     session.flush()  # Get ID before commit
 
     # Add associated chemicals
-    for chem_id, rate in chemicals_mix_rates:
-        if not chem_id or not rate:
+    for chem_id, target in chemicals_targets:
+        if not chem_id or not target:
             continue  # Skip empty rows
         spc = SprayProgramChemical(
             spray_program_id=spray_program.id,
             chemical_id=int(chem_id),
-            mix_rate_per_100L=Decimal(rate),
+            target=str(target),
         )
         session.add(spc)
 

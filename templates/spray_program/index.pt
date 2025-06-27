@@ -7,11 +7,14 @@
                     <a href="/spray_program/new" class="button is-link is-small" type="button">
                         + Add Spray Program
                     </a>
+                    <div id="message-area"></div>
+
                     <table class="table is-striped is-hoverable is-fullwidth">
                         <thead>
                             <tr>
                                 <th>Name</th>
                                 <th>Water Spray Rate / ha</th>
+                                <th>EL</th>
                                 <th>Chemicals</th>
                                 <th>Apply</th>
                                 <th>Actions</th>
@@ -23,27 +26,38 @@
                                     <strong><a href=" /spray_program/${sp.id}">${sp.name}</a></strong>
                                 </td>
                                 <td>${sp.water_spray_rate_per_hectare} L</td>
-
+                                <td>${sp.growth_stage.el_number}</td>
                                 <td>
                                     <table class="table is-narrow is-fullwidth is-bordered is-striped">
                                         <thead>
                                             <tr>
                                                 <th>Chemical</th>
-                                                <th class="has-text-right">Mix Rate (per 100L)</th>
+                                                <th class="has-text-right">Target</th>
+                                                <th class="has-text-right">Concentration Factor</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr tal:repeat="spc sp.spray_program_chemicals">
                                                 <td>${spc.chemical.name}</td>
-                                                <td class="has-text-right">${spc.mix_rate_per_100L}</td>
+                                                <td class="has-text-right">${spc.target.value}</td>
+                                                <td class="has-text-right">${spc.concentration_factor}</td>
                                             </tr>
                                         </tbody>
                                     </table>
                                 </td>
-                                <td><button class="button is-info is-small"
-                                        hx-post="/spray_programs/${sp.id}/add_to_all_units">
+                                <td>
+                                    <button class="button is-danger is-small"
+                                        hx-post="/spray_programs/${sp.id}/add_to_all_reds" hx-target="#message-area"
+                                        hx-swap="none">
+                                        Apply to All Reds
+                                    </button>
+
+                                    <button class="button is-info is-small"
+                                        hx-post="/spray_programs/${sp.id}/add_to_all_units" hx-target="#message-area"
+                                        hx-swap="none">
                                         Apply to All MUs
-                                    </button></td>
+                                    </button>
+                                </td>
                                 <td class="buttons">
                                     <button class="button is-info is-small" hx-get="/spray_program/${sp.id}/edit"
                                         hx-target="#spray_program_row_${sp.id}" hx-swap="outerHTML">

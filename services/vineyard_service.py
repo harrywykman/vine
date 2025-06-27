@@ -1,13 +1,18 @@
 from fastapi import HTTPException, status
-from sqlalchemy import func
+from sqlalchemy import asc, func
 from sqlalchemy.orm import selectinload
 from sqlmodel import Session, select
 
 from data.vineyard import (
     Chemical,
+    GrowthStage,
     ManagementUnit,
+    SprayProgram,
+    SprayProgramChemical,
+    SprayRecord,
     Variety,
     Vineyard,
+    WineColour,
 )
 
 
@@ -58,6 +63,17 @@ def get_all_management_units(session: Session):
     return management_units
 
 
+def get_red_management_units(session: Session):
+    statement = (
+        select(ManagementUnit)
+        .join(ManagementUnit.variety)  # join to Variety
+        .join(Variety.wine_colour)  # join to WineColour
+        .where(WineColour.name == "Red")
+    )
+    results = session.exec(statement).all()
+    return results
+
+
 def eagerly_get_management_unit_by_id(session: Session, id: int):
     management_unit = session.exec(
         select(ManagementUnit)
@@ -86,3 +102,65 @@ def all_varieties(session: Session):
 
     varieties = session.exec(query)
     return varieties
+
+
+def all_growth_stages(session: Session):
+    query = select(GrowthStage).order_by(GrowthStage.el_number)
+
+    varieties = session.exec(query)
+    return varieties
+
+
+def eagerly_get_vineyard_spray_records(
+    session: Session, vineyard_id: int
+) -> list[SprayRecord]:
+    statement = (
+        select(SprayRecord)
+        .join(SprayRecord.management_unit)
+        .join(SprayRecord.spray_program)
+        .join(SprayProgram.growth_stage)  # for ordering
+        .where(ManagementUnit.vineyard_id == vineyard_id)
+        .options(
+            selectinload(SprayRecord.management_unit)
+            .selectinload(ManagementUnit.variety)
+            .selectinload(Variety.wine_colour),
+            selectinload(SprayRecord.spray_program).selectinload(
+                SprayProgram.growth_stage
+            ),
+            selectinload(SprayRecord.spray_program)
+            .selectinload(SprayProgram.spray_program_chemicals)
+            .selectinload(SprayProgramChemical.chemical)
+            .selectinload(Chemical.chemical_groups),
+        )
+        .order_by(asc(GrowthStage.el_number))
+    )
+    return session.exec(statement).all()
+
+
+# If there are 9 management units each with a spray record associated with a single spray program, how many Spray programs should be in the list returned?
+
+
+def eagerly_get_vineyard_spray_programs(
+    session: Session, vineyard_id: int
+) -> list[SprayProgram]:
+    statement = (
+        select(SprayProgram)
+        .distinct(SprayProgram.id)
+        .join(SprayProgram.spray_records)
+        .join(SprayRecord.management_unit)
+        .join(SprayProgram.growth_stage)
+        .where(ManagementUnit.vineyard_id == vineyard_id)
+        .options(
+            selectinload(SprayProgram.growth_stage),
+            selectinload(SprayProgram.spray_program_chemicals)
+            .selectinload(SprayProgramChemical.chemical)
+            .selectinload(Chemical.chemical_groups),
+            selectinload(SprayProgram.spray_records)
+            .selectinload(SprayRecord.management_unit)
+            .selectinload(ManagementUnit.variety)
+            .selectinload(Variety.wine_colour),
+        )
+        .order_by(SprayProgram.id, GrowthStage.el_number)
+    )
+    spray_programs = session.exec(statement).all()
+    return spray_programs
