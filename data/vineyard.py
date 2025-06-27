@@ -56,8 +56,8 @@ class ManagementUnit(SQLModel, table=True):
     variety_name_modifier: Optional[str] = Field(default=None)
 
     area: Decimal = Field(sa_column=sa.Column(sa.Numeric(5, 2)))
-    row_width: Decimal = Field(sa_column=sa.Column(sa.Numeric(3, 2)))
-    vine_spacing: Decimal = Field(sa_column=sa.Column(sa.Numeric(3, 2)))
+    row_width: Decimal = Field(sa_column=sa.Column(sa.Numeric(2, 1)))
+    vine_spacing: Decimal = Field(sa_column=sa.Column(sa.Numeric(2, 1)))
 
     rows_total: Optional[int] = Field(default=None)
     rows_start_number: Optional[int] = Field(default=None)
@@ -130,9 +130,7 @@ class SprayProgram(SQLModel, table=True):
 
     id: Optional[int] = Field(default=None, primary_key=True)
     name: str
-    water_spray_rate_per_hectare: Decimal = Field(
-        default=0, max_digits=5, decimal_places=2, nullable=False
-    )
+    water_spray_rate_per_hectare: int
 
     date_created: datetime.datetime = Field(
         sa_column=sa.Column(sa.DateTime, default=datetime.datetime.now, index=True)

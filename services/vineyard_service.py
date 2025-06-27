@@ -111,6 +111,7 @@ def all_growth_stages(session: Session):
     return varieties
 
 
+# TODO Reduce eagerness!
 def eagerly_get_vineyard_spray_records(
     session: Session, vineyard_id: int
 ) -> list[SprayRecord]:
@@ -134,12 +135,16 @@ def eagerly_get_vineyard_spray_records(
         )
         .order_by(asc(GrowthStage.el_number))
     )
+    spray_records = session.exec(statement).all()
+    spray_records.sort(
+        key=lambda sr: sr.spray_program.growth_stage.el_number
+        if sr.spray_program.growth_stage
+        else 999
+    )
     return session.exec(statement).all()
 
 
-# If there are 9 management units each with a spray record associated with a single spray program, how many Spray programs should be in the list returned?
-
-
+# TODO Reduce eagerness!
 def eagerly_get_vineyard_spray_programs(
     session: Session, vineyard_id: int
 ) -> list[SprayProgram]:
@@ -163,4 +168,8 @@ def eagerly_get_vineyard_spray_programs(
         .order_by(SprayProgram.id, GrowthStage.el_number)
     )
     spray_programs = session.exec(statement).all()
+    # Sort by el_number
+    spray_programs.sort(
+        key=lambda sp: sp.growth_stage.el_number if sp.growth_stage else 999
+    )
     return spray_programs

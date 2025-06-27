@@ -6,18 +6,20 @@ from sqlalchemy.orm import selectinload
 from sqlmodel import Session, select
 from starlette import status
 
-from data.vineyard import SprayProgram, SprayProgramChemical
+from data.vineyard import GrowthStage, SprayProgram, SprayProgramChemical
 
 
 def eagerly_get_all_spray_programs(session: Session) -> list[SprayProgram]:
     statement = (
         select(SprayProgram)
+        .join(SprayProgram.growth_stage)
         .options(
+            selectinload(SprayProgram.growth_stage),
             selectinload(SprayProgram.spray_program_chemicals).selectinload(
                 SprayProgramChemical.chemical
-            )
+            ),
         )
-        .order_by(SprayProgram.name)
+        .order_by(GrowthStage.el_number)
     )
 
     spray_programs = session.exec(statement)

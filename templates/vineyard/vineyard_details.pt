@@ -59,6 +59,7 @@
                                     <tr>
                                         <th>Spray Program</th>
                                         <th>Water Spray Rate / ha</th>
+                                        <th>Ideal EL</th>
                                         <th>Program Details</th>
                                     </tr>
                                 </thead>
@@ -68,6 +69,7 @@
                                             <strong><a href=" /spray_programs">${sp.name}</a></strong>
                                         </td>
                                         <td>${sp.water_spray_rate_per_hectare} L</td>
+                                        <td>${sp.growth_stage.el_number}</td>
                                         <td>
                                             <table class="table is-narrow is-fullwidth is-bordered is-striped">
                                                 <thead>
@@ -110,9 +112,9 @@
                                             <!-- <td>${sr.operator}</td> -->
                                             <!-- <td>${sr.date_created.strftime('%Y-%m-%d')}</td> -->
                                             <td>
-                                                <span class="tag is-small" tal:condition="sr.complete">✅
+                                                <span class="tag is-success" tal:condition="sr.complete">✅
                                                     Complete</span>
-                                                <span class="tag is-small is-warning" tal:condition="not sr.complete">⏳
+                                                <span class="tag is-small is-danger" tal:condition="not sr.complete">⏳
                                                     Incomplete</span>
                                             </td>
                                         </div>
