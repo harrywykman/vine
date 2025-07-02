@@ -11,6 +11,7 @@ from data.vineyard import (
     SprayProgram,
     SprayProgramChemical,
     SprayRecord,
+    SprayRecordChemical,
     Status,
     Variety,
     Vineyard,
@@ -238,5 +239,30 @@ class SprayProgramChemicalAdmin(ModelView, model=SprayProgramChemical):
 
     form_ajax_refs = {
         "spray_program": {"fields": [SprayProgram.name]},
+        "chemical": {"fields": [Chemical.name]},
+    }
+
+
+class SprayRecordChemicalAdmin(ModelView, model=SprayRecordChemical):
+    column_list = [
+        SprayRecordChemical.id,
+        SprayRecordChemical.spray_record_id,
+        SprayRecordChemical.chemical_id,
+        SprayRecordChemical.batch_number,
+    ]
+
+    column_filters = [
+        SprayRecordChemical.spray_record_id,
+        SprayRecordChemical.chemical_id,
+    ]
+
+    form_columns = [
+        SprayRecordChemical.spray_record_id,
+        SprayRecordChemical.chemical_id,
+        SprayRecordChemical.batch_number,
+    ]
+
+    form_ajax_refs = {
+        "spray_record": {"fields": [SprayRecord.operator]},
         "chemical": {"fields": [Chemical.name]},
     }

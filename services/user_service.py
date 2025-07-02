@@ -1,3 +1,4 @@
+import datetime
 from typing import Optional
 
 from passlib.handlers.sha2_crypt import sha512_crypt as crypto
@@ -48,6 +49,11 @@ def login_user(session: Session, email: str, password: str) -> Optional[User]:
             return None
     except ValueError:
         return None
+
+    # TODO update last_login
+    user.last_login = datetime.datetime.now()
+    session.add(user)
+    session.commit()
 
     return user
 

@@ -118,6 +118,7 @@ class GrowthStage(SQLModel, table=True):
     )
 
     spray_programs: List["SprayProgram"] = Relationship(back_populates="growth_stage")
+    spray_records: List["SprayRecord"] = Relationship(back_populates="growth_stage")
 
     def __str__(self):
         return f"{self.el_number} - {self.description}"
@@ -151,6 +152,25 @@ class SprayProgram(SQLModel, table=True):
         return f"{self.name}"
 
 
+class WindDirection(str, enum.Enum):
+    N = "North"
+    NNE = "North-Northeast"
+    NE = "Northeast"
+    ENE = "East-Northeast"
+    E = "East"
+    ESE = "East-Southeast"
+    SE = "Southeast"
+    SSE = "South-Southeast"
+    S = "South"
+    SSW = "South-Southwest"
+    SW = "Southwest"
+    WSW = "West-Southwest"
+    W = "West"
+    WNW = "West-Northwest"
+    NW = "Northwest"
+    NNW = "North-Northwest"
+
+
 class SprayRecord(SQLModel, table=True):
     __tablename__ = "spray_records"
 
@@ -160,7 +180,29 @@ class SprayRecord(SQLModel, table=True):
     date_created: datetime.datetime = Field(
         sa_column=sa.Column(sa.DateTime, default=datetime.datetime.now, index=True)
     )
-    # TODO: Add Growth Stage
+    date_completed: datetime.datetime | None = Field(
+        sa_column=sa.Column(sa.DateTime, default=datetime.datetime.now, index=True)
+    )
+    date_updated: datetime.datetime = Field(
+        sa_column=sa.Column(
+            sa.DateTime,
+            default=datetime.datetime.now,
+            onupdate=datetime.datetime.now,
+            index=True,
+        )
+    )
+    growth_stage_id: int | None = Field(foreign_key="growth_stages.id")
+    growth_stage: GrowthStage = Relationship(back_populates="spray_records")
+    hours_taken: Decimal | None = Field(sa_column=sa.Column(sa.Numeric(2, 1)))
+
+    temperature: int | None
+    relative_humidity: int | None
+
+    wind_speed: int | None
+
+    wind_direction: Optional[WindDirection] = Field(
+        default=None, sa_column=sa.Column(sa.Enum(WindDirection))
+    )
 
     management_unit_id: int = Field(foreign_key="management_units.id", nullable=False)
     spray_program_id: int = Field(
@@ -169,6 +211,30 @@ class SprayRecord(SQLModel, table=True):
 
     management_unit: ManagementUnit = Relationship(back_populates="spray_records")
     spray_program: SprayProgram = Relationship(back_populates="spray_records")
+
+    spray_record_chemicals: List["SprayRecordChemical"] | None = Relationship(
+        back_populates="spray_record", cascade_delete=True
+    )
+
+    def __str__(self):
+        return f"{self.complete}"
+
+
+class SprayRecordChemical(SQLModel, table=True):
+    __tablename__ = "spray_record_chemicals"
+
+    id: Optional[int] = Field(default=None, primary_key=True)
+    spray_record_id: int | None = Field(
+        foreign_key="spray_records.id", nullable=False, ondelete="CASCADE"
+    )
+    chemical_id: int | None = Field(foreign_key="chemicals.id", nullable=False)
+    batch_number: str | None
+
+    spray_record: SprayRecord = Relationship(back_populates="spray_record_chemicals")
+    chemical: "Chemical" = Relationship(back_populates="spray_record_chemicals")
+
+    def __str__(self):
+        return f"{self.chemical.name} - batch - {self.batch_number}"
 
 
 class Target(str, enum.Enum):
@@ -184,6 +250,7 @@ class Target(str, enum.Enum):
 
 class SprayProgramChemical(SQLModel, table=True):
     __tablename__ = "spray_program_chemicals"
+    __table_args__ = {"extend_existing": True}
 
     id: Optional[int] = Field(default=None, primary_key=True)
     spray_program_id: int = Field(
@@ -277,6 +344,10 @@ class Chemical(SQLModel, table=True):
     )
 
     spray_program_chemicals: List["SprayProgramChemical"] = Relationship(
+        back_populates="chemical"
+    )
+
+    spray_record_chemicals: List["SprayRecordChemical"] = Relationship(
         back_populates="chemical"
     )
 

@@ -11,6 +11,7 @@ class ViewModelBase:
         self.request: Request = request
         self.session: Session = session
         self.error: Optional[str] = None
+        self.info: Optional[str] = None
         self.user_id: Optional[int] = cookie_auth.get_user_id_via_auth_cookie(
             self.request
         )

@@ -1,3 +1,5 @@
+import datetime
+
 import fastapi
 from fastapi import Depends
 from fastapi_chameleon import template
@@ -82,6 +84,9 @@ async def login_post(request: Request, session: Session = Depends(get_session)):
         "/account", status_code=status.HTTP_302_FOUND
     )
     cookie_auth.set_auth(resp, user.id)
+
+    # TODO update last_login
+    user.last_login = datetime.datetime.now()
 
     return resp
 

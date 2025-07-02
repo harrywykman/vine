@@ -4,6 +4,7 @@ from sqlmodel import Session
 from starlette.requests import Request
 
 from data.vineyard import Chemical
+from services import vineyard_service
 from viewmodels.shared.viewmodel import ViewModelBase
 
 
@@ -28,6 +29,8 @@ class CreateViewModel(ViewModelBase):
         self.chemical_ids = form.getlist("chemical_ids")
         self.targets = form.getlist("targets")
         self.chemicals_targets = zip(self.chemical_ids, self.targets)
+
+        self.growth_stages: list = vineyard_service.all_growth_stages(self.session)
 
         print("################## ZIP ################")
         print(self.chemicals_targets)

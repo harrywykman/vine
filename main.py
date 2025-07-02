@@ -15,6 +15,7 @@ from data.admin import (
     SprayProgramAdmin,
     SprayProgramChemicalAdmin,
     SprayRecordAdmin,
+    SprayRecordChemicalAdmin,
     StatusAdmin,
     UserAdmin,
     VarietyAdmin,
@@ -63,3 +64,4 @@ admin.add_view(ChemicalAdmin)
 admin.add_view(GrowthStageAdmin)
 admin.add_view(ChemicalGroupAdmin)
 admin.add_view(SprayProgramChemicalAdmin)
+admin.add_view(SprayRecordChemicalAdmin)

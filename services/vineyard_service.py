@@ -1,6 +1,7 @@
 from fastapi import HTTPException, status
+from icecream import ic
 from sqlalchemy import asc, func
-from sqlalchemy.orm import selectinload
+from sqlalchemy.orm import joinedload, selectinload
 from sqlmodel import Session, select
 
 from data.vineyard import (
@@ -10,6 +11,7 @@ from data.vineyard import (
     SprayProgram,
     SprayProgramChemical,
     SprayRecord,
+    SprayRecordChemical,
     Variety,
     Vineyard,
     WineColour,
@@ -107,7 +109,7 @@ def all_varieties(session: Session):
 def all_growth_stages(session: Session):
     query = select(GrowthStage).order_by(GrowthStage.el_number)
 
-    varieties = session.exec(query)
+    varieties = session.exec(query).all()
     return varieties
 
 
@@ -136,12 +138,64 @@ def eagerly_get_vineyard_spray_records(
         .order_by(asc(GrowthStage.el_number))
     )
     spray_records = session.exec(statement).all()
+    # Sort by el_number - # NOTE maybe else should be 0 if no growth stage to put to top of list?
     spray_records.sort(
         key=lambda sr: sr.spray_program.growth_stage.el_number
         if sr.spray_program.growth_stage
         else 999
     )
-    return session.exec(statement).all()
+    return spray_records
+
+
+def eagerly_get_spray_record_by_id(
+    session: Session, spray_record_id: int
+) -> SprayRecord | None:
+    statement = (
+        select(SprayRecord)
+        .where(SprayRecord.id == spray_record_id)
+        .options(
+            joinedload(SprayRecord.management_unit)
+            .joinedload(ManagementUnit.variety)
+            .joinedload(Variety.wine_colour),
+            joinedload(SprayRecord.spray_program),
+            joinedload(SprayRecord.growth_stage),
+            joinedload(SprayRecord.spray_record_chemicals).joinedload(
+                SprayRecordChemical.chemical
+            ),
+        )
+    )
+    spray_record = session.exec(statement).first()
+    ic(spray_record)
+    return spray_record
+
+
+def eagerly_get_vineyard_spray_program_spray_records(
+    session: Session, vineyard_id: int, spray_program_id: int
+) -> list[SprayRecord]:
+    statement = (
+        select(SprayRecord)
+        .join(SprayRecord.management_unit)
+        .join(SprayRecord.spray_program)
+        .where(ManagementUnit.vineyard_id == vineyard_id)
+        .where(SprayRecord.spray_program_id == spray_program_id)
+        .options(
+            selectinload(SprayRecord.management_unit)
+            .selectinload(ManagementUnit.variety)
+            .selectinload(Variety.wine_colour),
+            selectinload(SprayRecord.spray_program).selectinload(
+                SprayProgram.growth_stage
+            ),
+            selectinload(SprayRecord.spray_program)
+            .selectinload(SprayProgram.spray_program_chemicals)
+            .selectinload(SprayProgramChemical.chemical)
+            .selectinload(Chemical.chemical_groups),
+        )
+        .order_by(asc(ManagementUnit.name))
+    )
+    spray_records = session.exec(statement).all()
+    spray_records.sort(key=lambda sr: sr.management_unit.name or "")
+    ic(spray_records)
+    return spray_records
 
 
 # TODO Reduce eagerness!
@@ -168,8 +222,20 @@ def eagerly_get_vineyard_spray_programs(
         .order_by(SprayProgram.id, GrowthStage.el_number)
     )
     spray_programs = session.exec(statement).all()
-    # Sort by el_number
+    # Sort by el_number - # NOTE maybe else should be 0 if no growth stage to put to top of list?
     spray_programs.sort(
         key=lambda sp: sp.growth_stage.el_number if sp.growth_stage else 999
     )
     return spray_programs
+
+
+def get_spray_program_chemicals(
+    spray_program_id: int, session: Session
+) -> list[Chemical]:
+    statement = (
+        select(Chemical)
+        .join(SprayProgramChemical)
+        .filter(SprayProgramChemical.spray_program_id == spray_program_id)
+    )
+    spray_program_chemicals = session.exec(statement).all()
+    return spray_program_chemicals

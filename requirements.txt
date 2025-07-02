@@ -1,11 +1,15 @@
 alembic==1.16.2
+alembic-postgresql-enum==1.7.0
 annotated-types==0.7.0
 anyio==4.9.0
+asttokens==3.0.0
 certifi==2025.6.15
 Chameleon==4.6.0
 click==8.2.1
+colorama==0.4.6
 dnspython==2.7.0
 email_validator==2.2.0
+executing==2.2.0
 fastapi==0.115.12
 fastapi-cli==0.0.7
 fastapi_chameleon==0.1.17
@@ -14,6 +18,7 @@ h11==0.16.0
 httpcore==1.0.9
 httptools==0.6.4
 httpx==0.28.1
+icecream==2.1.5
 idna==3.10
 itsdangerous==2.2.0
 Jinja2==3.1.6

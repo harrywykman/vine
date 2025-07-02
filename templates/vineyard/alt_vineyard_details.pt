@@ -1,26 +1,31 @@
 <div metal:use-macro="load: ../shared/_layout.pt">
     <div metal:fill-slot="content" tal:omit-tag="True">
-        <div class="section content">
-            <div class="vineyard container">
-                <h1 class="title">${vineyard.name}</h1>
 
+        <!-- Vineyard title -->
+        <section class="section">
+            <div class="container">
+                <h1 class="title is-3">${vineyard.name}</h1>
 
-                <div class="section content">
-                    <div class="container managements_unit_list">
-                        <h2 class="title">Management Units</h2>
-                        <table>
+                <!-- Management Units -->
+                <div class="mb-5">
+                    <h2 class="title is-4">Management Units</h2>
+                    <div class="table-container">
+                        <table class="table is-fullwidth is-striped is-hoverable is-narrow">
                             <thead>
-                                <th>Name</th>
-                                <th>Variety</th>
-                                <th>Area</th>
-                                <th>Row Width</th>
-                                <th># Rows</th>
-                                <th>Row Numbering</th>
-                                <th>Vine Spacing</th>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Variety</th>
+                                    <th>Area</th>
+                                    <th>Row Width</th>
+                                    <th># Rows</th>
+                                    <th>Row Numbering</th>
+                                    <th>Vine Spacing</th>
+                                    <th tal:condition="is_logged_in">Actions</th>
+                                </tr>
                             </thead>
                             <tbody>
                                 <tr tal:repeat="mu management_units" id="management_unit_row_${mu.id}">
-                                    <th class="name"><a href="#">${mu.name}</a></th>
+                                    <td><a href="#">${mu.name}</a></td>
                                     <td>${mu.variety.name}</td>
                                     <td>${mu.area} ha</td>
                                     <td>${mu.row_width} m</td>
@@ -39,116 +44,89 @@
                     </div>
                 </div>
 
-                <div class="section content">
-                    <div class="container vineyard">
-                        <div class="content">
-                            <div class="${vineyard.name}-map">
-                                <h2 class="title">${vineyard.name} Map</h2>
-                                <div id="map"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="section content">
-                    <div class="container spray_record_list">
-                        <h2 class="title">Spray Records</h2>
-                        <div class="box section" tal:repeat="sp spray_programs" id="spray_program_container_${sp.id}">
-                            <table class="table is-fullwidth">
-                                <thead>
-                                    <tr>
-                                        <th></th>
-                                        <th>Water Spray Rate / ha</th>
-                                        <th>Ideal EL</th>
-                                        <th>Spray Details</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            <strong><a
-                                                    href="/vineyards/${vineyard.id}/spray_records/${sp.id}">${sp.name}</a></strong>
-                                        </td>
-                                        <td>${sp.water_spray_rate_per_hectare} L</td>
-                                        <td>${sp.growth_stage.el_number}</td>
-                                        <td>
-                                            <div class="box">
-                                                <table class="table is-narrow is-fullwidth is-striped">
-                                                    <thead>
-                                                        <tr>
-                                                            <th></th>
-                                                            <th>Mix Rate / 100L</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr tal:repeat="spc sp.spray_program_chemicals">
-                                                            <td>${spc.chemical.name}</td>
-                                                            <td>${spc.calculated_mix_rate_per_100L()}
-                                                                ${spc.chemical.rate_unit.value}
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </td>
-
-                                    </tr>
-                                </tbody>
-                            </table>
+                <!-- Spray Programs -->
+                <div class="mb-6">
+                    <h2 class="title is-4">Spray Records</h2>
+                    <div class="columns is-multiline">
+                        <div class="column is-full" tal:repeat="sp spray_programs"
+                            id="spray_program_container_${sp.id}">
                             <div class="box">
-                                <table class="table is-fullwidth">
-                                    <thead>
-                                        <tr>
-                                            <th>Mangement Unit</th>
-                                            <th>Completed</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr tal:repeat="mu management_units">
-                                        <tr tal:repeat="sr mu.spray_records">
-                                            <div tal:condition="sr.spray_program.id == sp.id">
-                                                <td>
-                                                    <i class="fas fa-wine-bottle"
-                                                        tal:attributes="class python:'fas fa-wine-bottle has-text-danger' if mu.variety.wine_colour.name == 'Red' else 'fas fa-wine-bottle has-text-grey'">
-                                                    </i>&nbsp;
-                                                    <a href="/vineyards/${vineyard.id}/spray_record/${sr.id}">${mu.name}
-                                                        &mdash; ${mu.variety.name}</a>
-                                                </td>
-                                                <!-- <td>${sr.operator}</td> -->
-                                                <!-- <td>${sr.date_created.strftime('%Y-%m-%d')}</td> -->
-                                                <td>
-                                                    <span class="tag is-success" tal:condition="sr.complete">✅
-                                                        Complete</span>
-                                                    <span class="tag is-small is-danger"
-                                                        tal:condition="not sr.complete">⏳
-                                                        Incomplete</span>
-                                                </td>
-                                            </div>
-                                        </tr>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                                <h3 class="subtitle is-5 mb-3">
+                                    <a href="/spray_programs">${sp.name}</a>
+                                </h3>
+
+                                <div class="is-flex is-justify-content-space-between is-flex-wrap-wrap mb-4">
+                                    <p><strong>Water Spray Rate:</strong> ${sp.water_spray_rate_per_hectare} L/ha</p>
+                                    <p><strong>Ideal EL:</strong> ${sp.growth_stage.el_number}</p>
+                                </div>
+
+                                <!-- Chemical Mix -->
+                                <div class="table-container mb-3">
+                                    <table class="table is-fullwidth is-narrow is-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Chemical</th>
+                                                <th>Mix Rate / 100L</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr tal:repeat="spc sp.spray_program_chemicals">
+                                                <td>${spc.chemical.name}</td>
+                                                <td>${spc.calculated_mix_rate_per_100L()}
+                                                    ${spc.chemical.rate_unit.value}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <!-- Spray Record Summary -->
+                                <div class="table-container">
+                                    <table class="table is-fullwidth is-narrow">
+                                        <thead>
+                                            <tr>
+                                                <th>Management Unit</th>
+                                                <th>Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr tal:repeat="mu management_units">
+                                            <tr tal:repeat="sr mu.spray_records">
+                                                <div tal:condition="sr.spray_program.id == sp.id">
+                                                    <td>
+                                                        <i class="fas fa-wine-bottle"
+                                                            tal:attributes="class python:'fas fa-wine-bottle has-text-danger' if mu.variety.wine_colour.name == 'Red' else 'fas fa-wine-bottle has-text-grey'">
+                                                        </i>&nbsp;
+                                                        ${mu.name} — ${mu.variety.name}
+                                                    </td>
+                                                    <td>
+                                                        <span class="tag is-success" tal:condition="sr.complete">✅
+                                                            Complete</span>
+                                                        <span class="tag is-danger is-light"
+                                                            tal:condition="not sr.complete">⏳ Incomplete</span>
+                                                    </td>
+                                                </div>
+                                            </tr>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-        <div class="section content">
-            <div class="container vineyard">
-                <div class="content">
-                    <div class="${vineyard.name}-map">
-                        <h2 class="title">${vineyard.name} Map</h2>
-                        <div id="map"></div>
-                    </div>
+
+                <!-- Map -->
+                <div class="mb-6">
+                    <h2 class="title is-4">${vineyard.name} Map</h2>
+                    <div id="map" class="box" style="height: 400px;"></div>
                 </div>
+
             </div>
-        </div>
+        </section>
     </div>
 
     <div metal:fill-slot="additional-css" tal:omit-tag="True">
-        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-            integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
     </div>
     <div metal:fill-slot="additional-js" tal:omit-tag="True">
         <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"

@@ -7,6 +7,7 @@
 
   <link rel="stylesheet" href="/static/css/site.css" />
   <link rel="stylesheet" href="/static/css/nav.css" />
+
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css" />
   <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.5/dist/htmx.min.js"
     integrity="sha384-t4DxZSyQK+0Uv4jzy5B0QyHyWQD2GFURUmxKMBVww9+e2EJ0ei/vCvv7+79z0fkr"
@@ -14,8 +15,6 @@
   <script src="https://unpkg.com/htmx.org@1.9.12/dist/ext/debug.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
     crossorigin="anonymous" referrerpolicy="no-referrer" />
-
-
 
   <div metal:define-slot="additional-css" tal:omit-tag="True"></div>
 </head>
@@ -80,15 +79,21 @@
     </div>
   </nav>
 
-  <div class="columns">
-    <div class="column">
-    </div>
-    <div class="column is-three-quarters">
-      <div class="container main_content">
+  <div class="columns is-variable is-1 is-multiline is-mobile">
+    <!-- Optional Left Spacer (hide on mobile) -->
+    <div class="column is-hidden-mobile is-1-tablet is-2-desktop"></div>
+
+    <!-- Main Content Column (full width on mobile, centered on desktop) -->
+    <div class="column is-12-mobile is-10-tablet is-8-desktop">
+      <div class="container main_content px-3 py-4">
+
+
         <div metal:define-slot="content" tal:omit-tag="True">No content</div>
       </div>
     </div>
-    <div class="column"></div>
+
+    <!-- Optional Right Spacer (hide on mobile) -->
+    <div class="column is-hidden-mobile is-1-tablet is-2-desktop"></div>
   </div>
 
   <footer class="footer">

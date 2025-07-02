@@ -1,25 +1,27 @@
 <div metal:use-macro="load: ../shared/_layout.pt">
     <div metal:fill-slot="content" tal:omit-tag="True">
-        <div class="section content">
-            <div class="container vineyard-list">
-                <div class="vineyard-list container">
-                    <h2 class="title">Vineyards</h2>
+        <section class="section">
+            <div class="container">
+                <h2 class="title is-3">Vineyards</h2>
 
-                    <table class="table is-striped is-hoverable is-fullwidth">
+                <div class="table-container">
+                    <table class="table is-fullwidth is-striped is-hoverable is-narrow">
                         <thead>
-                            <th>Name</th>
-                            <th>Address</th>
-                            <th>Actions</th>
+                            <tr>
+                                <th>Name</th>
+                                <th>Address</th>
+                                <th>Actions</th>
+                            </tr>
                         </thead>
                         <tbody>
                             <tr tal:repeat="v vineyards">
-                                <th class="name"><a href="/vineyards/${v.id}">${v.name}</a></th>
-                                <td class="address">${v.address}</td>
-                                <td>
-                                    <a href="/vineyards/${v.id}" class="button is-primary is-outlined">Edit</a>
-                                    <form method="post" action="/vineyards/${ v.id }/delete" class="inline"
+                                <td><a href="/vineyards/${v.id}">${v.name}</a></td>
+                                <td>${v.address}</td>
+                                <td class="is-flex is-flex-wrap-wrap is-align-items-center is-gap-2">
+                                    <a href="/vineyards/${v.id}" class="button is-info is-small mr-2">Edit</a>
+                                    <form method="post" action="/vineyards/${v.id}/delete" class="inline"
                                         onsubmit="return confirm('Delete?');">
-                                        <button class="button is-danger is-outlined" type="submit">Delete</button>
+                                        <button type="submit" class="button is-danger is-light is-small">Delete</button>
                                     </form>
                                 </td>
                             </tr>
@@ -27,10 +29,10 @@
                     </table>
                 </div>
             </div>
-        </div>
+        </section>
     </div>
 
     <div metal:fill-slot="additional-css" tal:omit-tag="True">
-        <!-- additional css from the page -->
+        <!-- additional CSS -->
     </div>
 </div>

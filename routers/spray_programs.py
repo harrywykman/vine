@@ -115,6 +115,10 @@ async def create_spray_program(
             status_code=status.HTTP_404_NOT_FOUND, detail="Spray program not created"
         )
 
+    if vm.error:
+        print(vm.error)
+        return vm.to_dict()
+
     response = responses.RedirectResponse(
         url="/spray_programs", status_code=status.HTTP_302_FOUND
     )

@@ -1,36 +1,41 @@
 <div metal:use-macro="load: ../shared/_layout.pt">
     <div metal:fill-slot="content" tal:omit-tag="True">
-        <div class="section content">
-            <div class="container vineyard-list">
-                <div class="vineyard-list container">
-                    <h2 class="title">Vineyards</h2>
+        <section class="section">
+            <div class="container">
+                <h2 class="title is-3">Vineyards</h2>
 
-                    <table class="table is-striped is-hoverable is-fullwidth">
-                        <thead>
-                            <th>Name</th>
-                            <th>Address</th>
-                            <th>Actions</th>
-                        </thead>
-                        <tbody>
-                            <tr tal:repeat="v vineyards">
-                                <th class="name"><a href="/vineyards/${v.id}">${v.name}</a></th>
-                                <td class="address">${v.address}</td>
-                                <td>
-                                    <a href="/vineyards/${v.id}" class="button is-info is-small">Edit</a>
-                                    <form method="post" action="/vineyards/${ v.id }/delete" class="inline"
-                                        onsubmit="return confirm('Delete?');">
-                                        <button class="button is-small is-danger is-light" type="submit">Delete</button>
-                                    </form>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="columns is-multiline" tal:repeat="v vineyards">
+                    <div class="column is-12-mobile is-6-tablet is-4-desktop">
+                        <div class="box">
+                            <article class="media">
+                                <div class="media-content">
+                                    <div class="content">
+                                        <p>
+                                            <strong>
+                                                <a href="/vineyards/${v.id}">${v.name}</a>
+                                            </strong><br />
+                                            <small class="has-text-grey">${v.address}</small>
+                                        </p>
+                                    </div>
+                                    <div class="buttons mt-2">
+                                        <a href="/vineyards/${v.id}" class="button is-info is-small">Edit</a>
+                                        <form method="post" action="/vineyards/${v.id}/delete" class="inline"
+                                            onsubmit="return confirm('Delete?');" style="display:inline;">
+                                            <button type="submit"
+                                                class="button is-danger is-light is-small">Delete</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </article>
+                        </div>
+                    </div>
                 </div>
+
             </div>
-        </div>
+        </section>
     </div>
 
     <div metal:fill-slot="additional-css" tal:omit-tag="True">
-        <!-- additional css from the page -->
+        <!-- additional CSS -->
     </div>
 </div>

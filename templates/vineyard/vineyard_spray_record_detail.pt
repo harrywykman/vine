@@ -1,0 +1,118 @@
+<div metal:use-macro="load: ../shared/_layout.pt">
+    <div metal:fill-slot="content" tal:omit-tag="True">
+        <section class="section">
+            <div class="container">
+                <h1 class="title is-3">Spray Record Details</h1>
+                <div tal:condition="spray_record.complete">
+                    <div class="box">
+                        <h2 class="subtitle is-5">General Info</h2>
+                        <div class="columns is-multiline">
+                            <div class="column is-half">
+                                <strong>Operator:</strong> ${spray_record.operator or 'N/A'}
+                            </div>
+                            <div class="column is-half">
+                                <strong>Complete:</strong>
+                                <span class="tag is-${'success' if spray_record.complete else 'danger'}">
+                                    ${'Yes' if spray_record.complete else 'No'}
+                                </span>
+                            </div>
+                            <div class="column is-half">
+                                <strong>Date Completed:</strong>
+                                ${spray_record.date_completed.strftime('%Y-%m-%d %H:%M') if spray_record.date_completed
+                                else
+                                '—'}
+                            </div>
+                            <div class="column is-half">
+                                <strong>Growth Stage:</strong>
+                                ${spray_record.growth_stage.el_number} – ${spray_record.growth_stage.description}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="box">
+                        <h2 class="subtitle is-5">Weather & Conditions</h2>
+                        <div class="columns is-multiline">
+                            <div class="column is-one-quarter">
+                                <strong>Hours Taken:</strong> ${spray_record.hours_taken or '—'}
+                            </div>
+                            <div class="column is-one-quarter">
+                                <strong>Temperature:</strong> ${spray_record.temperature or '—'} °C
+                            </div>
+                            <div class="column is-one-quarter">
+                                <strong>Humidity:</strong> ${spray_record.relative_humidity or '—'}%
+                            </div>
+                            <div class="column is-one-quarter">
+                                <strong>Wind Speed:</strong> ${spray_record.wind_speed or '—'} km/h
+                            </div>
+                            <div class="column is-one-quarter">
+                                <strong>Wind Direction:</strong> ${spray_record.wind_direction or '—'}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="box">
+                        <h2 class="subtitle is-5">Management Unit</h2>
+                        <div class="content">
+                            <p><strong>Name:</strong> ${spray_record.management_unit.name}</p>
+                            <p><strong>Variety:</strong> ${spray_record.management_unit.variety.name}</p>
+                            <p><strong>Wine Colour:</strong> ${spray_record.management_unit.variety.wine_colour.name}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="box">
+                        <h2 class="subtitle is-5">Spray Program</h2>
+                        <div class="content">
+                            <p><strong>Program Name:</strong> ${spray_record.spray_program.name}</p>
+                            <p><strong>Water Rate:</strong> ${spray_record.spray_program.water_spray_rate_per_hectare}
+                                L/ha
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="box">
+                        <h2 class="subtitle is-5">Chemicals Applied</h2>
+                        <table class="table is-fullwidth is-bordered is-striped">
+                            <thead>
+                                <tr>
+                                    <th>Chemical</th>
+                                    <th>Active Ingredient</th>
+                                    <th>Batch Number</th>
+                                    <th>Rate per 100L</th>
+                                    <th>Unit</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tal:chems tal:repeat="src spray_record.spray_record_chemicals">
+                                    <tr>
+                                        <td>${src.chemical.name}</td>
+                                        <td>${src.chemical.active_ingredient}</td>
+                                        <td>${src.batch_number}</td>
+                                        <td>${src.chemical.rate_per_100l or '—'}</td>
+                                        <td>${src.chemical.rate_unit or '—'}</td>
+                                    </tr>
+                                </tal:chems>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="field is-grouped">
+                        <div class="control">
+                            <a class="button is-link" href="/vineyards/${spray_record.management_unit.vineyard_id}">
+                                ← Back to Vineyard Details
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div tal:condition="not spray_record.complete">
+                    Incomplete
+                    <div class="control">
+                        <a class="button is-link" href="/vineyards/${spray_record.management_unit.vineyard_id}">
+                            ← Back to Vineyard Details
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>

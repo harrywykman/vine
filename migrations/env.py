@@ -5,27 +5,18 @@ from alembic import context
 from sqlalchemy import engine_from_config, pool
 from sqlmodel import SQLModel
 
+from data.user import User  # noqa: F401
 from data.vineyard import (
-    Chemical,
-    ManagementUnit,
-    SprayProgram,
-    SprayProgramChemical,
-    SprayRecord,
-    Status,
-    Variety,
-    Vineyard,
-    WineColour,
+    Chemical,  # noqa: F401
+    ManagementUnit,  # noqa: F401
+    SprayProgram,  # noqa: F401
+    SprayProgramChemical,  # noqa: F401
+    SprayRecord,  # noqa: F401
+    Status,  # noqa: F401
+    Variety,  # noqa: F401
+    Vineyard,  # noqa: F401
+    WineColour,  # noqa: F401
 )
-
-vineyard = Vineyard
-mu = ManagementUnit
-status = Status
-variety = Variety
-wine_colour = WineColour
-spray_program = SprayProgram
-spray_record = SprayRecord
-spray_program_chemical = SprayProgramChemical
-chemical = Chemical
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
