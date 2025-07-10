@@ -13,7 +13,7 @@ class Vineyard(SQLModel, table=True):
     __tablename__ = "vineyards"
 
     id: Optional[int] = Field(default=None, primary_key=True)
-    name: str = Field(index=True, unique=True)
+    name: str = Field(index=True, unique=True, nullable=False)
     address: Optional[str] = Field(default=None)
 
     management_units: List["ManagementUnit"] = Relationship(back_populates="vineyard")
@@ -52,7 +52,7 @@ class ManagementUnit(SQLModel, table=True):
     __tablename__ = "management_units"
 
     id: Optional[int] = Field(default=None, primary_key=True)
-    name: str = Field(index=True, unique=True)
+    name: str = Field(index=True)
     variety_name_modifier: Optional[str] = Field(default=None)
 
     area: Decimal = Field(sa_column=sa.Column(sa.Numeric(5, 2)))
@@ -67,7 +67,9 @@ class ManagementUnit(SQLModel, table=True):
     spray_records: List["SprayRecord"] = Relationship(back_populates="management_unit")
 
     variety_id: int | None = Field(default=None, foreign_key="varieties.id")
-    vineyard_id: int | None = Field(default=None, foreign_key="vineyards.id")
+    vineyard_id: int | None = Field(
+        default=None, foreign_key="vineyards.id", ondelete="CASCADE"
+    )
     status_id: int | None = Field(default=None, foreign_key="states.id")
 
     variety: Variety | None = Relationship(back_populates="management_units")
@@ -204,9 +206,11 @@ class SprayRecord(SQLModel, table=True):
         default=None, sa_column=sa.Column(sa.Enum(WindDirection))
     )
 
-    management_unit_id: int = Field(foreign_key="management_units.id", nullable=False)
+    management_unit_id: int = Field(
+        foreign_key="management_units.id", nullable=False, index=True
+    )
     spray_program_id: int = Field(
-        foreign_key="spray_programs.id", nullable=False, ondelete="CASCADE"
+        foreign_key="spray_programs.id", nullable=False, ondelete="CASCADE", index=True
     )
 
     management_unit: ManagementUnit = Relationship(back_populates="spray_records")
@@ -222,6 +226,11 @@ class SprayRecord(SQLModel, table=True):
 
 class SprayRecordChemical(SQLModel, table=True):
     __tablename__ = "spray_record_chemicals"
+    __table_args__ = (
+        sa.UniqueConstraint(
+            "spray_record_id", "chemical_id", name="uq_sprayrecord_chemical"
+        ),
+    )
 
     id: Optional[int] = Field(default=None, primary_key=True)
     spray_record_id: int | None = Field(
@@ -234,7 +243,7 @@ class SprayRecordChemical(SQLModel, table=True):
     chemical: "Chemical" = Relationship(back_populates="spray_record_chemicals")
 
     def __str__(self):
-        return f"{self.chemical.name} - batch - {self.batch_number}"
+        return f"batch - {self.batch_number}"
 
 
 class Target(str, enum.Enum):
@@ -250,7 +259,12 @@ class Target(str, enum.Enum):
 
 class SprayProgramChemical(SQLModel, table=True):
     __tablename__ = "spray_program_chemicals"
-    __table_args__ = {"extend_existing": True}
+    __table_args__ = (
+        sa.UniqueConstraint(
+            "spray_program_id", "chemical_id", name="uq_sprayprogram_chemical"
+        ),
+        {"extend_existing": True},
+    )
 
     id: Optional[int] = Field(default=None, primary_key=True)
     spray_program_id: int = Field(
@@ -277,10 +291,13 @@ class ChemicalGroupLink(SQLModel, table=True):
     __table_args__ = {"extend_existing": True}
 
     chemical_id: Optional[int] = Field(
-        default=None, foreign_key="chemicals.id", primary_key=True
+        default=None, foreign_key="chemicals.id", primary_key=True, ondelete="CASCADE"
     )
     group_id: Optional[int] = Field(
-        default=None, foreign_key="chemical_groups.id", primary_key=True
+        default=None,
+        foreign_key="chemical_groups.id",
+        primary_key=True,
+        ondelete="CASCADE",
     )
 
 

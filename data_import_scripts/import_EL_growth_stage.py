@@ -1,4 +1,4 @@
-from sqlmodel import Session, SQLModel
+from sqlmodel import Session
 
 from data.vineyard import GrowthStage
 from database import engine
@@ -50,9 +50,16 @@ def seed_growth_stages():
             )
             if not session.get(GrowthStage, el):
                 session.add(stage)
+                print(
+                    f"################ Added Growth Stage EL {stage.el_number} ################"
+                )
+            else:
+                print(
+                    f"################ Skipped Growth Stage {stage.el_number} - already in db ################"
+                )
+
         session.commit()
 
 
 if __name__ == "__main__":
-    SQLModel.metadata.create_all(engine)
     seed_growth_stages()

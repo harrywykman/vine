@@ -5,7 +5,7 @@ from sqlmodel import Session, select
 from data.vineyard import Chemical
 from dependencies import get_session
 
-CSV_FILE_PATH = "./data_import_scripts/chemicals.csv"  # or an absolute path
+# CSV_FILE_PATH = "./data_import_scripts/chemicals.csv"  # or an absolute path
 
 
 def load_chemicals_from_csv(file_path: str) -> list[dict[str, str]]:
@@ -22,7 +22,8 @@ def load_chemicals_from_csv(file_path: str) -> list[dict[str, str]]:
     return chemicals
 
 
-def import_chemicals(chemicals: list[dict[str, str]]):
+def import_chemicals(file_path: str):
+    chemicals = load_chemicals_from_csv(file_path)
     session_generator = get_session()
     session: Session = next(session_generator)
     try:
@@ -52,5 +53,4 @@ def import_chemicals(chemicals: list[dict[str, str]]):
 
 
 if __name__ == "__main__":
-    chemicals = load_chemicals_from_csv(CSV_FILE_PATH)
-    import_chemicals(chemicals)
+    import_chemicals("./data_import_scripts/chemicals.csv")

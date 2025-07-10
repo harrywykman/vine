@@ -50,6 +50,7 @@ def eagerly_get_vineyard_managment_units_by_id(session: Session, id: int):
             selectinload(ManagementUnit.variety),
             selectinload(ManagementUnit.status),
         )
+        .order_by(ManagementUnit.name)
     ).all()
     return management_units
 

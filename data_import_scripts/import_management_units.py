@@ -2,6 +2,7 @@ from datetime import datetime
 from decimal import Decimal
 
 import pandas as pd
+import sqlalchemy.orm as sa_orm
 from sqlmodel import Session, select
 
 import database
@@ -9,7 +10,6 @@ from data.vineyard import ManagementUnit, Status, Variety, Vineyard
 
 
 def parse_rows_numbers(rows_numbers: str):
-    # Parse strings like "1 to 16" into (1, 16)
     if not isinstance(rows_numbers, str) or "to" not in rows_numbers.lower():
         return None, None
     try:
@@ -22,13 +22,10 @@ def parse_rows_numbers(rows_numbers: str):
 
 
 def parse_plant_date(plant_date_str: str):
-    # Extract first year from strings like "2020/2022" or parse date normally
     if not isinstance(plant_date_str, str):
         return None
     try:
-        # Take first year if multiple years separated by slash
         year_part = plant_date_str.split("/")[0].strip()
-        # Try to parse as year only
         year = int(year_part)
         return datetime(year, 1, 1).date()
     except Exception:
@@ -60,41 +57,46 @@ def import_management_units(csv_path: str):
 
     df = pd.read_csv(csv_path, names=CSV_COLUMNS, header=0)
 
-    # df = pd.read_csv(csv_path)
-
-    # Normalize and trim strings for matching keys
+    # Normalize and trim strings
     for col in ["Vineyard Name", "Variety Name", "Status", "Management Unit Name"]:
         if col in df.columns:
             df[col] = df[col].fillna("").astype(str).str.strip()
 
-    # Drop rows missing required keys
-    required_cols = [
-        "Management Unit Name",
-        "Variety Name",
-        "Vineyard Name",
-        # "Status",
-        # "Management Unit Area",
-        # "Management Unit Row Width",
-        # "Management Unit Vine Spacing",
-        # "Plant Date",
-    ]
+    # Drop rows missing required fields
+    required_cols = ["Management Unit Name", "Vineyard Name"]
     df = df.dropna(subset=required_cols)
 
-    # Remove duplicates (by Management Unit Name, case insensitive)
-    df["mu_name_lower"] = df["Management Unit Name"].str.lower()
-    df = df.drop_duplicates(subset=["mu_name_lower"])
+    # Deduplicate using Vineyard + MU name as composite key
+    df["mu_key"] = (
+        df["Vineyard Name"].str.lower().str.strip()
+        + "::"
+        + df["Management Unit Name"].str.lower().str.strip()
+    )
+
+    # Detect duplicates before dropping them
+    duplicate_keys = df[df.duplicated(subset=["mu_key"], keep=False)]
+
+    if not duplicate_keys.empty:
+        print("⚠️ Duplicate Management Units found in CSV:")
+        for _, row in duplicate_keys.iterrows():
+            print(
+                f"  - Vineyard: '{row['Vineyard Name']}', MU: '{row['Management Unit Name']}'"
+            )
+
+    # Now drop the actual duplicates
+    df = df.drop_duplicates(subset=["mu_key"])
 
     with Session(database.engine) as session:
-        # Existing MUs by lower name
+        # Load existing MUs with vineyard join
         existing_munits = {
-            name.lower()
-            for (name,) in session.exec(select(ManagementUnit.name)).all()
-            if name
+            f"{mu.vineyard.name.lower().strip()}::{mu.name.lower().strip()}"
+            for mu in session.exec(
+                select(ManagementUnit).options(
+                    sa_orm.joinedload(ManagementUnit.vineyard)
+                )
+            ).all()
         }
 
-        print(existing_munits)
-
-        # Lookup dicts for Vineyard, Variety, Status keyed by lowercase name
         vineyard_map = {v.name.lower(): v for v in session.exec(select(Vineyard)).all()}
         variety_map = {v.name.lower(): v for v in session.exec(select(Variety)).all()}
         status_map = {s.status.lower(): s for s in session.exec(select(Status)).all()}
@@ -102,37 +104,38 @@ def import_management_units(csv_path: str):
         new_munits = []
 
         for _, row in df.iterrows():
-            munit_name = row["Management Unit Name"]
-            print(f"MANAGEMENT UNIT NAME: {munit_name}")
-            munit_name_lower = munit_name.lower()
-            if munit_name_lower in existing_munits:
+            munit_name = row["Management Unit Name"].strip()
+            vineyard_name = row["Vineyard Name"].strip()
+            munit_key = f"{vineyard_name.lower()}::{munit_name.lower()}"
+
+            if munit_key in existing_munits:
                 continue
 
-            vineyard = vineyard_map.get(row["Vineyard Name"].lower())
-            print(vineyard)
+            vineyard = vineyard_map.get(vineyard_name.lower())
             if not vineyard:
                 print(
-                    f"⚠️ Vineyard '{row['Vineyard Name']}' not found, skipping MU '{munit_name}'"
+                    f"⚠️ Vineyard '{vineyard_name}' not found, skipping MU '{munit_name}'"
                 )
                 continue
 
             variety = variety_map.get(row["Variety Name"].lower())
-            print(variety)
             if not variety:
-                print(f"⚠️ Variety None for MU '{munit_name}'")
-                variety = None
-                continue
+                # print(
+                #    f"⚠️ Variety '{row['Variety Name']}' not found, skipping MU '{munit_name}'"
+                # )
+                print("Variety is None but still adding")
+                variety_id = None
+            else:
+                variety_id = variety.id
 
             status = status_map.get(row["Status"].lower())
-            print(status)
             if not status:
                 print(
                     f"⚠️ Status '{row['Status']}' not found, skipping MU '{munit_name}'"
                 )
-                status = "Active"
                 continue
 
-            # Parse decimals safely
+            # Safe decimal parsing
             try:
                 area = Decimal(row["Management Unit Area"])
                 row_width = Decimal(row["Management Unit Row Width"])
@@ -142,13 +145,7 @@ def import_management_units(csv_path: str):
                 continue
 
             date_planted = parse_plant_date(row["Plant Date"])
-            """ # Parse plant date
-            date_planted = parse_plant_date(row["Plant Date"])
-            if not date_planted:
-                print(f"⚠️ Error parsing plant date for MU '{munit_name}': skipping")
-                continue """
 
-            # Parse rows total and rows start/end
             def safe_int(val):
                 try:
                     return int(val) if pd.notna(val) else None
@@ -156,29 +153,17 @@ def import_management_units(csv_path: str):
                     return None
 
             rows_total = safe_int(row.get("Management Unit Rows Total"))
-
             rows_start, rows_end = parse_rows_numbers(row.get("Rows Numbers", ""))
 
-            print(munit_name)
-            print(row.get("Management Unit Variety Name Modifier" or None))
-            print(area)
-            print(row_width)
-            print(f"vine_spacing: {vine_spacing}")
-            print(f"rows_total: {rows_total}")
-            print(f"rows_start_number: {rows_start}")
-            print(f"rows_end_number: {rows_end}")
-            print(f"date_planted: {date_planted}")
-            print(f"vineyard_id: {vineyard.id}")
-            print(f"variety_id: {variety.id}")
-            print(f"status_id: {status.id}")
+            raw_modifier = row.get("Management Unit Variety Name Modifier")
+            variety_name_modifier = (
+                str(raw_modifier).strip() if pd.notna(raw_modifier) else None
+            )
 
             new_munits.append(
                 ManagementUnit(
                     name=munit_name,
-                    variety_name_modifier=row.get(
-                        "Management Unit Variety Name Modifier"
-                    )
-                    or None,
+                    variety_name_modifier=variety_name_modifier,
                     area=area,
                     row_width=row_width,
                     vine_spacing=vine_spacing,
@@ -187,11 +172,11 @@ def import_management_units(csv_path: str):
                     rows_end_number=rows_end,
                     date_planted=date_planted,
                     vineyard_id=vineyard.id,
-                    variety_id=variety.id,
+                    variety_id=variety_id,
                     status_id=status.id,
                 )
             )
-            existing_munits.add(munit_name_lower)
+            existing_munits.add(munit_key)
 
         if new_munits:
             session.add_all(new_munits)
@@ -202,5 +187,4 @@ def import_management_units(csv_path: str):
 
 
 if __name__ == "__main__":
-    import_management_units("data_import_scripts/mu_import_amarok.csv")
-    # import_management_units("data_import_scripts/management_units.csv")
+    import_management_units("data_import_scripts/mu_import.csv")

@@ -2,7 +2,10 @@
     <div metal:fill-slot="content" tal:omit-tag="True">
         <section class="section">
             <div class="container">
-                <h1 class="title is-3">Spray Record Details</h1>
+                <h1 class="title is-3">${spray_record.spray_program.name} Spray of
+                    ${spray_record.management_unit.vineyard.name} ${spray_record.management_unit.name}
+                    -
+                    ${spray_record.management_unit.variety.name}</h1>
                 <div tal:condition="spray_record.complete">
                     <div class="box">
                         <h2 class="subtitle is-5">General Info</h2>
@@ -26,15 +29,15 @@
                                 <strong>Growth Stage:</strong>
                                 ${spray_record.growth_stage.el_number} – ${spray_record.growth_stage.description}
                             </div>
+                            <div class="column is-one-quarter">
+                                <strong>Hours Taken:</strong> ${spray_record.hours_taken or '—'}
+                            </div>
                         </div>
                     </div>
 
                     <div class="box">
                         <h2 class="subtitle is-5">Weather & Conditions</h2>
                         <div class="columns is-multiline">
-                            <div class="column is-one-quarter">
-                                <strong>Hours Taken:</strong> ${spray_record.hours_taken or '—'}
-                            </div>
                             <div class="column is-one-quarter">
                                 <strong>Temperature:</strong> ${spray_record.temperature or '—'} °C
                             </div>
@@ -45,7 +48,7 @@
                                 <strong>Wind Speed:</strong> ${spray_record.wind_speed or '—'} km/h
                             </div>
                             <div class="column is-one-quarter">
-                                <strong>Wind Direction:</strong> ${spray_record.wind_direction or '—'}
+                                <strong>Wind Direction:</strong> ${spray_record.wind_direction.name or '—'}
                             </div>
                         </div>
                     </div>
@@ -53,10 +56,8 @@
                     <div class="box">
                         <h2 class="subtitle is-5">Management Unit</h2>
                         <div class="content">
-                            <p><strong>Name:</strong> ${spray_record.management_unit.name}</p>
-                            <p><strong>Variety:</strong> ${spray_record.management_unit.variety.name}</p>
-                            <p><strong>Wine Colour:</strong> ${spray_record.management_unit.variety.wine_colour.name}
-                            </p>
+                            <p><strong>Name:</strong> ${spray_record.management_unit.name} -
+                                ${spray_record.management_unit.variety.name}</p>
                         </div>
                     </div>
 
@@ -79,19 +80,43 @@
                                     <th>Active Ingredient</th>
                                     <th>Batch Number</th>
                                     <th>Rate per 100L</th>
-                                    <th>Unit</th>
+                                    <th>Target</th>
+                                    <th>Group(s)</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tal:chems tal:repeat="src spray_record.spray_record_chemicals">
+                                <div tal:repeat="src spray_record.spray_record_chemicals">
                                     <tr>
                                         <td>${src.chemical.name}</td>
                                         <td>${src.chemical.active_ingredient}</td>
-                                        <td>${src.batch_number}</td>
-                                        <td>${src.chemical.rate_per_100l or '—'}</td>
-                                        <td>${src.chemical.rate_unit or '—'}</td>
+                                        <td>${src.batch_number or '—'}</td>
+                                        <td>
+                                            <div tal:define="spc python:
+                            next((spc for spc in spray_record.spray_program.spray_program_chemicals
+                                  if spc.chemical_id == src.chemical.id), None)">
+                                                ${spc.calculated_mix_rate_per_100L() if spc else '—'}
+                                            </div>${src.chemical.rate_unit.value or
+                                            '—'}
+                                        </td>
+
+                                        <!-- Look up the corresponding target via spray_program -->
+                                        <td>
+                                            <div tal:define="spc python:
+                            next((spc for spc in spray_record.spray_program.spray_program_chemicals
+                                  if spc.chemical_id == src.chemical.id), None)">
+                                                ${spc.target.value if spc and spc.target else '—'}
+                                            </div>
+                                        </td>
+
+                                        <!-- List chemical group codes/names -->
+                                        <td>
+                                            <div tal:repeat="group src.chemical.chemical_groups">
+                                                <span class="tag is-dark">${group.code} – ${group.name}</span>
+                                            </div>
+                                            <span tal:condition="not src.chemical.chemical_groups">—</span>
+                                        </td>
                                     </tr>
-                                </tal:chems>
+                                </div>
                             </tbody>
                         </table>
                     </div>

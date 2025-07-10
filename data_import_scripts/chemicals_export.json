@@ -1,0 +1,130 @@
+[
+  {
+    "name": "Sulphur",
+    "active_ingredient": "Sulphur",
+    "rate_per_100l": 600,
+    "rate_unit": "g",
+    "chemical_groups": [
+      "M2"
+    ]
+  },
+  {
+    "name": "Canola oil",
+    "active_ingredient": "Canola oil",
+    "rate_per_100l": 600,
+    "rate_unit": "mL",
+    "chemical_groups": [
+      "Non"
+    ]
+  },
+  {
+    "name": "Vitiwet",
+    "active_ingredient": "Ethoxylated Octyl Phenol",
+    "rate_per_100l": 10,
+    "rate_unit": "mL",
+    "chemical_groups": [
+      "Non"
+    ]
+  },
+  {
+    "name": "Intervene",
+    "active_ingredient": "113g/kg Poloxin-D Zinc Salt",
+    "rate_per_100l": 40,
+    "rate_unit": "g",
+    "chemical_groups": [
+      "19"
+    ]
+  },
+  {
+    "name": "Tribase Blue",
+    "active_ingredient": "Tribasic Copper Sulphate",
+    "rate_per_100l": 125,
+    "rate_unit": "mL",
+    "chemical_groups": [
+      "M1"
+    ]
+  },
+  {
+    "name": "Polyfeed",
+    "active_ingredient": "NPK",
+    "rate_per_100l": 400,
+    "rate_unit": "g",
+    "chemical_groups": [
+      "Non"
+    ]
+  },
+  {
+    "name": "Dragon 700WG",
+    "active_ingredient": "700g/kg Dithianon",
+    "rate_per_100l": 25,
+    "rate_unit": "g",
+    "chemical_groups": [
+      "M9"
+    ]
+  },
+  {
+    "name": "Migiwa",
+    "active_ingredient": "218 g/L IPFLUFENOQUIN",
+    "rate_per_100l": 25,
+    "rate_unit": "mL",
+    "chemical_groups": [
+      "52"
+    ]
+  },
+  {
+    "name": "Switch",
+    "active_ingredient": "375g/kg Cyprodinil 250g/kg Fludioxonil",
+    "rate_per_100l": 80,
+    "rate_unit": "g",
+    "chemical_groups": [
+      "9",
+      "12"
+    ]
+  },
+  {
+    "name": "Seeker Duo",
+    "active_ingredient": "Fenpropidan and Difenoconazole",
+    "rate_per_100l": 40,
+    "rate_unit": "mL",
+    "chemical_groups": [
+      "3",
+      "5"
+    ]
+  },
+  {
+    "name": "Vivando",
+    "active_ingredient": "500 g/L METRAFENONE",
+    "rate_per_100l": 20,
+    "rate_unit": "mL",
+    "chemical_groups": [
+      "50"
+    ]
+  },
+  {
+    "name": "Digger EW",
+    "active_ingredient": "125g/kg Difenoconazole",
+    "rate_per_100l": 50,
+    "rate_unit": "mL",
+    "chemical_groups": [
+      "3"
+    ]
+  },
+  {
+    "name": "Kusabi",
+    "active_ingredient": "300 g/L PYRIOFENONE",
+    "rate_per_100l": 30,
+    "rate_unit": "mL",
+    "chemical_groups": [
+      "50"
+    ]
+  },
+  {
+    "name": "Revus (only if wet)",
+    "active_ingredient": "250g/L Mandipropamid",
+    "rate_per_100l": 40,
+    "rate_unit": "mL",
+    "chemical_groups": [
+      "40"
+    ]
+  }
+]

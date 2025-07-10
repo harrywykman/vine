@@ -114,6 +114,17 @@ class VineyardSprayRecordsSubmitViewModel(ViewModelBase):
             spray_record.date_completed = datetime.datetime.now()
 
             for chem_id, batch_number in chem_batch_map.items():
+                # Ensure no duplicates added
+                existing = self.session.exec(
+                    select(SprayRecordChemical).where(
+                        SprayRecordChemical.spray_record_id == spray_record.id,
+                        SprayRecordChemical.chemical_id == chem_id,
+                    )
+                ).first()
+
+                if existing:
+                    continue
+
                 src = SprayRecordChemical(
                     spray_record_id=spray_record.id,
                     chemical_id=chem_id,
