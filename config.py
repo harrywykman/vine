@@ -1,18 +1,20 @@
-from typing import Optional
-
 from functools import lru_cache
+from typing import Optional
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    app_name: str = "App Name"
-    database_type: Optional[str]  = None
+    app_name: str = None
+    database_type: Optional[str] = None
     database_user: Optional[str] = None
     database_password: Optional[str] = None
-    database_host: str = "localhost"
-    database_port: str = "5432"
+    database_host: Optional[str] = None
+    database_port: Optional[str] = None
     database_name: Optional[str] = None
+    super_admin_name: Optional[str] = None
+    super_admin_email: Optional[str] = None
+    super_admin_password: Optional[str] = None
 
     model_config = SettingsConfigDict(env_file=".env")
 

@@ -4,7 +4,9 @@
             <h1 class="title">Your Account</h1>
 
             <div>
-                <p>Welcome to your account ${ user.name }!</p>
+                <p><strong>Name:</strong> ${user.name}</p>
+                <p><strong>Email:</strong> ${user.email}</p>
+                <p><strong>Role:</strong> ${user.role.value}</p>
             </div>
         </div>
     </div>

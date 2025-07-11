@@ -50,7 +50,6 @@ def eagerly_get_vineyard_managment_units_by_id(session: Session, id: int):
             selectinload(ManagementUnit.variety),
             selectinload(ManagementUnit.status),
         )
-        .order_by(ManagementUnit.name)
     ).all()
     return management_units
 
@@ -240,3 +239,32 @@ def get_spray_program_chemicals(
     )
     spray_program_chemicals = session.exec(statement).all()
     return spray_program_chemicals
+
+
+def spray_program_complete_for_vineyard(
+    session: Session, spray_program_id: int, vineyard_id: int
+) -> bool:
+    """
+    Check if a spray program is complete for all management units that have spray records for this program.
+    Returns True if all spray records for this program in this vineyard are marked as complete.
+    Returns False if there are no spray records for this program, or if any are incomplete.
+    """
+    from sqlmodel import select
+
+    # Get all spray records for this spray program in this vineyard
+    statement = (
+        select(SprayRecord)
+        .join(ManagementUnit)
+        .where(
+            SprayRecord.spray_program_id == spray_program_id,
+            ManagementUnit.vineyard_id == vineyard_id,
+        )
+    )
+    spray_records = session.exec(statement).all()
+
+    # If no spray records exist for this program, consider it incomplete
+    if not spray_records:
+        return False
+
+    # Check if all spray records are complete
+    return all(record.complete for record in spray_records)

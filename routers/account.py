@@ -1,7 +1,6 @@
-import datetime
-
 import fastapi
 from fastapi import Depends
+from fastapi.responses import HTMLResponse
 from fastapi_chameleon import template
 from sqlmodel import Session
 from starlette import status
@@ -13,6 +12,7 @@ from services import user_service
 from viewmodels.account.account_viewmodel import AccountViewModel
 from viewmodels.account.login_viewmodel import LoginViewModel
 from viewmodels.account.register_viewmodel import RegisterViewModel
+from viewmodels.auth.unauthorised_viewmodel import UnauthorisedViewModel
 
 router = fastapi.APIRouter()
 
@@ -81,12 +81,9 @@ async def login_post(request: Request, session: Session = Depends(get_session)):
         return vm.to_dict()
 
     resp = fastapi.responses.RedirectResponse(
-        "/account", status_code=status.HTTP_302_FOUND
+        "/vineyards", status_code=status.HTTP_302_FOUND
     )
     cookie_auth.set_auth(resp, user.id)
-
-    # TODO update last_login
-    user.last_login = datetime.datetime.now()
 
     return resp
 
@@ -99,3 +96,12 @@ def logout():
     cookie_auth.logout(response)
 
     return response
+
+
+@router.get("/unauthorised", response_class=HTMLResponse)
+@template(template_file="shared/unauthorised.pt")
+async def unauthorised(request: Request, session: Session = Depends(get_session)):
+    vm = UnauthorisedViewModel(request, session)
+    vm.message = "You don't have permission to access this resource."
+
+    return vm.to_dict()

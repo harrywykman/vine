@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
+</head>
+
+<body>
+    <nav class="navbar is-primary">
+        <div class="navbar-brand">
+            <a class="navbar-item">
+                <strong>My App</strong>
+            </a>
+        </div>
+        <div class="navbar-menu">
+            <div class="navbar-end">
+                <div class="navbar-item">
+                    <span>Welcome, ${current_user.name}</span>
+                </div>
+
+                <!-- Show admin link only to admins -->
+                <div class="navbar-item" tal:condition="current_user.is_admin()">
+                    <a class="button is-light" href="/admin/dashboard">
+                        Admin Panel
+                    </a>
+                </div>
+
+                <!-- Show superadmin link only to superadmins -->
+                <div class="navbar-item" tal:condition="current_user.is_superadmin()">
+                    <a class="button is-warning" href="/superadmin/system">
+                        System Admin
+                    </a>
+                </div>
+
+                <div class="navbar-item">
+                    <a class="button is-light" href="/logout">
+                        Logout
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <section class="section">
+        <div class="container">
+            <h1 class="title">Dashboard</h1>
+
+            <div class="columns">
+                <div class="column">
+                    <div class="box">
+                        <h2 class="subtitle">Your Profile</h2>
+                        <p><strong>Name:</strong> ${current_user.name}</p>
+                        <p><strong>Email:</strong> ${current_user.email}</p>
+                        <p><strong>Role:</strong>
+                            <span class="tag is-primary">${current_user.role.value}</span>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Admin-only content -->
+                <div class="column" tal:condition="current_user.has_permission('admin')">
+                    <div class="box">
+                        <h2 class="subtitle">Admin Actions</h2>
+                        <div class="buttons">
+                            <a class="button is-primary" href="/admin/users">
+                                Manage Users
+                            </a>
+                            <a class="button is-info" href="/admin/reports">
+                                View Reports
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Superadmin-only content -->
+                <div class="column" tal:condition="current_user.is_superadmin()">
+                    <div class="box">
+                        <h2 class="subtitle">System Administration</h2>
+                        <div class="buttons">
+                            <a class="button is-warning" href="/superadmin/settings">
+                                System Settings
+                            </a>
+                            <a class="button is-danger" href="/superadmin/maintenance">
+                                Maintenance Mode
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+
+</html>

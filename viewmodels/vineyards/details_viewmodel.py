@@ -32,3 +32,13 @@ class DetailsViewModel(ViewModelBase):
         self.spray_records: list[SprayRecord] = (
             vineyard_service.eagerly_get_vineyard_spray_records(self.session, self.id)
         )
+
+        # Add spray program completion status as a dictionary
+        # This creates a mapping of spray_program_id -> completion_status
+        self.spray_program_completion_status: dict[int, bool] = {}
+        for spray_program in self.spray_programs:
+            self.spray_program_completion_status[spray_program.id] = (
+                vineyard_service.spray_program_complete_for_vineyard(
+                    self.session, spray_program.id, self.id
+                )
+            )

@@ -10,6 +10,7 @@ from starlette import status
 from data.vineyard import Chemical, SprayProgram, SprayProgramChemical, Target
 from dependencies import get_session
 from services import spray_program_service, spray_record_service, vineyard_service
+from viewmodels.shared.viewmodel import ViewModelBase
 from viewmodels.spray_programs.create_viewmodel import CreateViewModel
 from viewmodels.spray_programs.form_viewmodel import FormViewModel
 from viewmodels.spray_programs.list_viewmodel import ListViewModel
@@ -227,29 +228,28 @@ def add_program_to_all_units(
 
 
 @router.post("/spray_programs/{spray_program_id}/add_to_all_reds")
+@fastapi_chameleon.template("partials/notification.pt")
 def add_program_to_all_red(
-    spray_program_id: int, session: Session = Depends(get_session)
+    request: Request, spray_program_id: int, session: Session = Depends(get_session)
 ):
     spray_program = spray_program_service.eagerly_get_spray_program_by_id(
         spray_program_id, session
     )
-
     if not spray_program:
         raise HTTPException(status_code=404, detail="SprayProgram not found")
 
     red_management_units = vineyard_service.get_red_management_units(session)
-
     for mu in red_management_units:
         spray_record = spray_record_service.create_or_update_spray_record(
             session, mu.id, spray_program_id
         )
         session.add(spray_record)
-
     session.commit()
 
-    return f"""
-        <div class="notification is-success is-light">
-        <button class="delete"></button>
-            ✅ Spray program <strong>{spray_program.name}</strong> applied to all red units.
-        </div>
-    """
+    vm = ViewModelBase(request, session)
+    vm.set_success(
+        f"Spray program <strong>{spray_program.name}</strong> applied to all red units."
+    )
+
+    # Return the view model directly - to_dict() will be called automatically
+    return vm.to_dict()

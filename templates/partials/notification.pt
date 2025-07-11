@@ -1,0 +1,19 @@
+<div tal:condition="success" class="notification is-success is-light">
+    <button class="delete" hx-get="/empty" hx-target="closest .notification" hx-swap="outerHTML"></button>
+    <span tal:content="structure success"></span>
+</div>
+
+<div tal:condition="error" class="notification is-danger is-light">
+    <button class="delete" hx-get="/empty" hx-target="closest .notification" hx-swap="outerHTML"></button>
+    <span tal:content="structure error"></span>
+</div>
+
+<div tal:condition="warning" class="notification is-warning is-light">
+    <button class="delete" hx-get="/empty" hx-target="closest .notification" hx-swap="outerHTML"></button>
+    <span tal:content="structure warning"></span>
+</div>
+
+<div tal:condition="info" class="notification is-info is-light">
+    <button class="delete" hx-get="/empty" hx-target="closest .notification" hx-swap="outerHTML"></button>
+    <span tal:content="structure info"></span>
+</div>

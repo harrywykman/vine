@@ -1,6 +1,6 @@
 <div metal:use-macro="load: ../shared/_layout.pt">
     <div metal:fill-slot="content" tal:omit-tag="True">
-        <h1 class="title">Login to PyPI</h1>
+        <h1 class="title">Login</h1>
         <form action="" method="POST">
 
             <div class="field">

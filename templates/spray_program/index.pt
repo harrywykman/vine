@@ -17,7 +17,7 @@
                                 <th>EL</th>
                                 <th>Chemicals</th>
                                 <th>Apply</th>
-                                <th>Actions</th>
+                                <!-- <th>Actions</th> -->
                             </tr>
                         </thead>
                         <tbody>
@@ -48,7 +48,7 @@
                                 <td>
                                     <button class="button is-danger is-small"
                                         hx-post="/spray_programs/${sp.id}/add_to_all_reds" hx-target="#message-area"
-                                        hx-swap="none">
+                                        hx-swap="innerHTML">
                                         Apply to All Reds
                                     </button>
 
@@ -58,7 +58,7 @@
                                         Apply to All MUs
                                     </button>
                                 </td>
-                                <td class="buttons">
+                                <!--                                 <td class="buttons">
                                     <button class="button is-info is-small" hx-get="/spray_program/${sp.id}/edit"
                                         hx-target="#spray_program_row_${sp.id}" hx-swap="outerHTML">
                                         Edit
@@ -68,7 +68,7 @@
                                         onsubmit="return confirm('Delete Spray Program ${sp.name}?');">
                                         <button class="button is-small is-danger is-light" type="submit">Delete</button>
                                     </form>
-                                </td>
+                                </td> -->
                             </tr>
                         </tbody>
                     </table>

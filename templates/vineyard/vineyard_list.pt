@@ -4,33 +4,30 @@
             <div class="container">
                 <h2 class="title is-3">Vineyards</h2>
 
-                <div class="columns is-multiline" tal:repeat="v vineyards">
-                    <div class="column is-12-mobile is-6-tablet is-4-desktop">
-                        <div class="box">
-                            <article class="media">
-                                <div class="media-content">
-                                    <div class="content">
-                                        <p>
-                                            <strong>
-                                                <a href="/vineyards/${v.id}">${v.name}</a>
-                                            </strong><br />
-                                            <small class="has-text-grey">${v.address}</small>
-                                        </p>
-                                    </div>
-                                    <div class="buttons mt-2">
-                                        <a href="/vineyards/${v.id}" class="button is-info is-small">Edit</a>
-                                        <form method="post" action="/vineyards/${v.id}/delete" class="inline"
-                                            onsubmit="return confirm('Delete?');" style="display:inline;">
-                                            <button type="submit"
-                                                class="button is-danger is-light is-small">Delete</button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </article>
-                        </div>
-                    </div>
+                <div class="table-container">
+                    <table class="table is-fullwidth is-striped is-hoverable is-narrow">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <!-- <th>Address</th> -->
+                                <!-- <th>Actions</th> -->
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr tal:repeat="v vineyards">
+                                <td><a href="/vineyards/${v.id}">${v.name}</a></td>
+                                <!--  <td>${v.address}</td> -->
+                                <!--                                 <td class="is-flex is-flex-wrap-wrap is-align-items-center is-gap-2">
+                                    <a href="/vineyards/${v.id}" class="button is-info is-small mr-2">Edit</a>
+                                    <form method="post" action="/vineyards/${v.id}/delete" class="inline"
+                                        onsubmit="return confirm('Delete?');">
+                                        <button type="submit" class="button is-danger is-light is-small">Delete</button>
+                                    </form>
+                                </td> -->
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-
             </div>
         </section>
     </div>

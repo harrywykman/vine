@@ -5,8 +5,9 @@ from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from sqladmin import Admin
-from sqlmodel import SQLModel
+from sqlmodel import Session, SQLModel
 
+from config import SETTINGS
 from data.admin import (
     ChemicalAdmin,
     ChemicalGroupAdmin,
@@ -23,7 +24,8 @@ from data.admin import (
     WineColourAdmin,
 )
 from database import engine
-from routers import account, chemicals, spray_programs, vineyards
+from routers import account, administration, chemicals, spray_programs, vineyards
+from services import user_service
 
 # Initialise Fast API app
 app = FastAPI()
@@ -44,9 +46,19 @@ app.include_router(vineyards.router)
 app.include_router(chemicals.router)
 app.include_router(spray_programs.router)
 app.include_router(account.router)
+app.include_router(administration.router)
 
 # create db
 SQLModel.metadata.create_all(engine)
+
+# create superuser if no users exist
+with Session(engine) as session:
+    user_service.create_first_superadmin(
+        session,
+        SETTINGS.super_admin_name,
+        SETTINGS.super_admin_email,
+        SETTINGS.super_admin_password,
+    )
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
