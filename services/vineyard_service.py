@@ -41,10 +41,10 @@ def get_vineyard_by_name(session: Session, name: str):
     return vineyard
 
 
-def eagerly_get_vineyard_managment_units_by_id(session: Session, id: int):
+def eagerly_get_vineyard_managment_units_by_id(session: Session, vineyard_id: int):
     management_units = session.exec(
         select(ManagementUnit)
-        .where(ManagementUnit.vineyard_id == id)
+        .where(ManagementUnit.vineyard_id == vineyard_id)
         .order_by(ManagementUnit.name)
         .options(
             selectinload(ManagementUnit.variety),
@@ -71,6 +71,17 @@ def get_red_management_units(session: Session):
         .join(ManagementUnit.variety)  # join to Variety
         .join(Variety.wine_colour)  # join to WineColour
         .where(WineColour.name == "Red")
+    )
+    results = session.exec(statement).all()
+    return results
+
+
+def get_red_management_units(session: Session):
+    statement = (
+        select(ManagementUnit)
+        .join(ManagementUnit.variety)  # join to Variety
+        .join(Variety.wine_colour)  # join to WineColour
+        .where(WineColour.name == "White")
     )
     results = session.exec(statement).all()
     return results
@@ -111,6 +122,22 @@ def all_growth_stages(session: Session):
 
     varieties = session.exec(query).all()
     return varieties
+
+
+def get_all_spray_records(session: Session):
+    statement = (
+        select(SprayRecord)
+        .join(SprayProgram.growth_stage)
+        .options(
+            selectinload(SprayRecord.spray_program).selectinload(
+                SprayProgram.growth_stage
+            ),
+        )
+        .order_by(asc(GrowthStage.el_number))
+    )
+
+    spray_records = session.exec(statement).all()
+    return spray_records
 
 
 # TODO Reduce eagerness!

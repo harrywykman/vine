@@ -37,7 +37,6 @@
     <div id="navbarBasicExample" class="navbar-menu">
       <div class="navbar-start">
         <a tal:condition="is_logged_in" href="/vineyards" class="navbar-item"> Vineyards </a>
-        <a tal:condition="is_logged_in and is_admin" href="/spray_programs" class="navbar-item"> Spray Programs </a>
 
 
         <!-- <div tal:condition="is_logged_in" class="navbar-item has-dropdown is-hoverable">
@@ -68,6 +67,12 @@
             <div tal:condition="is_logged_in">
               <a href="/account/" class="button is-primary">
                 <strong>Account</strong>
+              </a>
+            </div>
+
+            <div class="navbar-item" tal:condition="is_admin">
+              <a class="button is-warning" href="/administration/dashboard">
+                Admin
               </a>
             </div>
             <div tal:condition="is_logged_in">

@@ -18,6 +18,7 @@ from dependencies import get_current_user, get_session
 from services.user_service import get_users_by_role, update_user_role
 from viewmodels.admin.admin_viewmodels import (
     AdminDashboardViewModel,
+    SprayProgressReportViewModel,
     UserManagementViewModel,
 )
 
@@ -36,6 +37,16 @@ async def admin_dashboard(request: Request, session: Session = Depends(get_sessi
             return RedirectResponse(url="/login", status_code=302)
         else:
             return RedirectResponse(url="/unauthorised", status_code=302)
+
+
+@router.get("/reports/spray_progress", response_class=HTMLResponse)
+@fastapi_chameleon.template("admin/spray_progress.pt")
+async def spray_progress_report(
+    request: Request, session: Session = Depends(get_session)
+):
+    vm = SprayProgressReportViewModel(request, session)
+
+    return vm.to_dict()
 
 
 ## Example routes from Claude

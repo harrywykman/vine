@@ -103,12 +103,13 @@
                                             <div class="level-item">
                                                 <span class="tag is-success ml-2"
                                                     tal:condition="spray_program_completion_status[sp.id]">
-                                                    Complete
+                                                    Complete - ${spray_program_completion_dates[sp.id]}
                                                 </span>
-                                                <span class="tag is-warning ml-2"
-                                                    tal:condition="not spray_program_completion_status[sp.id]">
-                                                    Incomplete
-                                                </span>
+                                                <div tal:condition="not spray_program_completion_status[sp.id]">
+                                                    <span class="tag is-warning ml-2">
+                                                        Incomplete
+                                                    </span>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="level-right">
@@ -165,7 +166,11 @@
                                             </tr>
                                         </tbody>
                                     </table>
-
+                                    <div class="section has-text-centered">
+                                        <a class="button is-primary is-outlined"
+                                            href="/vineyards/${vineyard.id}/spray_records/${sp.id}">Create Spray Record
+                                        </a>
+                                    </div>
                                     <div class="box">
                                         <table class="table is-fullwidth">
                                             <thead>
@@ -187,7 +192,7 @@
                                                         </td>
                                                         <td>
                                                             <span class="tag is-success" tal:condition="sr.complete">
-                                                                Complete</span>
+                                                                Complete - ${sr.formatted_date_completed}</span>
                                                             <span class="tag is-small is-danger"
                                                                 tal:condition="not sr.complete">
                                                                 Incomplete</span>

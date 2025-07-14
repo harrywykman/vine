@@ -3,10 +3,12 @@
         <div class="section content">
             <div class="container spray_program-list">
                 <div class="spray_program-list container">
-                    <h2 class="title">Spray Program</h2>
-                    <a href="/spray_program/new" class="button is-link is-small" type="button">
-                        + Add Spray Program
-                    </a>
+                    <h2 class="title">Spray Program 2025 / 2026</h2>
+                    <div class="content">
+                        <a href="/spray_program/new" class="button is-link is-small" type="button">
+                            + Add Spray
+                        </a>
+                    </div>
                     <div id="message-area"></div>
 
                     <table class="table is-striped is-hoverable is-fullwidth">
@@ -46,17 +48,24 @@
                                     </table>
                                 </td>
                                 <td>
-                                    <button class="button is-danger is-small"
-                                        hx-post="/spray_programs/${sp.id}/add_to_all_reds" hx-target="#message-area"
-                                        hx-swap="innerHTML">
-                                        Apply to All Reds
-                                    </button>
+                                    <div class="buttons">
+                                        <button class="button is-danger is-small is-outlined"
+                                            hx-post="/spray_programs/${sp.id}/add_to_all_reds" hx-target="#message-area"
+                                            hx-swap="innerHTML">
+                                            Apply to All Reds
+                                        </button>
+                                        <button class="button is-white is-small is-outlined"
+                                            hx-post="/spray_programs/${sp.id}/add_to_all_whites"
+                                            hx-target="#message-area" hx-swap="innerHTML">
+                                            Apply to All Whites
+                                        </button>
 
-                                    <button class="button is-info is-small"
-                                        hx-post="/spray_programs/${sp.id}/add_to_all_units" hx-target="#message-area"
-                                        hx-swap="none">
-                                        Apply to All MUs
-                                    </button>
+                                        <button class="button is-info is-small is-outlined"
+                                            hx-post="/spray_programs/${sp.id}/add_to_all_units"
+                                            hx-target="#message-area" hx-swap="none">
+                                            Apply to All MUs
+                                        </button>
+                                    </div>
                                 </td>
                                 <!--                                 <td class="buttons">
                                     <button class="button is-info is-small" hx-get="/spray_program/${sp.id}/edit"

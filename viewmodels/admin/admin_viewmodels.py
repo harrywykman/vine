@@ -6,6 +6,8 @@ from sqlmodel import select
 from starlette.requests import Request
 
 from data.user import User, UserRole
+from data.vineyard import SprayRecord, Vineyard
+from services import spray_program_service, vineyard_service
 from services.user_service import get_users_by_role
 from viewmodels.shared.viewmodel import ViewModelBase
 
@@ -29,6 +31,28 @@ class AdminDashboardViewModel(ViewModelBase):
             "admins": len(self.admin_users),
             "operators": len(self.operator_users),
             "regular": len(self.regular_users),
+        }
+
+
+class SprayProgressReportViewModel(ViewModelBase):
+    def __init__(self, request: Request, session: Session):
+        super().__init__(request, session)
+
+        # Ensure user has admin permissions
+        self.require_permission(UserRole.ADMIN)
+
+        self.vineyards: List[Vineyard] = vineyard_service.all_vineyards(session)
+
+        # self.vineyards = session.exec(select(Vineyard).order_by(Vineyard.name)).all()
+        self.spray_programs = spray_program_service.eagerly_get_all_spray_programs(
+            session
+        )
+
+        # Build lookup: {(management_unit_id, spray_program_id): SprayRecord}
+        self.spray_records = session.exec(select(SprayRecord)).all()
+        self.spray_lookup = {
+            (rec.management_unit_id, rec.spray_program_id): rec
+            for rec in self.spray_records
         }
 
 

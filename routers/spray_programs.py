@@ -251,5 +251,31 @@ def add_program_to_all_red(
         f"Spray program <strong>{spray_program.name}</strong> applied to all red units."
     )
 
-    # Return the view model directly - to_dict() will be called automatically
+    return vm.to_dict()
+
+
+@router.post("/spray_programs/{spray_program_id}/add_to_all_whites")
+@fastapi_chameleon.template("partials/notification.pt")
+def add_program_to_all_white(
+    request: Request, spray_program_id: int, session: Session = Depends(get_session)
+):
+    spray_program = spray_program_service.eagerly_get_spray_program_by_id(
+        spray_program_id, session
+    )
+    if not spray_program:
+        raise HTTPException(status_code=404, detail="SprayProgram not found")
+
+    white_management_units = vineyard_service.get_red_management_units(session)
+    for mu in white_management_units:
+        spray_record = spray_record_service.create_or_update_spray_record(
+            session, mu.id, spray_program_id
+        )
+        session.add(spray_record)
+    session.commit()
+
+    vm = ViewModelBase(request, session)
+    vm.set_success(
+        f"Spray program <strong>{spray_program.name}</strong> applied to all white units."
+    )
+
     return vm.to_dict()

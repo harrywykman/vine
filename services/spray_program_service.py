@@ -22,7 +22,7 @@ def eagerly_get_all_spray_programs(session: Session) -> list[SprayProgram]:
         .order_by(GrowthStage.el_number)
     )
 
-    spray_programs = session.exec(statement)
+    spray_programs = session.exec(statement).all()
     if not spray_programs:
         raise HTTPException(status_code=404, detail="No Spray Programs Found")
     return spray_programs

@@ -1,0 +1,64 @@
+<div metal:use-macro="load: ../shared/_layout.pt">
+    <div metal:fill-slot="content" tal:omit-tag="True">
+
+        <section class="section">
+            <div class="container">
+                <h1 class="title is-3 has-text-light">Spray Season Progress</h1>
+
+                <div class="table-container">
+                    <table
+                        class="table is-scrollable is-bordered is-striped is-narrow is-hoverable is-fullwidth has-background-dark has-text-light">
+                        <thead>
+                            <tr>
+                                <th class="has-text-light">Vineyard / Management Unit</th>
+                                <th tal:repeat="program spray_programs" class="has-text-light">
+                                    ${program.name}
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tal:block tal:repeat="vineyard vineyards">
+                                <!-- Vineyard Row -->
+                                <tr class="has-background-grey-darker">
+                                    <td colspan="${1 + len(spray_programs)}">
+                                        <strong class="has-text-white">${vineyard.name}</strong>
+                                    </td>
+                                </tr>
+
+                                <!-- Management Units -->
+                                <tr tal:repeat="unit vineyard.management_units">
+                                    <td>
+                                        <span class="ml-4 has-text-light">${unit.name}</span>
+                                    </td>
+                                    <td tal:repeat="program spray_programs">
+                                        <div tal:define="record spray_lookup.get((unit.id, program.id))">
+
+                                            <!-- Complete -->
+                                            <span tal:condition="record and record.complete" class="tag is-success">
+                                                <span class="icon is-small"><i class="fas fa-check-circle"></i></span>
+                                                <span>${record.formatted_date_completed}</span>
+                                            </span>
+
+                                            <!-- Pending -->
+                                            <span tal:condition="record and not record.complete" class="tag is-warning">
+                                                <span class="icon is-small"><i class="fas fa-hourglass-half"></i></span>
+                                                <span>Spray pending</span>
+                                            </span>
+
+                                            <!-- Unassigned -->
+                                            <span tal:condition="not record" class="is-dark has-text-centered">
+                                                <p>-</p>
+                                            </span>
+
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tal:block>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+    </div>
+</div>

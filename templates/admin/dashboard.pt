@@ -1,114 +1,84 @@
-<!DOCTYPE html>
-<html>
+<div metal:use-macro="load: ../shared/_layout.pt">
+    <div metal:fill-slot="content" tal:omit-tag="True">
 
-<head>
-    <title>Admin Dashboard</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
-    <script src="https://unpkg.com/htmx.org@2.0.5"></script>
-</head>
+        <section class="section">
+            <div class="container">
+                <h1 class="title">Admin Dashboard</h1>
 
-<body>
-    <nav class="navbar is-primary">
-        <div class="navbar-brand">
-            <a class="navbar-item">
-                <strong>Vine Admin</strong>
-            </a>
-        </div>
-        <div class="navbar-menu">
-            <div class="navbar-end">
-                <div class="navbar-item">
-                    <span>Welcome, ${user.name}</span>
-                    <span class="tag is-info ml-2">${user.role}</span>
-                </div>
+                <div class="columns">
+                    <div class="column">
+                        <div class="box">
+                            <h2 class="subtitle">User Statistics</h2>
+                            <div class="content">
+                                <p><strong>Total Users:</strong> ${user_stats.total}</p>
+                                <p><strong>Admins:</strong> ${user_stats.admins}</p>
+                                <p><strong>Operators:</strong> ${user_stats.operators}</p>
+                                <p><strong>Regular Users:</strong> ${user_stats.regular}</p>
+                            </div>
+                        </div>
+                    </div>
 
-                <!-- Show superadmin link only to superadmins -->
-                <div class="navbar-item" tal:condition="is_superadmin">
-                    <a class="button is-warning" href="/admin/system">
-                        System Admin
-                    </a>
-                </div>
+                    <div class="column">
+                        <div class="box">
+                            <h2 class="subtitle">Quick Actions</h2>
+                            <div class="buttons">
+                                <a class="button is-info" href="/spray_programs">
+                                    <span class="icon">
+                                        <i class="fas fa-spray-can"></i>
+                                    </span>
+                                    <span>Manage Spray Programs</span>
+                                </a>
+                                <a class="button is-primary" href="/admin/users">
+                                    <span class="icon">
+                                        <i class="fas fa-users"></i>
+                                    </span>
+                                    <span>Manage Users</span>
+                                </a>
+                                <a class="button is-info" href="/administration/reports/spray_progress">
+                                    <span class="icon">
+                                        <i class="fas fa-chart-bar"></i>
+                                    </span>
+                                    <span>View Reports</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
 
-                <div class="navbar-item">
-                    <a class="button is-light" href="/logout">
-                        Logout
-                    </a>
-                </div>
-            </div>
-        </div>
-    </nav>
-
-    <section class="section">
-        <div class="container">
-            <h1 class="title">Admin Dashboard</h1>
-
-            <div class="columns">
-                <div class="column">
-                    <div class="box">
-                        <h2 class="subtitle">User Statistics</h2>
-                        <div class="content">
-                            <p><strong>Total Users:</strong> ${user_stats.total}</p>
-                            <p><strong>Admins:</strong> ${user_stats.admins}</p>
-                            <p><strong>Operators:</strong> ${user_stats.operators}</p>
-                            <p><strong>Regular Users:</strong> ${user_stats.regular}</p>
+                    <!-- Superadmin-only quick actions -->
+                    <div class="column" tal:condition="is_superadmin">
+                        <div class="box">
+                            <h2 class="subtitle">System Actions</h2>
+                            <div class="buttons">
+                                <button class="button is-warning" hx-post="/api/system/maintenance"
+                                    hx-vals='{"enabled": true}' hx-confirm="Enable maintenance mode?">
+                                    <span class="icon">
+                                        <i class="fas fa-tools"></i>
+                                    </span>
+                                    <span>Maintenance Mode</span>
+                                </button>
+                                <a class="button is-danger" href="/admin/system">
+                                    <span class="icon">
+                                        <i class="fas fa-cogs"></i>
+                                    </span>
+                                    <span>System Settings</span>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="column">
-                    <div class="box">
-                        <h2 class="subtitle">Quick Actions</h2>
-                        <div class="buttons">
-                            <a class="button is-primary" href="/admin/users">
-                                <span class="icon">
-                                    <i class="fas fa-users"></i>
-                                </span>
-                                <span>Manage Users</span>
-                            </a>
-                            <a class="button is-info" href="/admin/reports">
-                                <span class="icon">
-                                    <i class="fas fa-chart-bar"></i>
-                                </span>
-                                <span>View Reports</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Superadmin-only quick actions -->
-                <div class="column" tal:condition="is_superadmin">
-                    <div class="box">
-                        <h2 class="subtitle">System Actions</h2>
-                        <div class="buttons">
-                            <button class="button is-warning" hx-post="/api/system/maintenance"
-                                hx-vals='{"enabled": true}' hx-confirm="Enable maintenance mode?">
-                                <span class="icon">
-                                    <i class="fas fa-tools"></i>
-                                </span>
-                                <span>Maintenance Mode</span>
-                            </button>
-                            <a class="button is-danger" href="/admin/system">
-                                <span class="icon">
-                                    <i class="fas fa-cogs"></i>
-                                </span>
-                                <span>System Settings</span>
-                            </a>
+                <div class="columns">
+                    <div class="column">
+                        <div class="box">
+                            <h2 class="subtitle">Recent Activity</h2>
+                            <div class="content">
+                                <p><em>...</em></p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+        </section>
 
-            <div class="columns">
-                <div class="column">
-                    <div class="box">
-                        <h2 class="subtitle">Recent Activity</h2>
-                        <div class="content">
-                            <p><em>Activity feed would go here...</em></p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-</body>
-
-</html>
+    </div>
+</div>

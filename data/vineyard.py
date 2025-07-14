@@ -126,6 +126,20 @@ class GrowthStage(SQLModel, table=True):
         return f"{self.el_number} - {self.description}"
 
 
+""" class SprayProgram(SQLModel, table=True):
+    __tablename__ = "annual_spray_programs"
+    
+    id: Optional[int] = Field(default=None, primary_key=True)
+    name: str = Field(nullable=False)
+    year: int = Field(nullable=False, index=True)
+    date_created: datetime.datetime = Field(
+        sa_column=sa.Column(sa.DateTime, default=datetime.datetime.now, index=True)
+    )
+    
+    # Relationships
+    sprays: List["Spray"] = Relationship(back_populates="spray_program", cascade_delete=True) """
+
+
 # TODO Should be Spray, where Spray Program is a Set of Sprays for a Year
 # ---- need to drop database and reimport dummy data to change
 class SprayProgram(SQLModel, table=True):
@@ -222,6 +236,12 @@ class SprayRecord(SQLModel, table=True):
 
     def __str__(self):
         return f"{self.complete}"
+
+    @property
+    def formatted_date_completed(self):
+        if self.date_completed:
+            return self.date_completed.strftime("%d/%m/%Y")
+        return None
 
 
 class SprayRecordChemical(SQLModel, table=True):
