@@ -1,13 +1,16 @@
 from decimal import Decimal
 from typing import Annotated, Optional
 
+import fastapi
 import fastapi_chameleon
 from fastapi import APIRouter, Depends, Form, HTTPException, Request
-from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.responses import HTMLResponse
 from sqlalchemy.orm import Session
 from sqlmodel import Session
+from starlette import status
 
 from dependencies import get_session
+from services import vineyard_service
 from viewmodels.vineyards.details_viewmodel import DetailsViewModel
 from viewmodels.vineyards.edit_mu_viewmodel import EditMUViewModel
 from viewmodels.vineyards.list_viewmodel import ListViewModel
@@ -147,134 +150,19 @@ async def submit_spray_records(
 
     vm.process_submission()
 
-    return RedirectResponse(
-        url=f"/vineyards/{vineyard_id}",
-        status_code=303,
-    )
-
-
-""" @router.post("/vineyards/{vineyard_id}/spray_records/{spray_program_id}/submit")
-async def submit_spray_records(
-    vineyard_id: int,
-    spray_program_id: int,
-    operator: Annotated[str, Form(...)],
-    growth_stage_id: Annotated[int | None, Form(None)],
-    hours_taken: Annotated[Decimal | None, Form(None)],
-    temperature: Annotated[int | None, Form(None)],
-    relative_humidity: Annotated[int | None, Form(None)],
-    wind_speed: Annotated[int | None, Form(None)],
-    wind_direction: Annotated[str | None, Form(None)],
-    management_unit_ids: Annotated[list[int], Form(...)],
-    request: Request,
-    session: Session = Depends(get_session),
-):
-    vm = VineyardSprayRecordsSubmitViewModel(
-        vineyard_id=vineyard_id,
-        spray_program_id=spray_program_id,
-        operator=operator,
-        growth_stage_id=growth_stage_id,
-        hours_taken=hours_taken,
-        temperature=temperature,
-        relative_humidity=relative_humidity,
-        wind_speed=wind_speed,
-        wind_direction=wind_direction,
-        management_unit_ids=management_unit_ids,
-        request=request,
-        session=session,
-    )
-
-    await vm.load_dynamic_fields()  # fetch batch numbers from request.form()
-    vm.process_submission()
-
-    return RedirectResponse(
-        url=f"/vineyards/{vineyard_id}/spray_records/{spray_program_id}",
-        status_code=303,
-    )
-
-
-@router.post("/vineyards/{vineyard_id}/spray_records/{spray_program_id}/submit")
-async def submit_spray_records(
-    request: Request,
-    vineyard_id: int,
-    spray_program_id: int,
-    operator: str = Form(...),
-    growth_stage_id: int | None = Form(None),
-    hours_taken: Decimal | None = Form(None),
-    temperature: int | None = Form(None),
-    relative_humidity: int | None = Form(None),
-    wind_speed: int | None = Form(None),
-    wind_direction: str | None = Form(None),
-    management_unit_ids: list[int] = Form(
-        ...
-    ),  # Will work if multiple checkboxes named "management_unit_ids"
-    session: Session = Depends(get_session),
-):
-    form = await request.form()
-
-    # Fetch SprayProgramChemicals for this program
-    program_chems = session.exec(
-        select(SprayProgramChemical).where(
-            SprayProgramChemical.spray_program_id == spray_program_id
+    if vineyard_service.spray_program_complete_for_vineyard(
+        session=session, spray_program_id=spray_program_id, vineyard_id=vineyard_id
+    ):
+        response = fastapi.responses.RedirectResponse(
+            f"/vineyards/{vineyard_id}",
+            status_code=status.HTTP_302_FOUND,
         )
-    ).all()
+        return response
 
-    # Map chemical_id -> batch_number from form
-    chem_batch_map = {}
-    for pc in program_chems:
-        key = f"batch_number_{pc.chemical_id}"
-        batch_number = form.get(key)
-        if not batch_number:
-            raise HTTPException(
-                status_code=400,
-                detail=f"Missing batch number for chemical {pc.chemical.name}",
-            )
-        chem_batch_map[pc.chemical_id] = batch_number
-
-    # Convert wind_direction string to enum if provided
-    wd_enum = None
-    if wind_direction:
-        try:
-            wd_enum = WindDirection[wind_direction]
-        except KeyError:
-            raise HTTPException(status_code=400, detail="Invalid wind direction")
-
-    # Process each selected management unit's spray record
-    for mu_id in management_unit_ids:
-        spray_record = session.exec(
-            select(SprayRecord).where(
-                SprayRecord.management_unit_id == mu_id,
-                SprayRecord.spray_program_id == spray_program_id,
-            )
-        ).first()
-
-        if not spray_record:
-            continue  # Or optionally raise an error?
-
-        spray_record.operator = operator
-        spray_record.growth_stage_id = growth_stage_id
-        spray_record.hours_taken = hours_taken
-        spray_record.temperature = temperature
-        spray_record.relative_humidity = relative_humidity
-        spray_record.wind_speed = wind_speed
-        spray_record.wind_direction = wd_enum
-        spray_record.complete = True
-        spray_record.date_completed = datetime.datetime.now()
-
-        # Add new SprayRecordChemicals with batch numbers
-        for chem_id, batch_number in chem_batch_map.items():
-            src = SprayRecordChemical(
-                spray_record_id=spray_record.id,
-                chemical_id=chem_id,
-                batch_number=batch_number,
-            )
-            session.add(src)
-
-        session.add(spray_record)
-
-    session.commit()
-
-    return RedirectResponse(
-        url=f"/vineyards/{vineyard_id}/spray_records/{spray_program_id}",
-        status_code=303,
+    vm = VineyardSprayRecordsFormViewModel(
+        vineyard_id, spray_program_id, request, session
     )
- """
+
+    vm.set_success("Successfully created spray record")
+
+    return vm.to_dict()

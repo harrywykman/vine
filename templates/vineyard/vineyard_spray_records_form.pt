@@ -2,6 +2,7 @@
     <div metal:fill-slot="content" tal:omit-tag="True">
 
         <div class="help is-success" tal:condition="info">${ info }</div>
+        <div id="message-area"></div>
 
         <form method="post" action="/vineyards/${vineyard_id}/spray_records/${spray_program_id}/submit">
 
@@ -105,7 +106,6 @@
             <div class="field mt-4">
                 <div class="control">
                     <button class="button is-primary is-fullwidth" type="submit">Submit Spray Records</button>
-
                     <a class="button is-link is-fullwidth" href="/vineyards/${vineyard_id}">
                         ← Back to Vineyard Details
                     </a>
