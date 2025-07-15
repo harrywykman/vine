@@ -28,7 +28,7 @@
                                 <!-- Management Units -->
                                 <tr tal:repeat="unit vineyard.management_units">
                                     <td>
-                                        <span class="ml-4 has-text-light">${unit.name}</span>
+                                        <span class="ml-4 has-text-light">${unit.name_with_variety}</span>
                                     </td>
                                     <td tal:repeat="program spray_programs">
                                         <div tal:define="record spray_lookup.get((unit.id, program.id))">

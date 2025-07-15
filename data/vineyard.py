@@ -79,6 +79,12 @@ class ManagementUnit(SQLModel, table=True):
     def __str__(self):
         return f"{self.name}"
 
+    @property
+    def name_with_variety(self):
+        if self.variety:
+            return f"{self.name} - {self.variety.name}"
+        return None
+
 
 class WineColour(SQLModel, table=True):
     __tablename__ = "wine_colours"
