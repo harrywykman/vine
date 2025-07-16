@@ -11,7 +11,7 @@
                         <thead>
                             <tr>
                                 <th class="has-text-light">Vineyard / Management Unit</th>
-                                <th tal:repeat="program spray_programs" class="has-text-light">
+                                <th tal:repeat="program sprays" class="has-text-light">
                                     ${program.name}
                                 </th>
                             </tr>
@@ -20,7 +20,7 @@
                             <tal:block tal:repeat="vineyard vineyards">
                                 <!-- Vineyard Row -->
                                 <tr class="has-background-grey-darker">
-                                    <td colspan="${1 + len(spray_programs)}">
+                                    <td colspan="${1 + len(sprays)}">
                                         <strong class="has-text-white">${vineyard.name}</strong>
                                     </td>
                                 </tr>
@@ -30,7 +30,7 @@
                                     <td>
                                         <span class="ml-4 has-text-light">${unit.name_with_variety}</span>
                                     </td>
-                                    <td tal:repeat="program spray_programs">
+                                    <td tal:repeat="program sprays">
                                         <div tal:define="record spray_lookup.get((unit.id, program.id))">
 
                                             <!-- Complete -->

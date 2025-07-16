@@ -304,7 +304,6 @@ class Target(str, enum.Enum):
     WETTER = "Wetter"
 
 
-# Renamed from SprayProgramChemical to SprayChemical
 class SprayChemical(SQLModel, table=True):
     __tablename__ = "spray_chemicals"
     __table_args__ = (

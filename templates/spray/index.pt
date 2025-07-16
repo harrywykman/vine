@@ -1,11 +1,11 @@
 <div metal:use-macro="load: ../shared/_layout.pt">
     <div metal:fill-slot="content" tal:omit-tag="True">
         <div class="section content">
-            <div class="container spray_program-list">
-                <div class="spray_program-list container">
-                    <h2 class="title">Spray Program 2025 / 2026</h2>
+            <div class="container spray-list">
+                <div class="spray-list container">
+                    <h2 class="title">Sprays</h2>
                     <div class="content">
-                        <a href="/spray_program/new" class="button is-link is-small" type="button">
+                        <a href="/spray/new" class="button is-link is-small" type="button">
                             + Add Spray
                         </a>
                     </div>
@@ -23,9 +23,9 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr tal:repeat="sp spray_programs" id="spray_program_row_${sp.id}">
+                            <tr tal:repeat="sp sprays" id="spray_row_${sp.id}">
                                 <td>
-                                    <strong><a href=" /spray_program/${sp.id}">${sp.name}</a></strong>
+                                    <strong><a href=" /spray/${sp.id}">${sp.name}</a></strong>
                                 </td>
                                 <td>${sp.water_spray_rate_per_hectare} L</td>
                                 <td>${sp.growth_stage.el_number}</td>
@@ -39,7 +39,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr tal:repeat="spc sp.spray_program_chemicals">
+                                            <tr tal:repeat="spc sp.spray_chemicals">
                                                 <td>${spc.chemical.name}</td>
                                                 <td class="has-text-right">${spc.target.value}</td>
                                                 <td class="has-text-right">${spc.concentration_factor}</td>
@@ -50,29 +50,29 @@
                                 <td>
                                     <div class="buttons">
                                         <button class="button is-danger is-small is-outlined"
-                                            hx-post="/spray_programs/${sp.id}/add_to_all_reds" hx-target="#message-area"
+                                            hx-post="/sprays/${sp.id}/add_to_all_reds" hx-target="#message-area"
                                             hx-swap="innerHTML">
                                             Apply to All Reds
                                         </button>
                                         <button class="button is-white is-small is-outlined"
-                                            hx-post="/spray_programs/${sp.id}/add_to_all_whites"
-                                            hx-target="#message-area" hx-swap="innerHTML">
+                                            hx-post="/sprays/${sp.id}/add_to_all_whites" hx-target="#message-area"
+                                            hx-swap="innerHTML">
                                             Apply to All Whites
                                         </button>
 
                                         <button class="button is-info is-small is-outlined"
-                                            hx-post="/spray_programs/${sp.id}/add_to_all_units"
-                                            hx-target="#message-area" hx-swap="none">
+                                            hx-post="/sprays/${sp.id}/add_to_all_units" hx-target="#message-area"
+                                            hx-swap="none">
                                             Apply to All MUs
                                         </button>
                                     </div>
                                 </td>
                                 <!--                                 <td class="buttons">
-                                    <button class="button is-info is-small" hx-get="/spray_program/${sp.id}/edit"
-                                        hx-target="#spray_program_row_${sp.id}" hx-swap="outerHTML">
+                                    <button class="button is-info is-small" hx-get="/spray/${sp.id}/edit"
+                                        hx-target="#spray_row_${sp.id}" hx-swap="outerHTML">
                                         Edit
                                     </button>
-                                    <form method="post" action="/spray_program/${ sp.id }/delete"
+                                    <form method="post" action="/spray/${ sp.id }/delete"
                                         class="is-inline-block"
                                         onsubmit="return confirm('Delete Spray Program ${sp.name}?');">
                                         <button class="button is-small is-danger is-light" type="submit">Delete</button>

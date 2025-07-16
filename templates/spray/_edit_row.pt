@@ -1,7 +1,7 @@
-<tr id="spray_program_row_${sp.id}">
+<tr id="spray_row_${sp.id}">
     <td colspan="4">
-        <form method="post" action="/spray_program/${sp.id}/edit" hx-post="/spray_program/${sp.id}/edit"
-            hx-target="#spray_program_row_${sp.id}" hx-swap="outerHTML">
+        <form method="post" action="/spray/${sp.id}/edit" hx-post="/spray/${sp.id}/edit"
+            hx-target="#spray_row_${sp.id}" hx-swap="outerHTML">
 
             <div class="columns is-multiline is-vcentered">
                 <div class="column is-3">
@@ -25,7 +25,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr tal:repeat="spc sp.spray_program_chemicals">
+                            <tr tal:repeat="spc sp.spray_chemicals">
                                 <td>
                                     <div class="select is-small is-fullwidth">
                                         <select name="chemical_ids">
@@ -50,7 +50,7 @@
                     <div class="buttons">
                         <button type="submit" class="button is-small is-success is-light">Save</button>
                         <button type="button" class="button is-small is-warning is-light"
-                            hx-get="/spray_program/${sp.id}/view" hx-target="#spray_program_row_${sp.id}"
+                            hx-get="/spray/${sp.id}/view" hx-target="#spray_row_${sp.id}"
                             hx-swap="outerHTML">
                             Cancel
                         </button>

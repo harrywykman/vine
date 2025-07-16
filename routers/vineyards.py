@@ -47,19 +47,17 @@ def vineyard_details(
 
 
 @router.get(
-    "/vineyards/{vineyard_id}/spray_records/{spray_program_id}",
+    "/vineyards/{vineyard_id}/spray_records/{spray_id}",
     response_class=HTMLResponse,
 )
 @fastapi_chameleon.template("vineyard/vineyard_spray_records_form.pt")
 def vineyard_spray_records_form(
     request: Request,
     vineyard_id: int,
-    spray_program_id: int,
+    spray_id: int,
     session: Session = Depends(get_session),
 ):
-    vm = VineyardSprayRecordsFormViewModel(
-        vineyard_id, spray_program_id, request, session
-    )
+    vm = VineyardSprayRecordsFormViewModel(vineyard_id, spray_id, request, session)
 
     return vm.to_dict()
 
@@ -108,12 +106,12 @@ async def spray_record_detail(
     return vm.to_dict()
 
 
-@router.post("/vineyards/{vineyard_id}/spray_records/{spray_program_id}/submit")
+@router.post("/vineyards/{vineyard_id}/spray_records/{spray_id}/submit")
 @fastapi_chameleon.template("vineyard/vineyard_spray_records_form.pt")
 async def submit_spray_records(
     request: Request,
     vineyard_id: int,
-    spray_program_id: int,
+    spray_id: int,
     operator: Annotated[str, Form()],
     management_unit_ids: Annotated[list[int], Form()],
     growth_stage_id: Annotated[Optional[int], Form()] = None,
@@ -126,7 +124,7 @@ async def submit_spray_records(
 ):
     vm = VineyardSprayRecordsSubmitViewModel(
         vineyard_id=vineyard_id,
-        spray_program_id=spray_program_id,
+        spray_id=spray_id,
         operator=operator,
         growth_stage_id=growth_stage_id,
         hours_taken=hours_taken,
@@ -150,8 +148,8 @@ async def submit_spray_records(
 
     vm.process_submission()
 
-    if vineyard_service.spray_program_complete_for_vineyard(
-        session=session, spray_program_id=spray_program_id, vineyard_id=vineyard_id
+    if vineyard_service.spray_complete_for_vineyard(
+        session=session, spray_id=spray_id, vineyard_id=vineyard_id
     ):
         response = fastapi.responses.RedirectResponse(
             f"/vineyards/{vineyard_id}",
@@ -159,9 +157,7 @@ async def submit_spray_records(
         )
         return response
 
-    vm = VineyardSprayRecordsFormViewModel(
-        vineyard_id, spray_program_id, request, session
-    )
+    vm = VineyardSprayRecordsFormViewModel(vineyard_id, spray_id, request, session)
 
     vm.set_success("Successfully created spray record")
 

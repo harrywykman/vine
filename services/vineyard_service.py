@@ -8,8 +8,8 @@ from data.vineyard import (
     Chemical,
     GrowthStage,
     ManagementUnit,
-    SprayProgram,
-    SprayProgramChemical,
+    Spray,
+    SprayChemical,
     SprayRecord,
     SprayRecordChemical,
     Variety,
@@ -127,11 +127,9 @@ def all_growth_stages(session: Session):
 def get_all_spray_records(session: Session):
     statement = (
         select(SprayRecord)
-        .join(SprayProgram.growth_stage)
+        .join(Spray.growth_stage)
         .options(
-            selectinload(SprayRecord.spray_program).selectinload(
-                SprayProgram.growth_stage
-            ),
+            selectinload(SprayRecord.spray).selectinload(Spray.growth_stage),
         )
         .order_by(asc(GrowthStage.el_number))
     )
@@ -147,19 +145,17 @@ def eagerly_get_vineyard_spray_records(
     statement = (
         select(SprayRecord)
         .join(SprayRecord.management_unit)
-        .join(SprayRecord.spray_program)
-        .join(SprayProgram.growth_stage)  # for ordering
+        .join(SprayRecord.spray)
+        .join(Spray.growth_stage)  # for ordering
         .where(ManagementUnit.vineyard_id == vineyard_id)
         .options(
             selectinload(SprayRecord.management_unit)
             .selectinload(ManagementUnit.variety)
             .selectinload(Variety.wine_colour),
-            selectinload(SprayRecord.spray_program).selectinload(
-                SprayProgram.growth_stage
-            ),
-            selectinload(SprayRecord.spray_program)
-            .selectinload(SprayProgram.spray_program_chemicals)
-            .selectinload(SprayProgramChemical.chemical)
+            selectinload(SprayRecord.spray).selectinload(Spray.growth_stage),
+            selectinload(SprayRecord.spray)
+            .selectinload(Spray.spray_chemicals)
+            .selectinload(SprayChemical.chemical)
             .selectinload(Chemical.chemical_groups),
         )
         .order_by(asc(GrowthStage.el_number))
@@ -167,9 +163,7 @@ def eagerly_get_vineyard_spray_records(
     spray_records = session.exec(statement).all()
     # Sort by el_number - # NOTE maybe else should be 0 if no growth stage to put to top of list?
     spray_records.sort(
-        key=lambda sr: sr.spray_program.growth_stage.el_number
-        if sr.spray_program.growth_stage
-        else 999
+        key=lambda sr: sr.spray.growth_stage.el_number if sr.spray.growth_stage else 999
     )
     return spray_records
 
@@ -184,7 +178,7 @@ def eagerly_get_spray_record_by_id(
             joinedload(SprayRecord.management_unit)
             .joinedload(ManagementUnit.variety)
             .joinedload(Variety.wine_colour),
-            joinedload(SprayRecord.spray_program),
+            joinedload(SprayRecord.spray),
             joinedload(SprayRecord.growth_stage),
             joinedload(SprayRecord.spray_record_chemicals).joinedload(
                 SprayRecordChemical.chemical
@@ -196,25 +190,23 @@ def eagerly_get_spray_record_by_id(
     return spray_record
 
 
-def eagerly_get_vineyard_spray_program_spray_records(
-    session: Session, vineyard_id: int, spray_program_id: int
+def eagerly_get_vineyard_spray_spray_records(
+    session: Session, vineyard_id: int, spray_id: int
 ) -> list[SprayRecord]:
     statement = (
         select(SprayRecord)
         .join(SprayRecord.management_unit)
-        .join(SprayRecord.spray_program)
+        .join(SprayRecord.spray)
         .where(ManagementUnit.vineyard_id == vineyard_id)
-        .where(SprayRecord.spray_program_id == spray_program_id)
+        .where(SprayRecord.spray_id == spray_id)
         .options(
             selectinload(SprayRecord.management_unit)
             .selectinload(ManagementUnit.variety)
             .selectinload(Variety.wine_colour),
-            selectinload(SprayRecord.spray_program).selectinload(
-                SprayProgram.growth_stage
-            ),
-            selectinload(SprayRecord.spray_program)
-            .selectinload(SprayProgram.spray_program_chemicals)
-            .selectinload(SprayProgramChemical.chemical)
+            selectinload(SprayRecord.spray).selectinload(Spray.growth_stage),
+            selectinload(SprayRecord.spray)
+            .selectinload(Spray.spray_chemicals)
+            .selectinload(SprayChemical.chemical)
             .selectinload(Chemical.chemical_groups),
         )
         .order_by(asc(ManagementUnit.name))
@@ -226,50 +218,42 @@ def eagerly_get_vineyard_spray_program_spray_records(
 
 
 # TODO Reduce eagerness!
-def eagerly_get_vineyard_spray_programs(
-    session: Session, vineyard_id: int
-) -> list[SprayProgram]:
+def eagerly_get_vineyard_sprays(session: Session, vineyard_id: int) -> list[Spray]:
     statement = (
-        select(SprayProgram)
-        .distinct(SprayProgram.id)
-        .join(SprayProgram.spray_records)
+        select(Spray)
+        .distinct(Spray.id)
+        .join(Spray.spray_records)
         .join(SprayRecord.management_unit)
-        .join(SprayProgram.growth_stage)
+        .join(Spray.growth_stage)
         .where(ManagementUnit.vineyard_id == vineyard_id)
         .options(
-            selectinload(SprayProgram.growth_stage),
-            selectinload(SprayProgram.spray_program_chemicals)
-            .selectinload(SprayProgramChemical.chemical)
+            selectinload(Spray.growth_stage),
+            selectinload(Spray.spray_chemicals)
+            .selectinload(SprayChemical.chemical)
             .selectinload(Chemical.chemical_groups),
-            selectinload(SprayProgram.spray_records)
+            selectinload(Spray.spray_records)
             .selectinload(SprayRecord.management_unit)
             .selectinload(ManagementUnit.variety)
             .selectinload(Variety.wine_colour),
         )
-        .order_by(SprayProgram.id, GrowthStage.el_number)
+        .order_by(Spray.id, GrowthStage.el_number)
     )
-    spray_programs = session.exec(statement).all()
+    sprays = session.exec(statement).all()
     # Sort by el_number - # NOTE maybe else should be 0 if no growth stage to put to top of list?
-    spray_programs.sort(
-        key=lambda sp: sp.growth_stage.el_number if sp.growth_stage else 999
-    )
-    return spray_programs
+    sprays.sort(key=lambda sp: sp.growth_stage.el_number if sp.growth_stage else 999)
+    return sprays
 
 
-def get_spray_program_chemicals(
-    spray_program_id: int, session: Session
-) -> list[Chemical]:
+def get_spray_chemicals(spray_id: int, session: Session) -> list[Chemical]:
     statement = (
-        select(Chemical)
-        .join(SprayProgramChemical)
-        .filter(SprayProgramChemical.spray_program_id == spray_program_id)
+        select(Chemical).join(SprayChemical).filter(SprayChemical.spray_id == spray_id)
     )
-    spray_program_chemicals = session.exec(statement).all()
-    return spray_program_chemicals
+    spray_chemicals = session.exec(statement).all()
+    return spray_chemicals
 
 
-def spray_program_complete_for_vineyard(
-    session: Session, spray_program_id: int, vineyard_id: int
+def spray_complete_for_vineyard(
+    session: Session, spray_id: int, vineyard_id: int
 ) -> bool:
     """
     Check if a spray program is complete for all management units that have spray records for this program.
@@ -283,7 +267,7 @@ def spray_program_complete_for_vineyard(
         select(SprayRecord)
         .join(ManagementUnit)
         .where(
-            SprayRecord.spray_program_id == spray_program_id,
+            SprayRecord.spray_id == spray_id,
             ManagementUnit.vineyard_id == vineyard_id,
         )
     )

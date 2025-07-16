@@ -7,7 +7,7 @@ from starlette.requests import Request
 
 from data.user import User, UserRole
 from data.vineyard import SprayRecord, Vineyard
-from services import spray_program_service, vineyard_service
+from services import spray_service, vineyard_service
 from services.user_service import get_users_by_role
 from viewmodels.shared.viewmodel import ViewModelBase
 
@@ -44,15 +44,12 @@ class SprayProgressReportViewModel(ViewModelBase):
         self.vineyards: List[Vineyard] = vineyard_service.all_vineyards(session)
 
         # self.vineyards = session.exec(select(Vineyard).order_by(Vineyard.name)).all()
-        self.spray_programs = spray_program_service.eagerly_get_all_spray_programs(
-            session
-        )
+        self.sprays = spray_service.eagerly_get_all_sprays(session)
 
-        # Build lookup: {(management_unit_id, spray_program_id): SprayRecord}
+        # Build lookup: {(management_unit_id, spray_id): SprayRecord}
         self.spray_records = session.exec(select(SprayRecord)).all()
         self.spray_lookup = {
-            (rec.management_unit_id, rec.spray_program_id): rec
-            for rec in self.spray_records
+            (rec.management_unit_id, rec.spray_id): rec for rec in self.spray_records
         }
 
 

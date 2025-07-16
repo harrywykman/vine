@@ -8,8 +8,8 @@ from data.vineyard import (
     ChemicalGroup,
     GrowthStage,
     ManagementUnit,
-    SprayProgram,
-    SprayProgramChemical,
+    Spray,
+    SprayChemical,
     SprayRecord,
     SprayRecordChemical,
     Status,
@@ -74,18 +74,18 @@ class StatusAdmin(ModelView, model=Status):
 
 
 # ---------- SPRAY PROGRAM ----------
-class SprayProgramAdmin(ModelView, model=SprayProgram):
+class SprayAdmin(ModelView, model=Spray):
     column_list = [
-        SprayProgram.id,
-        SprayProgram.name,
-        SprayProgram.water_spray_rate_per_hectare,
-        SprayProgram.date_created,
+        Spray.id,
+        Spray.name,
+        Spray.water_spray_rate_per_hectare,
+        Spray.date_created,
     ]
-    column_searchable_list = [SprayProgram.name]
-    column_filters = [SprayProgram.date_created]
+    column_searchable_list = [Spray.name]
+    column_filters = [Spray.date_created]
     form_columns = [
-        SprayProgram.name,
-        SprayProgram.water_spray_rate_per_hectare,
+        Spray.name,
+        Spray.water_spray_rate_per_hectare,
     ]
 
 
@@ -96,7 +96,7 @@ class SprayRecordAdmin(ModelView, model=SprayRecord):
         SprayRecord.complete,
         SprayRecord.date_created,
         SprayRecord.management_unit_id,
-        SprayRecord.spray_program_id,
+        SprayRecord.spray_id,
     ]
     column_searchable_list = [SprayRecord.operator]
     column_filters = [SprayRecord.complete, SprayRecord.date_created]
@@ -104,7 +104,7 @@ class SprayRecordAdmin(ModelView, model=SprayRecord):
         SprayRecord.operator,
         SprayRecord.complete,
         SprayRecord.management_unit_id,
-        SprayRecord.spray_program_id,
+        SprayRecord.spray_id,
     ]
 
 
@@ -216,29 +216,29 @@ class ChemicalGroupAdmin(ModelView, model=ChemicalGroup):
     }
 
 
-class SprayProgramChemicalAdmin(ModelView, model=SprayProgramChemical):
+class SprayChemicalAdmin(ModelView, model=SprayChemical):
     column_list = [
-        SprayProgramChemical.id,
-        SprayProgramChemical.spray_program_id,
-        SprayProgramChemical.chemical_id,
-        SprayProgramChemical.concentration_factor,
-        SprayProgramChemical.target,
+        SprayChemical.id,
+        SprayChemical.spray_id,
+        SprayChemical.chemical_id,
+        SprayChemical.concentration_factor,
+        SprayChemical.target,
     ]
     column_searchable_list = []
     column_filters = [
-        SprayProgramChemical.target,
-        SprayProgramChemical.spray_program_id,
-        SprayProgramChemical.chemical_id,
+        SprayChemical.target,
+        SprayChemical.spray_id,
+        SprayChemical.chemical_id,
     ]
     form_columns = [
-        SprayProgramChemical.spray_program_id,
-        SprayProgramChemical.chemical_id,
-        SprayProgramChemical.concentration_factor,
-        SprayProgramChemical.target,
+        SprayChemical.spray_id,
+        SprayChemical.chemical_id,
+        SprayChemical.concentration_factor,
+        SprayChemical.target,
     ]
 
     form_ajax_refs = {
-        "spray_program": {"fields": [SprayProgram.name]},
+        "spray": {"fields": [Spray.name]},
         "chemical": {"fields": [Chemical.name]},
     }
 

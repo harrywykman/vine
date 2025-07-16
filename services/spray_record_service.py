@@ -8,7 +8,7 @@ def create_or_update_spray_record(
 ) -> SprayRecord:
     # Check for an existing record
     statement = select(SprayRecord).where(
-        SprayRecord.management_unit_id == mu_id, SprayRecord.spray_program_id == sp_id
+        SprayRecord.management_unit_id == mu_id, SprayRecord.spray_id == sp_id
     )
     existing_record = session.exec(statement).first()
 
@@ -22,7 +22,7 @@ def create_or_update_spray_record(
         # Create new record
         spray_record = SprayRecord(
             management_unit_id=mu_id,
-            spray_program_id=sp_id,
+            spray_id=sp_id,
         )
         session.add(spray_record)
 

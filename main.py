@@ -13,8 +13,8 @@ from data.admin import (
     ChemicalGroupAdmin,
     GrowthStageAdmin,
     ManagementUnitAdmin,
-    SprayProgramAdmin,
-    SprayProgramChemicalAdmin,
+    SprayAdmin,
+    SprayChemicalAdmin,
     SprayRecordAdmin,
     SprayRecordChemicalAdmin,
     StatusAdmin,
@@ -24,7 +24,14 @@ from data.admin import (
     WineColourAdmin,
 )
 from database import engine
-from routers import account, administration, chemicals, spray_programs, vineyards
+from routers import (
+    account,
+    administration,
+    chemicals,
+    spray_programs,
+    sprays,
+    vineyards,
+)
 from services import user_service
 
 # Initialise Fast API app
@@ -45,6 +52,7 @@ fastapi_chameleon.global_init(template_folder, auto_reload=dev_mode)
 app.include_router(vineyards.router)
 app.include_router(chemicals.router)
 app.include_router(spray_programs.router)
+app.include_router(sprays.router)
 app.include_router(account.router)
 app.include_router(administration.router)
 
@@ -70,10 +78,10 @@ admin.add_view(ManagementUnitAdmin)
 admin.add_view(VarietyAdmin)
 admin.add_view(WineColourAdmin)
 admin.add_view(StatusAdmin)
-admin.add_view(SprayProgramAdmin)
+admin.add_view(SprayAdmin)
 admin.add_view(SprayRecordAdmin)
 admin.add_view(ChemicalAdmin)
 admin.add_view(GrowthStageAdmin)
 admin.add_view(ChemicalGroupAdmin)
-admin.add_view(SprayProgramChemicalAdmin)
+admin.add_view(SprayChemicalAdmin)
 admin.add_view(SprayRecordChemicalAdmin)

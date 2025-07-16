@@ -40,12 +40,12 @@
       <td>{{ record.operator }}</td>
       <td>{{ record.spray_unit.name if record.spray_unit else 'N/A' }}</td>
       <td>
-        {% if record.spray_program %}
-          <strong>Program {{ record.spray_program.number }}</strong><br>
-          <small>{{ record.spray_program.date }}</small>
-          {% if record.spray_program.program_chemicals %}
+        {% if record.spray %}
+          <strong>Program {{ record.spray.number }}</strong><br>
+          <small>{{ record.spray.date }}</small>
+          {% if record.spray.program_chemicals %}
             <ul class="mb-0">
-              {% for pc in record.spray_program.program_chemicals %}
+              {% for pc in record.spray.program_chemicals %}
               <li>
                 {{ pc.chemical.name }} —
                 {{ "%.2f"|format(pc.mix_rate_per_100L) }}/100L,

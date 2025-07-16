@@ -5,7 +5,7 @@ from fastapi import Request
 from sqlmodel import Session, select
 
 from data.vineyard import (
-    SprayProgramChemical,
+    SprayChemical,
     SprayRecord,
     SprayRecordChemical,
     WindDirection,
@@ -17,7 +17,7 @@ class VineyardSprayRecordsSubmitViewModel(ViewModelBase):
     def __init__(
         self,
         vineyard_id: int,
-        spray_program_id: int,
+        spray_id: int,
         operator: str,
         growth_stage_id: int | None,
         hours_taken: Decimal | None,
@@ -32,7 +32,7 @@ class VineyardSprayRecordsSubmitViewModel(ViewModelBase):
         super().__init__(request, session)
 
         self.vineyard_id = vineyard_id
-        self.spray_program_id = spray_program_id
+        self.spray_id = spray_id
         self.operator = operator.strip()
         self.growth_stage_id = growth_stage_id
         self.hours_taken = hours_taken
@@ -64,9 +64,7 @@ class VineyardSprayRecordsSubmitViewModel(ViewModelBase):
 
         # Validate batch numbers
         program_chems = self.session.exec(
-            select(SprayProgramChemical).where(
-                SprayProgramChemical.spray_program_id == self.spray_program_id
-            )
+            select(SprayChemical).where(SprayChemical.spray_id == self.spray_id)
         ).all()
 
         for pc in program_chems:
@@ -79,11 +77,9 @@ class VineyardSprayRecordsSubmitViewModel(ViewModelBase):
         if self.error:
             return  # Do not proceed if there's an error
 
-        # Fetch SprayProgramChemicals
+        # Fetch SprayChemicals
         program_chems = self.session.exec(
-            select(SprayProgramChemical).where(
-                SprayProgramChemical.spray_program_id == self.spray_program_id
-            )
+            select(SprayChemical).where(SprayChemical.spray_id == self.spray_id)
         ).all()
 
         # Map chemical_id -> batch_number
@@ -96,7 +92,7 @@ class VineyardSprayRecordsSubmitViewModel(ViewModelBase):
             spray_record = self.session.exec(
                 select(SprayRecord).where(
                     SprayRecord.management_unit_id == int(mu_id),
-                    SprayRecord.spray_program_id == self.spray_program_id,
+                    SprayRecord.spray_id == self.spray_id,
                 )
             ).first()
 

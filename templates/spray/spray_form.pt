@@ -2,9 +2,9 @@
     <div metal:fill-slot="content" tal:omit-tag="True">
         <section class="section">
             <div class="container">
-                <h1 class="title">Add Spray Program</h1>
+                <h1 class="title">Add Spray</h1>
 
-                <form method="post" action="/spray_program/new">
+                <form method="post" action="/spray/new">
                     <div class="field">
                         <label class="label">Name</label>
                         <div class="control">
@@ -38,7 +38,7 @@
                         </div>
 
                         <div class="field">
-                            <button class="button is-link is-small" type="button" hx-get="/spray_program/chemical_row"
+                            <button class="button is-link is-small" type="button" hx-get="/spray/chemical_row"
                                 hx-target="#chemical-list" hx-swap="beforeend">
                                 + Add Chemical
                             </button>
@@ -50,7 +50,7 @@
                             <button type="submit" class="button is-primary">Create</button>
                         </div>
                         <div class="control">
-                            <a href="/spray_programs" class="button is-light">Cancel</a>
+                            <a href="/sprays" class="button is-light">Cancel</a>
                         </div>
                     </div>
                 </form>

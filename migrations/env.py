@@ -9,8 +9,8 @@ from data.user import User  # noqa: F401
 from data.vineyard import (
     Chemical,  # noqa: F401
     ManagementUnit,  # noqa: F401
+    SprayChemical,  # noqa: F401
     SprayProgram,  # noqa: F401
-    SprayProgramChemical,  # noqa: F401
     SprayRecord,  # noqa: F401
     Status,  # noqa: F401
     Variety,  # noqa: F401

@@ -2,7 +2,7 @@
     <div metal:fill-slot="content" tal:omit-tag="True">
         <section class="section">
             <div class="container">
-                <h1 class="title is-3">${spray_record.spray_program.name} Spray of
+                <h1 class="title is-3">${spray_record.spray.name} Spray of
                     ${spray_record.management_unit.vineyard.name} ${spray_record.management_unit.name}
                     -
                     ${spray_record.management_unit.variety.name}</h1>
@@ -64,8 +64,8 @@
                     <div class="box">
                         <h2 class="subtitle is-5">Spray Program</h2>
                         <div class="content">
-                            <p><strong>Program Name:</strong> ${spray_record.spray_program.name}</p>
-                            <p><strong>Water Rate:</strong> ${spray_record.spray_program.water_spray_rate_per_hectare}
+                            <p><strong>Program Name:</strong> ${spray_record.spray.name}</p>
+                            <p><strong>Water Rate:</strong> ${spray_record.spray.water_spray_rate_per_hectare}
                                 L/ha
                             </p>
                         </div>
@@ -92,17 +92,17 @@
                                         <td>${src.batch_number or '—'}</td>
                                         <td>
                                             <div tal:define="spc python:
-                            next((spc for spc in spray_record.spray_program.spray_program_chemicals
+                            next((spc for spc in spray_record.spray.spray_chemicals
                                   if spc.chemical_id == src.chemical.id), None)">
                                                 ${spc.calculated_mix_rate_per_100L() if spc else '—'}
                                             </div>${src.chemical.rate_unit.value or
                                             '—'}
                                         </td>
 
-                                        <!-- Look up the corresponding target via spray_program -->
+                                        <!-- Look up the corresponding target via spray -->
                                         <td>
                                             <div tal:define="spc python:
-                            next((spc for spc in spray_record.spray_program.spray_program_chemicals
+                            next((spc for spc in spray_record.spray.spray_chemicals
                                   if spc.chemical_id == src.chemical.id), None)">
                                                 ${spc.target.value if spc and spc.target else '—'}
                                             </div>

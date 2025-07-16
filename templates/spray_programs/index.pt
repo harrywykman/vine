@@ -1,0 +1,40 @@
+<div metal:use-macro="load: ../shared/_layout.pt">
+    <div metal:fill-slot="content" tal:omit-tag="True">
+        <div class="section content">
+            <div class="container spray_program-list">
+                <div class="spray-program-list container">
+                    <h2 class="title">Spray Programs</h2>
+                    <div class="content">
+                        <a href="/spray_program/new" class="button is-link is-small" type="button">
+                            + Add Spray Program
+                        </a>
+                    </div>
+                    <div id="message-area"></div>
+
+                    <table class="table is-striped is-hoverable is-fullwidth">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Year Start</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr tal:repeat="sp spray_programs" id="spray_row_${sp.id}">
+                                <td>
+                                    <strong><a href=" /spray_program/${sp.id}">${sp.name}</a></strong>
+                                </td>
+                                <td>
+                                    ${sp.year}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div metal:fill-slot="additional-css" tal:omit-tag="True">
+        <!-- additional css from the page -->
+    </div>
+</div>

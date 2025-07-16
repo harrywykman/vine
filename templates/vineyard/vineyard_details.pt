@@ -89,11 +89,11 @@
                 <div class="section content">
                     <div class="container spray_record_list">
                         <h2 class="title">Spray Records</h2>
-                        <div class="" tal:repeat="sp spray_programs" id="spray_program_container_${sp.id}">
+                        <div class="" tal:repeat="sp sprays" id="spray_container_${sp.id}">
 
                             <!-- Collapsible details element -->
                             <details class="details box"
-                                tal:attributes="open python:'open' if not spray_program_completion_status[sp.id] else None">
+                                tal:attributes="open python:'open' if not spray_completion_status[sp.id] else None">
                                 <summary class="summary p-4 is-clickable">
                                     <div class="level">
                                         <div class="level-left">
@@ -102,10 +102,10 @@
                                             </div>
                                             <div class="level-item">
                                                 <span class="tag is-success ml-2"
-                                                    tal:condition="spray_program_completion_status[sp.id]">
-                                                    Complete - ${spray_program_completion_dates[sp.id]}
+                                                    tal:condition="spray_completion_status[sp.id]">
+                                                    Complete - ${spray_completion_dates[sp.id]}
                                                 </span>
-                                                <div tal:condition="not spray_program_completion_status[sp.id]">
+                                                <div tal:condition="not spray_completion_status[sp.id]">
                                                     <span class="tag is-warning ml-2">
                                                         Incomplete
                                                     </span>
@@ -153,7 +153,7 @@
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
-                                                                <tr tal:repeat="spc sp.spray_program_chemicals">
+                                                                <tr tal:repeat="spc sp.spray_chemicals">
                                                                     <td>${spc.chemical.name}</td>
                                                                     <td>${spc.calculated_mix_rate_per_100L()}
                                                                         ${spc.chemical.rate_unit.value}
@@ -182,7 +182,7 @@
                                             <tbody>
                                                 <tr tal:repeat="mu management_units">
                                                 <tr tal:repeat="sr mu.spray_records">
-                                                    <div tal:condition="sr.spray_program.id == sp.id">
+                                                    <div tal:condition="sr.spray.id == sp.id">
                                                         <td>
                                                             <i class="fas fa-wine-bottle"
                                                                 tal:attributes="class python:'fas fa-wine-bottle has-text-danger' if mu.variety.wine_colour.name == 'Red' else 'fas fa-wine-bottle has-text-grey'">

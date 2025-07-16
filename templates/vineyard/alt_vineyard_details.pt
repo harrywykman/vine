@@ -48,11 +48,11 @@
                 <div class="mb-6">
                     <h2 class="title is-4">Spray Records</h2>
                     <div class="columns is-multiline">
-                        <div class="column is-full" tal:repeat="sp spray_programs"
-                            id="spray_program_container_${sp.id}">
+                        <div class="column is-full" tal:repeat="sp sprays"
+                            id="spray_container_${sp.id}">
                             <div class="box">
                                 <h3 class="subtitle is-5 mb-3">
-                                    <a href="/spray_programs">${sp.name}</a>
+                                    <a href="/sprays">${sp.name}</a>
                                 </h3>
 
                                 <div class="is-flex is-justify-content-space-between is-flex-wrap-wrap mb-4">
@@ -70,7 +70,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr tal:repeat="spc sp.spray_program_chemicals">
+                                            <tr tal:repeat="spc sp.spray_chemicals">
                                                 <td>${spc.chemical.name}</td>
                                                 <td>${spc.calculated_mix_rate_per_100L()}
                                                     ${spc.chemical.rate_unit.value}</td>
@@ -91,7 +91,7 @@
                                         <tbody>
                                             <tr tal:repeat="mu management_units">
                                             <tr tal:repeat="sr mu.spray_records">
-                                                <div tal:condition="sr.spray_program.id == sp.id">
+                                                <div tal:condition="sr.spray.id == sp.id">
                                                     <td>
                                                         <i class="fas fa-wine-bottle"
                                                             tal:attributes="class python:'fas fa-wine-bottle has-text-danger' if mu.variety.wine_colour.name == 'Red' else 'fas fa-wine-bottle has-text-grey'">
