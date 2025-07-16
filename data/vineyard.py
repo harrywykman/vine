@@ -125,31 +125,50 @@ class GrowthStage(SQLModel, table=True):
         description="Indicates whether the stage is a major phenological phase",
     )
 
-    spray_programs: List["SprayProgram"] = Relationship(back_populates="growth_stage")
+    sprays: List["Spray"] = Relationship(back_populates="growth_stage")
     spray_records: List["SprayRecord"] = Relationship(back_populates="growth_stage")
 
     def __str__(self):
         return f"{self.el_number} - {self.description}"
 
 
-""" class SprayProgram(SQLModel, table=True):
-    __tablename__ = "annual_spray_programs"
-    
+class SprayProgram(SQLModel, table=True):
+    __tablename__ = "spray_programs"
+
     id: Optional[int] = Field(default=None, primary_key=True)
     name: str = Field(nullable=False)
-    year: int = Field(nullable=False, index=True)
+    year: int = Field(default=datetime.datetime.now().year, index=True)
     date_created: datetime.datetime = Field(
         sa_column=sa.Column(sa.DateTime, default=datetime.datetime.now, index=True)
     )
-    
+
     # Relationships
-    sprays: List["Spray"] = Relationship(back_populates="spray_program", cascade_delete=True) """
+    sprays: List["Spray"] = Relationship(
+        back_populates="spray_program", cascade_delete=True
+    )
+
+    def __str__(self):
+        return f"{self.name} ({self.year})"
 
 
-# TODO Should be Spray, where Spray Program is a Set of Sprays for a Year
-# ---- need to drop database and reimport dummy data to change
-class SprayProgram(SQLModel, table=True):
-    __tablename__ = "spray_programs"
+# Many-to-many association table for Spray and SprayProgram
+class SprayProgramSprayLink(SQLModel, table=True):
+    __tablename__ = "spray_program_spray_links"
+
+    spray_program_id: Optional[int] = Field(
+        default=None,
+        foreign_key="spray_programs.id",
+        primary_key=True,
+        ondelete="CASCADE",
+    )
+    spray_id: Optional[int] = Field(
+        default=None, foreign_key="sprays.id", primary_key=True, ondelete="CASCADE"
+    )
+
+
+# Renamed from SprayProgram to Spray
+class Spray(SQLModel, table=True):
+    __tablename__ = "sprays"
 
     id: Optional[int] = Field(default=None, primary_key=True)
     name: str
@@ -160,14 +179,16 @@ class SprayProgram(SQLModel, table=True):
     )
 
     growth_stage_id: int | None = Field(foreign_key="growth_stages.id")
+    spray_program_id: int = Field(foreign_key="spray_programs.id", nullable=False)
 
-    growth_stage: GrowthStage = Relationship(back_populates="spray_programs")
+    growth_stage: GrowthStage = Relationship(back_populates="sprays")
+    spray_program: SprayProgram = Relationship(back_populates="sprays")
 
-    spray_program_chemicals: List["SprayProgramChemical"] = Relationship(
-        back_populates="spray_program", cascade_delete=True
+    spray_chemicals: List["SprayChemical"] = Relationship(
+        back_populates="spray", cascade_delete=True
     )
     spray_records: List["SprayRecord"] = Relationship(
-        back_populates="spray_program", cascade_delete=True
+        back_populates="spray", cascade_delete=True
     )
 
     def __str__(self):
@@ -229,12 +250,12 @@ class SprayRecord(SQLModel, table=True):
     management_unit_id: int = Field(
         foreign_key="management_units.id", nullable=False, index=True
     )
-    spray_program_id: int = Field(
-        foreign_key="spray_programs.id", nullable=False, ondelete="CASCADE", index=True
+    spray_id: int = Field(
+        foreign_key="sprays.id", nullable=False, ondelete="CASCADE", index=True
     )
 
     management_unit: ManagementUnit = Relationship(back_populates="spray_records")
-    spray_program: SprayProgram = Relationship(back_populates="spray_records")
+    spray: Spray = Relationship(back_populates="spray_records")
 
     spray_record_chemicals: List["SprayRecordChemical"] | None = Relationship(
         back_populates="spray_record", cascade_delete=True
@@ -283,27 +304,24 @@ class Target(str, enum.Enum):
     WETTER = "Wetter"
 
 
-class SprayProgramChemical(SQLModel, table=True):
-    __tablename__ = "spray_program_chemicals"
+# Renamed from SprayProgramChemical to SprayChemical
+class SprayChemical(SQLModel, table=True):
+    __tablename__ = "spray_chemicals"
     __table_args__ = (
-        sa.UniqueConstraint(
-            "spray_program_id", "chemical_id", name="uq_sprayprogram_chemical"
-        ),
+        sa.UniqueConstraint("spray_id", "chemical_id", name="uq_spray_chemical"),
         {"extend_existing": True},
     )
 
     id: Optional[int] = Field(default=None, primary_key=True)
-    spray_program_id: int = Field(
-        foreign_key="spray_programs.id", nullable=False, ondelete="CASCADE"
-    )
+    spray_id: int = Field(foreign_key="sprays.id", nullable=False, ondelete="CASCADE")
     chemical_id: int = Field(foreign_key="chemicals.id", nullable=False)
     concentration_factor: Decimal = Field(
         default=1.00, max_digits=3, decimal_places=2, nullable=False
     )
     target: Optional[Target] = Field(default=None, sa_column=sa.Column(sa.Enum(Target)))
 
-    spray_program: SprayProgram = Relationship(back_populates="spray_program_chemicals")
-    chemical: "Chemical" = Relationship(back_populates="spray_program_chemicals")
+    spray: Spray = Relationship(back_populates="spray_chemicals")
+    chemical: "Chemical" = Relationship(back_populates="spray_chemicals")
 
     def __str__(self):
         return f"Targeting {self.target.value} with concentration factor: {self.concentration_factor}"
@@ -386,9 +404,7 @@ class Chemical(SQLModel, table=True):
         back_populates="chemicals", link_model=ChemicalGroupLink
     )
 
-    spray_program_chemicals: List["SprayProgramChemical"] = Relationship(
-        back_populates="chemical"
-    )
+    spray_chemicals: List["SprayChemical"] = Relationship(back_populates="chemical")
 
     spray_record_chemicals: List["SprayRecordChemical"] = Relationship(
         back_populates="chemical"
