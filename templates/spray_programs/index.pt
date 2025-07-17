@@ -15,16 +15,13 @@
                         <thead>
                             <tr>
                                 <th>Name</th>
-                                <th>Year Start</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr tal:repeat="sp spray_programs" id="spray_row_${sp.id}">
                                 <td>
-                                    <strong><a href=" /spray_program/${sp.id}">${sp.name}</a></strong>
-                                </td>
-                                <td>
-                                    ${sp.year}
+                                    <strong><a href=" /spray_programs/${sp.id}">${sp.name} ${sp.year_start} /
+                                            ${sp.year_end}</a></strong>
                                 </td>
                             </tr>
                         </tbody>

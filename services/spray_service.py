@@ -7,7 +7,7 @@ from sqlalchemy.orm import selectinload
 from sqlmodel import Session, select
 from starlette import status
 
-from data.vineyard import GrowthStage, Spray, SprayChemical
+from data.vineyard import GrowthStage, Spray, SprayChemical, SprayProgramSprayLink
 
 
 def eagerly_get_all_sprays(session: Session) -> list[Spray]:
@@ -45,6 +45,7 @@ def create_spray(
     water_spray_rate_per_hectare: Optional[Decimal],
     chemicals_targets: list,
     growth_stage_id: int,
+    spray_program_id: Optional[int] = None,
 ) -> Spray:
     if not name:
         raise Exception("name is required")
@@ -71,6 +72,12 @@ def create_spray(
             target=str(target),
         )
         session.add(spc)
+
+    if spray_program_id:
+        spray_program_spray_link = SprayProgramSprayLink()
+        spray_program_spray_link.spray_program_id = spray_program_id
+        spray_program_spray_link.spray_id = spray.id
+        session.add(spray_program_spray_link)
 
     session.commit()
 

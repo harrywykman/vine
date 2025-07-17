@@ -1,0 +1,43 @@
+<div metal:use-macro="load: ../shared/_layout.pt">
+    <div metal:fill-slot="content" tal:omit-tag="True">
+        <section class="section">
+            <div class="container">
+                <h1 class="title">Add Spray Program</h1>
+
+                <form method="post" action="/spray_program/new">
+                    <div class="field">
+                        <label class="label">Name</label>
+                        <div class="control">
+                            <input class="input" type="text" name="name" placeholder="${name}" value="Spray Program">
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label class="label">Year Start</label>
+                        <div class="control">
+                            <input class="input" type="number" step="1" name="year_start"
+                                placeholder=" eg. ${year_start}" value="${year_start}" required>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">Year End</label>
+                        <div class="control">
+                            <input class="input" type="number" step="1" name="year_end" placeholder="eg. ${year_end}"
+                                value="${year_end}" required>
+                        </div>
+                    </div>
+
+
+                    <div class="field is-grouped">
+                        <div class="control">
+                            <button type="submit" class="button is-primary">Create</button>
+                        </div>
+                        <div class="control">
+                            <a href="/sprays" class="button is-light">Cancel</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </div>
+</div>

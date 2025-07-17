@@ -1,8 +1,8 @@
-"""added user table to alembic env
+"""Made relationship between spray_program and spray many-to-many 2
 
-Revision ID: 252858c22199
-Revises: ffde0db481ae
-Create Date: 2025-07-02 11:16:03.204880
+Revision ID: 3da638faa6be
+Revises: 9b1aa03af6df
+Create Date: 2025-07-17 10:59:23.207794
 
 """
 from typing import Sequence, Union
@@ -13,8 +13,8 @@ import sqlmodel
 
 
 # revision identifiers, used by Alembic.
-revision: str = '252858c22199'
-down_revision: Union[str, Sequence[str], None] = 'ffde0db481ae'
+revision: str = '3da638faa6be'
+down_revision: Union[str, Sequence[str], None] = '9b1aa03af6df'
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 

@@ -19,6 +19,7 @@ class CreateViewModel(ViewModelBase):
         self.growth_stage_id: int = None
         self.chemical_ids: list = []
         self.targets: list = []
+        self.spray_program_id: int = None
 
     async def load(self):
         form = await self.request.form()
@@ -31,6 +32,8 @@ class CreateViewModel(ViewModelBase):
         self.chemicals_targets = zip(self.chemical_ids, self.targets)
 
         self.growth_stages: list = vineyard_service.all_growth_stages(self.session)
+
+        self.spray_program_id: int = form.get("spray_program_id")
 
         print("################## ZIP ################")
         print(self.chemicals_targets)

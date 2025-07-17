@@ -1,0 +1,94 @@
+<div metal:use-macro="load: ../shared/_layout.pt">
+    <div metal:fill-slot="content" tal:omit-tag="True">
+        <div class="section content">
+            <div class="container spray-list">
+                <div class="spray-list container">
+                    <h1 class="title">${spray_program.name} ${spray_program.year_start} / ${spray_program.year_end}</h1>
+                    <h2 class="title">Sprays</h2>
+                    <div class="content">
+                        <a href="/spray/new/spray_program/${spray_program.id}" class="button is-link is-small"
+                            type="button">
+                            + Add Spray
+                        </a>
+                    </div>
+                    <div id="message-area"></div>
+
+                    <table class="table is-striped is-hoverable is-fullwidth">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Water Spray Rate / ha</th>
+                                <th>EL</th>
+                                <th>Chemicals</th>
+                                <th>Apply</th>
+                                <!-- <th>Actions</th> -->
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr tal:repeat="s sprays" id="spray_row_${s.id}">
+                                <td>
+                                    <strong><a href=" /spray/${s.id}">${s.name}</a></strong>
+                                </td>
+                                <td>${s.water_spray_rate_per_hectare} L</td>
+                                <td>${s.growth_stage.el_number}</td>
+                                <td>
+                                    <table class="table is-narrow is-fullwidth is-bordered is-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Chemical</th>
+                                                <th class="has-text-right">Target</th>
+                                                <th class="has-text-right">Concentration Factor</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr tal:repeat="spc s.spray_chemicals">
+                                                <td>${spc.chemical.name}</td>
+                                                <td class="has-text-right">${spc.target.value}</td>
+                                                <td class="has-text-right">${spc.concentration_factor}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                                <td>
+                                    <div class="buttons">
+                                        <button class="button is-danger is-small is-outlined"
+                                            hx-post="/sprays/${s.id}/add_to_all_reds" hx-target="#message-area"
+                                            hx-swap="innerHTML">
+                                            Apply to All Reds
+                                        </button>
+                                        <button class="button is-white is-small is-outlined"
+                                            hx-post="/sprays/${s.id}/add_to_all_whites" hx-target="#message-area"
+                                            hx-swap="innerHTML">
+                                            Apply to All Whites
+                                        </button>
+
+                                        <button class="button is-info is-small is-outlined"
+                                            hx-post="/sprays/${s.id}/add_to_all_units" hx-target="#message-area"
+                                            hx-swap="none">
+                                            Apply to All MUs
+                                        </button>
+                                    </div>
+                                </td>
+                                <!--                                 <td class="buttons">
+                                    <button class="button is-info is-small" hx-get="/spray/${s.id}/edit"
+                                        hx-target="#spray_row_${s.id}" hx-swap="outerHTML">
+                                        Edit
+                                    </button>
+                                    <form method="post" action="/spray/${ s.id }/delete"
+                                        class="is-inline-block"
+                                        onsubmit="return confirm('Delete Spray Program ${s.name}?');">
+                                        <button class="button is-small is-danger is-light" type="submit">Delete</button>
+                                    </form>
+                                </td> -->
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div metal:fill-slot="additional-css" tal:omit-tag="True">
+        <!-- additional css from the page -->
+    </div>
+</div>

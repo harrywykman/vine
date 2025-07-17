@@ -132,26 +132,6 @@ class GrowthStage(SQLModel, table=True):
         return f"{self.el_number} - {self.description}"
 
 
-class SprayProgram(SQLModel, table=True):
-    __tablename__ = "spray_programs"
-
-    id: Optional[int] = Field(default=None, primary_key=True)
-    name: str = Field(nullable=False)
-    year: int = Field(default=datetime.datetime.now().year, index=True)
-    date_created: datetime.datetime = Field(
-        sa_column=sa.Column(sa.DateTime, default=datetime.datetime.now, index=True)
-    )
-
-    # Relationships
-    sprays: List["Spray"] = Relationship(
-        back_populates="spray_program", cascade_delete=True
-    )
-
-    def __str__(self):
-        return f"{self.name} ({self.year})"
-
-
-# Many-to-many association table for Spray and SprayProgram
 class SprayProgramSprayLink(SQLModel, table=True):
     __tablename__ = "spray_program_spray_links"
 
@@ -166,7 +146,26 @@ class SprayProgramSprayLink(SQLModel, table=True):
     )
 
 
-# Renamed from SprayProgram to Spray
+class SprayProgram(SQLModel, table=True):
+    __tablename__ = "spray_programs"
+
+    id: Optional[int] = Field(default=None, primary_key=True)
+    name: str = Field(nullable=False)
+    year_start: int = Field(default=datetime.datetime.now().year, index=True)
+    year_end: int = Field(default=datetime.datetime.now().year, index=True)
+    date_created: datetime.datetime = Field(
+        sa_column=sa.Column(sa.DateTime, default=datetime.datetime.now, index=True)
+    )
+
+    # Many-to-many relationship with Spray
+    sprays: List["Spray"] = Relationship(
+        back_populates="spray_programs", link_model=SprayProgramSprayLink
+    )
+
+    def __str__(self):
+        return f"{self.name} ({self.year_start} / {self.year_end})"
+
+
 class Spray(SQLModel, table=True):
     __tablename__ = "sprays"
 
@@ -179,10 +178,13 @@ class Spray(SQLModel, table=True):
     )
 
     growth_stage_id: int | None = Field(foreign_key="growth_stages.id")
-    spray_program_id: int = Field(foreign_key="spray_programs.id", nullable=False)
+    # spray_program_id: int = Field(foreign_key="spray_programs.id", nullable=False)
 
     growth_stage: GrowthStage = Relationship(back_populates="sprays")
-    spray_program: SprayProgram = Relationship(back_populates="sprays")
+
+    spray_programs: List["SprayProgram"] = Relationship(
+        back_populates="sprays", link_model=SprayProgramSprayLink
+    )
 
     spray_chemicals: List["SprayChemical"] = Relationship(
         back_populates="spray", cascade_delete=True
