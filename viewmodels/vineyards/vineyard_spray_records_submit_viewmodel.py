@@ -18,7 +18,7 @@ class VineyardSprayRecordsSubmitViewModel(ViewModelBase):
         self,
         vineyard_id: int,
         spray_id: int,
-        operator: str,
+        operator_id: str,
         growth_stage_id: int | None,
         hours_taken: Decimal | None,
         temperature: int | None,
@@ -33,7 +33,7 @@ class VineyardSprayRecordsSubmitViewModel(ViewModelBase):
 
         self.vineyard_id = vineyard_id
         self.spray_id = spray_id
-        self.operator = operator.strip()
+        self.operator_id = operator_id
         self.growth_stage_id = growth_stage_id
         self.hours_taken = hours_taken
         self.temperature = temperature
@@ -47,8 +47,8 @@ class VineyardSprayRecordsSubmitViewModel(ViewModelBase):
     async def load(self):
         self.form = await self.request.form()
 
-        if not self.operator:
-            self.error = "Operator name is required."
+        if not self.operator_id:
+            self.error = "An operator must be assigned to a completed"
             return
 
         if not self.management_unit_ids:
@@ -99,7 +99,7 @@ class VineyardSprayRecordsSubmitViewModel(ViewModelBase):
             if not spray_record:
                 continue
 
-            spray_record.operator = self.operator
+            spray_record.operator_id = self.operator_id
             spray_record.growth_stage_id = self.growth_stage_id
             spray_record.hours_taken = self.hours_taken
             spray_record.temperature = self.temperature

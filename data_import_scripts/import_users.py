@@ -16,19 +16,19 @@ user_data = [
     },
     {
         "name": "Colin",
-        "email": "colin@ahaviticulture.com",
+        "email": "colin@ahaviticulture.com.au",
         "password": "password",
         "role": "admin",
     },
     {
         "name": "Nic",
-        "email": "nic@ahaviticulture.com",
+        "email": "nic@ahaviticulture.com.au",
         "password": "password",
         "role": "operator",
     },
     {
         "name": "Larissa",
-        "email": "larissa@ahaviticulture.com",
+        "email": "larissa@ahaviticulture.com.au",
         "password": "password",
         "role": "admin",
     },

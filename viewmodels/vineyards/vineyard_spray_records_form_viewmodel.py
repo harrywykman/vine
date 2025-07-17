@@ -1,8 +1,10 @@
+from typing import List
+
 from icecream import ic
 from sqlmodel import Session
 from starlette.requests import Request
 
-from data.user import User
+from data.user import User, UserRole
 from data.vineyard import SprayRecord, WindDirection
 from services import spray_service, user_service, vineyard_service
 from viewmodels.shared.viewmodel import ViewModelBase
@@ -24,6 +26,9 @@ class VineyardSprayRecordsFormViewModel(ViewModelBase):
         self.spray_id = spray_id
         self.request = request
         self.session = session
+        self.operators: List[User] = user_service.get_users_by_role(
+            session=session, role=UserRole.OPERATOR
+        )
 
         self.spray = spray_service.eagerly_get_spray_by_id(spray_id, session)
 

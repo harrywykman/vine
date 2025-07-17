@@ -1,8 +1,9 @@
 import datetime
 from enum import Enum
+from typing import List
 
 import sqlalchemy as sa
-from sqlmodel import Field, SQLModel
+from sqlmodel import Field, Relationship, SQLModel
 
 
 class UserRole(str, Enum):
@@ -27,6 +28,8 @@ class User(SQLModel, table=True):
         sa_column=sa.Column(sa.DateTime, default=datetime.datetime.now, index=True)
     )
 
+    spray_records: List["SprayRecord"] | None = Relationship(back_populates="operator")  # noqa: F821
+
     def has_permission(self, required_role: UserRole) -> bool:
         """Check if user has required permission level"""
         role_hierarchy = {
@@ -44,3 +47,7 @@ class User(SQLModel, table=True):
     def is_superadmin(self) -> bool:
         """Check if user is superadmin"""
         return self.role == UserRole.SUPERADMIN
+
+
+# Define the relationship after both classes are available
+# User.spray_records = Relationship(back_populates="operator")

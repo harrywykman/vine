@@ -112,7 +112,7 @@ async def submit_spray_records(
     request: Request,
     vineyard_id: int,
     spray_id: int,
-    operator: Annotated[str, Form()],
+    operator_id: Annotated[int, Form()],
     management_unit_ids: Annotated[list[int], Form()],
     growth_stage_id: Annotated[Optional[int], Form()] = None,
     hours_taken: Annotated[Optional[Decimal], Form()] = None,
@@ -125,7 +125,7 @@ async def submit_spray_records(
     vm = VineyardSprayRecordsSubmitViewModel(
         vineyard_id=vineyard_id,
         spray_id=spray_id,
-        operator=operator,
+        operator_id=operator_id,
         growth_stage_id=growth_stage_id,
         hours_taken=hours_taken,
         temperature=temperature,

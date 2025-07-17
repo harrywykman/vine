@@ -220,7 +220,7 @@ class SprayRecord(SQLModel, table=True):
     __tablename__ = "spray_records"
 
     id: Optional[int] = Field(default=None, primary_key=True)
-    operator: str | None
+    operator_id: int | None = Field(foreign_key="users.id", nullable=True, index=True)
     complete: bool | None
     date_created: datetime.datetime = Field(
         sa_column=sa.Column(sa.DateTime, default=datetime.datetime.now, index=True)
@@ -257,6 +257,7 @@ class SprayRecord(SQLModel, table=True):
     )
 
     management_unit: ManagementUnit = Relationship(back_populates="spray_records")
+    operator: "User" = Relationship(back_populates="spray_records")
     spray: Spray = Relationship(back_populates="spray_records")
 
     spray_record_chemicals: List["SprayRecordChemical"] | None = Relationship(

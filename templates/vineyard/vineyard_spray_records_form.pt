@@ -9,7 +9,12 @@
             <div class="field">
                 <label class="label">Operator</label>
                 <div class="control">
-                    <input class="input" type="text" name="operator" required value="${operator.name}" />
+                    <div class="select is-fullwidth">
+                        <select name="operator_id" required>
+                            <option value="${operator.id}">${operator.name}</option>
+                            <option tal:repeat="operator operators" value="${operator.id}">${operator.name}</option>
+                        </select>
+                    </div>
                 </div>
             </div>
 

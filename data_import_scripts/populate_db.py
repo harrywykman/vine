@@ -4,6 +4,7 @@ from data_import_scripts import (
     import_EL_growth_stage,
     import_management_units,
     import_states,
+    import_users,
     import_varieties,
     import_vineyards,
 )
@@ -21,6 +22,7 @@ def populate_db():
     import_chemicals_and_groups.import_chemicals_from_json(
         "./data_import_scripts/chemicals_export.json"
     )
+    import_users.import_new_users()
     # import_chemicals.import_chemicals("./data_import_scripts/chemicals.csv")
 
 

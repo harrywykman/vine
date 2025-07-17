@@ -11,7 +11,7 @@
                         <h2 class="subtitle is-5">General Info</h2>
                         <div class="columns is-multiline">
                             <div class="column is-half">
-                                <strong>Operator:</strong> ${spray_record.operator or 'N/A'}
+                                <strong>Operator:</strong> ${spray_record.operator.name or 'N/A'}
                             </div>
                             <div class="column is-half">
                                 <strong>Complete:</strong>
