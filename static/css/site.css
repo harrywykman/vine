@@ -10,11 +10,54 @@
     font-size: 12px;
 }
 
-    .polygon-label {
-        font-size: 10px;
-        font-weight: bold;
-        color: #222;
-        background: rgba(160, 12, 12, 0);
-        padding: 0px 0px;
-        border-radius: 0px;
-    }
+.polygon-label {
+    font-size: 10px;
+    font-weight: bold;
+    color: #222;
+    background: rgba(160, 12, 12, 0);
+    padding: 0px 0px;
+    border-radius: 0px;
+}
+
+/* HTMX Loading  */
+
+/* Loading button styles */
+.loading-button {
+    position: relative;
+}
+
+/* Button becomes disabled during request */
+.loading-button.htmx-request {
+    pointer-events: none;
+    opacity: 0.6;
+}
+
+/* Hide loading text by default */
+.loading-button .loading-text {
+    display: none;
+}
+
+/* During HTMX request: hide normal text, show loading text */
+.loading-button.htmx-request .normal-text {
+    display: none;
+}
+
+.loading-button.htmx-request .loading-text {
+    display: inline;
+}
+
+/* Hide spinner by default */
+.loading-button .loading-spinner {
+    display: none;
+}
+
+/* Show and animate spinner only during HTMX request */
+.loading-button.htmx-request .loading-spinner {
+    display: inline-block;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}

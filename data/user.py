@@ -49,5 +49,5 @@ class User(SQLModel, table=True):
         return self.role == UserRole.SUPERADMIN
 
 
-# Define the relationship after both classes are available
+# Uncomment when running import modules - Define the relationship after both classes are available
 # User.spray_records = Relationship(back_populates="operator")

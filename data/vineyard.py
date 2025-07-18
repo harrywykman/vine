@@ -4,7 +4,12 @@ from decimal import Decimal
 from typing import List, Optional
 
 import sqlalchemy as sa
+from geoalchemy2 import Geometry
+from geoalchemy2.shape import from_shape, to_shape
+from shapely.geometry import Polygon
 from sqlmodel import Field, Relationship, SQLModel
+
+from data.user import User
 
 ###### CORE VINEYARD MODELS ########
 
@@ -15,11 +20,59 @@ class Vineyard(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     name: str = Field(index=True, unique=True, nullable=False)
     address: Optional[str] = Field(default=None)
+    boundary: Optional[str] = Field(
+        default=None,
+        sa_column=sa.Column(Geometry("POLYGON", srid=4326)),
+        description="Vineyard boundary as a polygon in WGS84 (EPSG:4326)",
+    )
 
     management_units: List["ManagementUnit"] = Relationship(back_populates="vineyard")
 
     def __str__(self):
         return f"{self.name}"
+
+    @property
+    def boundary_coordinates(self):
+        """Convert PostGIS geometry to GeoJSON for frontend use"""
+        if self.boundary:
+            shape = to_shape(self.boundary)
+
+            # Swap coordinates from (lon, lat) to [lat, lon] for Leaflet
+            coordinates = [[lat, lon] for lon, lat in shape.exterior.coords]
+
+            return coordinates
+        return None
+
+    @property
+    def centroid(self):
+        """Calculate the centroid of the vineyard boundary for Leaflet setView"""
+        if self.boundary:
+            try:
+                from geoalchemy2.shape import to_shape
+
+                # Convert WKBElement to Shapely geometry and get centroid
+                shape = to_shape(self.boundary)
+                centroid_point = shape.centroid
+
+                # Return as [latitude, longitude] for Leaflet setView
+                return [centroid_point.y, centroid_point.x]
+
+            except Exception as e:
+                print(f"Error calculating centroid: {e}")
+                print(f"Boundary type: {type(self.boundary)}")
+
+        # Fallback to hardcoded coordinates
+        return []
+
+    def set_boundary_from_coordinates(self, coordinates: List[List[float]]):
+        """Set boundary from list of [lng, lat] coordinates"""
+        if coordinates and len(coordinates) >= 3:
+            # Ensure the polygon is closed
+            if coordinates[0] != coordinates[-1]:
+                coordinates.append(coordinates[0])
+
+            polygon = Polygon(coordinates)
+            self.boundary = from_shape(polygon, srid=4326)
 
 
 class Variety(SQLModel, table=True):
@@ -64,6 +117,13 @@ class ManagementUnit(SQLModel, table=True):
     rows_end_number: Optional[int] = Field(default=None)
     date_planted: datetime.datetime | None = Field(sa_column=sa.Column(sa.Date))
 
+    # PostGIS polygon field for management unit area
+    area_polygon: Optional[str] = Field(
+        default=None,
+        sa_column=sa.Column(Geometry("POLYGON", srid=4326)),
+        description="Management unit area as a polygon in WGS84 (EPSG:4326)",
+    )
+
     spray_records: List["SprayRecord"] = Relationship(back_populates="management_unit")
 
     variety_id: int | None = Field(default=None, foreign_key="varieties.id")
@@ -84,6 +144,28 @@ class ManagementUnit(SQLModel, table=True):
         if self.variety:
             return f"{self.name} - {self.variety.name}"
         return None
+
+    @property
+    def area_coordinates_lat_long(self):
+        """Convert PostGIS geometry to GeoJSON for frontend use"""
+        if self.area_polygon:
+            shape = to_shape(self.area_polygon)
+
+            # Swap coordinates from (lon, lat) to [lat, lon] for Leaflet
+            coordinates = [[lat, lon] for lon, lat in shape.exterior.coords]
+
+            return coordinates
+        return None
+
+    def set_area_polygon_from_coordinates(self, coordinates: List[List[float]]):
+        """Set area polygon from list of [lng, lat] coordinates"""
+        if coordinates and len(coordinates) >= 3:
+            # Ensure the polygon is closed
+            if coordinates[0] != coordinates[-1]:
+                coordinates.append(coordinates[0])
+
+            polygon = Polygon(coordinates)
+            self.area_polygon = from_shape(polygon, srid=4326)
 
 
 class WineColour(SQLModel, table=True):

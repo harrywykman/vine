@@ -19,7 +19,8 @@
   <div metal:define-slot="additional-css" tal:omit-tag="True"></div>
 </head>
 
-<body>
+<body hx-ext="debug">
+
   <nav class="navbar" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
       <a tal:condition="is_logged_in" class="navbar-item">
@@ -134,10 +135,13 @@
         <strong>Copyright &copy;
           <a href="http://www.ahaviticulture.com.au/">AHA Viticulture</a></strong>
       </p>
-    </div>
   </footer>
 
-  <div metal:define-slot="additional-js" tal:omit-tag="True"></div>
+  <div metal:define-slot="additional-js" tal:omit-tag="True">
+
+
+  </div>
+
 </body>
 
 </html>

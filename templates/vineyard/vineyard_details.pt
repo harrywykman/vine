@@ -34,8 +34,6 @@
         <div class="section content">
             <div class="vineyard container">
                 <h1 class="title">${vineyard.name}</h1>
-
-
                 <div class="section content">
                     <div class="container managements_unit_list">
                         <h2 class="title">Management Units</h2>
@@ -51,9 +49,10 @@
                             </thead>
                             <tbody>
                                 <tr tal:repeat="mu management_units" id="management_unit_row_${mu.id}">
-                                    <th class="name"><a href="#">${mu.name} <div
-                                                tal:condition="mu.variety_name_modifier and not 'null' in mu.variety_name_modifier.lower().strip()">
-                                                (${mu.variety_name_modifier})</div></a></th>
+                                    <th class="name">${mu.name} <div tal:condition="mu.variety_name_modifier and not 'null' in
+                                            mu.variety_name_modifier.lower().strip()">
+                                            (${mu.variety_name_modifier})</div>
+                                    </th>
                                     <td>
                                         <div tal:condition="mu.variety">${mu.variety.name}</div>
                                         <div tal:condition="not mu.variety">${mu.status}</div>
@@ -75,7 +74,7 @@
                     </div>
                 </div>
 
-                <div class="section content">
+                <div tal:condition="vineyard.boundary_coordinates" class="section content">
                     <div class="container vineyard">
                         <div class="content">
                             <div class="${vineyard.name}-map">
@@ -167,8 +166,14 @@
                                         </tbody>
                                     </table>
                                     <div class="section has-text-centered">
-                                        <a class="button is-primary is-outlined"
-                                            href="/vineyards/${vineyard.id}/spray_records/${sp.id}">Create Spray Record
+                                        <a hx-get="/vineyards/${vineyard.id}/spray_records/${sp.id}" hx-target="body"
+                                            hx-swap="outerHTML" hx-push-url="true"
+                                            class="button is-primary is-outlined loading-button">
+                                            <span class="icon loading-spinner">
+                                                <i class="fas fa-spinner"></i>
+                                            </span>
+                                            <span class="normal-text">Create Spray Record</span>
+                                            <span class="loading-text">Loading...</span>
                                         </a>
                                     </div>
                                     <div class="box">
@@ -187,8 +192,16 @@
                                                             <i class="fas fa-wine-bottle"
                                                                 tal:attributes="class python:'fas fa-wine-bottle has-text-danger' if mu.variety.wine_colour.name == 'Red' else 'fas fa-wine-bottle has-text-grey'">
                                                             </i>&nbsp;
-                                                            <a href="/vineyards/${vineyard.id}/spray_record/${sr.id}">${mu.name}
-                                                                &mdash; ${mu.variety.name}</a>
+                                                            <a hx-get="/vineyards/${vineyard.id}/spray_record/${sr.id}"
+                                                                hx-target="body" hx-swap="outerHTML" hx-push-url="true"
+                                                                class="loading-button">
+                                                                <span class="icon loading-spinner">
+                                                                    <i class="fas fa-spinner"></i>
+                                                                </span>
+                                                                <span class="normal-text">${mu.name}
+                                                                    &mdash; ${mu.variety.name}</span>
+                                                                <span class="loading-text">Loading...</span>
+                                                            </a>
                                                         </td>
                                                         <td>
                                                             <span class="tag is-success" tal:condition="sr.complete">
@@ -220,8 +233,8 @@
     <div metal:fill-slot="additional-js" tal:omit-tag="True">
         <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
             integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-        <script>
-            var map = L.map('map').setView([-33.741525, 115.019020], 16);
+        <script tal:condition="vineyard.boundary_coordinates">
+            var map = L.map('map').setView(${ vineyard.centroid }, 16);
             L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 maxZoom: 19,
                 attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
@@ -232,163 +245,19 @@
                 subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
             }).addTo(map)
 
-            /* TODO - Get polygons from database*/
+            var vineyard_boundary = L.polygon(${ vineyard.boundary_coordinates }).addTo(map);
 
-            var amarok_boundary = L.polygon([
-                [-33.74544, 115.021],
-                [-33.74137, 115.021],
-                [-33.74136, 115.02194],
-                [-33.7404, 115.02196],
-                [-33.73866, 115.01974],
-                [-33.73737, 115.01977],
-                [-33.73738, 115.01684],
-                [-33.74543, 115.01679]
-            ]).addTo(map);
+            <div tal:repeat="mu vineyard.management_units" tal:omit-tag="">
+                var mu_${mu.id} = L.polygon(${mu.area_coordinates_lat_long}, {
+                    color: '${mu.variety.wine_colour}'
+                }).addTo(map);
 
-            map.fitBounds(amarok_boundary.getBounds());
-
-            var shi1_poly = L.polygon([
-                [-33.73739, 115.01695],
-                [- 33.73793, 115.01694],
-                [- 33.73792, 115.0196],
-                [- 33.73739, 115.0196]
-            ], { color: 'red' }).addTo(map);
-            var mer2_poly = L.polygon([
-                [-33.73794, 115.01694],
-                [-33.73793, 115.0196],
-                [-33.73869, 115.0196],
-                [-33.73869, 115.01694]
-            ], { color: 'red' }).addTo(map);
-            var che3_poly = L.polygon([
-                [-33.73877, 115.01903],
-                [-33.74041, 115.01902],
-                [-33.74041, 115.01975],
-                [-33.73916, 115.01975],
-                [-33.73906, 115.0196],
-                [-33.73877, 115.0196]
-            ], { color: 'white' }).addTo(map);
-            var sav4_poly = L.polygon([
-                [-33.74102, 115.01697],
-                [- 33.741, 115.02176],
-                [- 33.74133, 115.02177],
-                [- 33.74133, 115.01858],
-                [- 33.74157, 115.01822],
-                [- 33.74158, 115.01698]
-            ], { color: 'white' }).addTo(map);
-            var sem5_poly = L.polygon([
-                [-33.74101, 115.01697],
-                [- 33.74098, 115.02177],
-                [- 33.74051, 115.02177],
-                [- 33.74051, 115.01698]
-            ], { color: 'white' }).addTo(map);
-            var shi6_poly = L.polygon([
-                [-33.74135, 115.02091],
-                [- 33.74265, 115.02091],
-                [- 33.74265, 115.01838],
-                [- 33.74239, 115.01859],
-                [- 33.74219, 115.01878],
-                [- 33.74194, 115.01893],
-                [- 33.74172, 115.01899],
-                [- 33.74136, 115.01899]
-            ], { color: 'red' }).addTo(map);
-            var shi7_poly = L.polygon([
-                [-33.74353, 115.02023],
-                [- 33.74353, 115.018],
-                [- 33.74267, 115.01837],
-                [- 33.74266, 115.02091],
-                [- 33.74328, 115.02091],
-                [- 33.74328, 115.02043]
-            ], { color: 'red' }).addTo(map);
-            var cab8_poly = L.polygon([
-                [-33.74355, 115.02022],
-                [- 33.74397, 115.02025],
-                [- 33.744, 115.01718],
-                [- 33.74379, 115.01717],
-                [- 33.74371, 115.01787],
-                [- 33.74355, 115.01801]
-            ], { color: 'red' }).addTo(map);
-            var cab9_poly = L.polygon([
-                [-33.74398, 115.02027],
-                [- 33.74409, 115.02038],
-                [- 33.7441, 115.02092],
-                [- 33.74526, 115.02093],
-                [- 33.74536, 115.02077],
-                [- 33.74536, 115.01715],
-                [- 33.74523, 115.01699],
-                [- 33.74472, 115.01699],
-                [- 33.74437, 115.01715],
-                [- 33.74401, 115.01715]
-            ], { color: 'red' }).addTo(map);
-
-            shi1_poly.bindTooltip("Shiraz 1", {
-                permanent: true,
-                direction: "center",
-                className: "polygon-label"
-            });
-
-            mer2_poly.bindTooltip("Merlot 2", {
-                permanent: true,
-                direction: "center",
-                className: "polygon-label"
-            });
-
-            che3_poly.bindTooltip("Chenin Blanc 3", {
-                permanent: true,
-                direction: "center",
-                className: "polygon-label"
-            });
-
-            sav4_poly.bindTooltip("Sauvignon blanc 4", {
-                permanent: true,
-                direction: "center",
-                className: "polygon-label"
-            });
-
-            sem5_poly.bindTooltip("Semillon 5", {
-                permanent: true,
-                direction: "center",
-                className: "polygon-label"
-            });
-
-            shi6_poly.bindTooltip("Shiraz 6", {
-                permanent: true,
-                direction: "center",
-                className: "polygon-label"
-            });
-
-            shi7_poly.bindTooltip("Shiraz 7", {
-                permanent: true,
-                direction: "center",
-                className: "polygon-label"
-            });
-
-            cab8_poly.bindTooltip("Cabernet Sauvignon 8", {
-                permanent: true,
-                direction: "center",
-                className: "polygon-label"
-            });
-
-            cab9_poly.bindTooltip("Cabernet Sauvignon 9", {
-                permanent: true,
-                direction: "center",
-                className: "polygon-label"
-            });
-
-            /*             var popup = L.popup()
-                            .setLatLng([-33.737659, 115.018249])
-                            .setContent("Shiraz - Management Unit 1")
-                            .openOn(map);
-            
-                        var popup = L.popup();
-            
-                        function onMapClick(e) {
-                            popup
-                                .setLatLng(e.latlng)
-                                .setContent("You clicked the map at " + e.latlng.toString())
-                                .openOn(map);
-                        }
-                        map.on('click', onMapClick); */
-
+                mu_${mu.id}.bindTooltip("${mu.name} - ${mu.variety.name}", {
+                    permanent: true,
+                    direction: "center",
+                    className: "polygon-label"
+                });
+            </div>
         </script>
     </div>
 </div>
