@@ -11,6 +11,10 @@ from data.vineyard import Chemical, Spray, SprayChemical, Target
 from dependencies import get_session
 from services import spray_record_service, spray_service, vineyard_service
 from viewmodels.shared.viewmodel import ViewModelBase
+from viewmodels.sprays.apply_select_units_form_viewmodel import (
+    ApplySelectMUsFormViewModel,
+    SelectFormViewModel,
+)
 from viewmodels.sprays.create_viewmodel import CreateViewModel
 from viewmodels.sprays.form_viewmodel import FormViewModel
 from viewmodels.sprays.list_viewmodel import ListViewModel
@@ -207,7 +211,10 @@ async def update_spray(
 
 # TODO refactor to use viewmodel
 @router.post("/sprays/{spray_id}/add_to_all_units")
-def add_program_to_all_units(spray_id: int, session: Session = Depends(get_session)):
+@fastapi_chameleon.template("partials/notification.pt")
+def add_program_to_all_units(
+    request: Request, spray_id: int, session: Session = Depends(get_session)
+):
     spray = spray_service.eagerly_get_spray_by_id(spray_id, session)
 
     if not spray:
@@ -216,14 +223,22 @@ def add_program_to_all_units(spray_id: int, session: Session = Depends(get_sessi
     all_management_units = vineyard_service.get_all_management_units(session)
 
     for mu in all_management_units:
-        spray_record = spray_record_service.create_or_update_spray_record(
-            session, mu.id, spray_id
-        )
-        session.add(spray_record)
+        if mu.is_active:
+            spray_record = spray_record_service.create_or_update_spray_record(
+                session, mu.id, spray_id
+            )
+            session.add(spray_record)
+        else:
+            print(f"################## Skipped {mu.name} ###################")
 
     session.commit()
 
-    return {"message": f"Program {spray.name} added to all management units."}
+    vm = ViewModelBase(request, session)
+    vm.set_success(
+        f"Spray program <strong>{spray.name}</strong> applied to all active units."
+    )
+
+    return vm.to_dict()
 
 
 @router.post("/sprays/{spray_id}/add_to_all_reds")
@@ -272,5 +287,37 @@ def add_program_to_all_white(
     vm.set_success(
         f"Spray program <strong>{spray.name}</strong> applied to all white units."
     )
+
+    return vm.to_dict()
+
+
+@router.get("/sprays/{spray_id}/apply_to_select_units")
+@fastapi_chameleon.template("spray/select_mus_for_application.pt")
+def apply_to_select_units(
+    request: Request, spray_id: int, session: Session = Depends(get_session)
+):
+    vm = ApplySelectMUsFormViewModel(
+        request=request, session=session, spray_id=spray_id
+    )
+
+    return vm.to_dict()
+
+
+@router.get("/sprays/{vineyard_id}/select_all")
+@fastapi_chameleon.template("spray/_select_all_mus.pt")
+def select_all_vineyard_units(
+    request: Request, vineyard_id: int, session: Session = Depends(get_session)
+):
+    vm = SelectFormViewModel(request=request, session=session, vineyard_id=vineyard_id)
+
+    return vm.to_dict()
+
+
+@router.get("/sprays/{vineyard_id}/select_none")
+@fastapi_chameleon.template("spray/_select_no_mus.pt")
+def select_no_vineyard_units(
+    request: Request, vineyard_id: int, session: Session = Depends(get_session)
+):
+    vm = SelectFormViewModel(request=request, session=session, vineyard_id=vineyard_id)
 
     return vm.to_dict()

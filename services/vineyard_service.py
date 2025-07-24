@@ -1,3 +1,5 @@
+import re
+
 from fastapi import HTTPException, status
 from icecream import ic
 from sqlalchemy import asc, func
@@ -18,10 +20,49 @@ from data.vineyard import (
 )
 
 
+def custom_sort_key_management_unit(management_unit: ManagementUnit):
+    if management_unit.name.isdigit():
+        return int(management_unit.name)
+    elif re.search(r"\d+", management_unit.name) == None:
+        return 999
+    else:
+        return int(re.search(r"\d+", management_unit.name).group())
+
+
+def sort_mus(vineyard: Vineyard) -> Vineyard:
+    vineyard.management_units.sort(
+        key=lambda management_unit: custom_sort_key_management_unit(
+            management_unit=management_unit
+        )
+    )
+    return vineyard
+
+
 def all_vineyards(session: Session):
     query = select(Vineyard).order_by(Vineyard.name)
 
-    vineyards = session.exec(query)
+    vineyards = session.exec(query).all()
+
+    for vineyard in vineyards:
+        sort_mus(vineyard=vineyard)
+
+    return vineyards
+
+
+def all_vineyards_with_mangement_units(session: Session):
+    statement = (
+        select(Vineyard)
+        .order_by(Vineyard.name)
+        .options(
+            selectinload(Vineyard.management_units)
+            .selectinload(ManagementUnit.variety)
+            .selectinload(Variety.wine_colour),
+        )
+    )
+
+    vineyards = session.exec(statement).all()
+    for vineyard in vineyards:
+        sort_mus(vineyard=vineyard)
     return vineyards
 
 
@@ -30,6 +71,7 @@ def get_vineyard_by_id(session: Session, id: int):
     vineyard = session.get(Vineyard, id)
     if not vineyard:
         raise HTTPException(status_code=404, detail="Vineyard not found")
+    sort_mus(vineyard=vineyard)
     return vineyard
 
 
@@ -250,6 +292,18 @@ def get_spray_chemicals(spray_id: int, session: Session) -> list[Chemical]:
     )
     spray_chemicals = session.exec(statement).all()
     return spray_chemicals
+
+
+def get_spray_record_chemicals(
+    spray_record_id: int, session: Session
+) -> list[Chemical]:
+    statement = (
+        select(Chemical)
+        .join(SprayRecordChemical)
+        .filter(SprayRecordChemical.spray_record_id == spray_record_id)
+    )
+    spray_record_chemicals = session.exec(statement).all()
+    return spray_record_chemicals
 
 
 def spray_complete_for_vineyard(

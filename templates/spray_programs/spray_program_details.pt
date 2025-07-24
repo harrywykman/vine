@@ -6,9 +6,13 @@
                     <h1 class="title">${spray_program.name} ${spray_program.year_start} / ${spray_program.year_end}</h1>
                     <h2 class="title">Sprays</h2>
                     <div class="content">
-                        <a href="/spray/new/spray_program/${spray_program.id}" class="button is-link is-small"
-                            type="button">
-                            + Add Spray
+                        <a hx-get="/spray/new/spray_program/${spray_program.id}" hx-target="body" hx-swap="outerHTML"
+                            hx-push-url="true" class="button is-link is-small loading-button">
+                            <span class="icon loading-spinner">
+                                <i class="fas fa-spinner"></i>
+                            </span>
+                            <span class="normal-text">+ Add Spray</span>
+                            <span class="loading-text">Loading...</span>
                         </a>
                     </div>
                     <div id="message-area"></div>
@@ -64,9 +68,18 @@
 
                                         <button class="button is-info is-small is-outlined"
                                             hx-post="/sprays/${s.id}/add_to_all_units" hx-target="#message-area"
-                                            hx-swap="none">
+                                            hx-swap="innerHTML">
                                             Apply to All MUs
                                         </button>
+                                        <a hx-get="/sprays/${s.id}/apply_to_select_units" hx-target="body"
+                                            hx-swap="outerHTML" hx-push-url="true"
+                                            class="button is-info is-small is-outlined loading-button">
+                                            <span class="icon loading-spinner">
+                                                <i class="fas fa-spinner"></i>
+                                            </span>
+                                            <span class="normal-text">Select MUs for Application</span>
+                                            <span class="loading-text">Loading...</span>
+                                        </a>
                                     </div>
                                 </td>
                                 <!--                                 <td class="buttons">

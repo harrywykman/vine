@@ -1,6 +1,38 @@
+import fastapi_chameleon
+from fastapi import HTTPException
+from sqlalchemy.orm import selectinload
 from sqlmodel import Session, select
 
-from data.vineyard import SprayRecord
+from data.vineyard import ManagementUnit, SprayRecord, SprayRecordChemical, Variety
+
+
+def get_spray_record_by_id(session: Session, id: int) -> SprayRecord:
+    print("GETTING VINEYARD BY ID")
+    spray_record = session.get(SprayRecord, id)
+    if not spray_record:
+        raise HTTPException(status_code=404, detail="Spray record not found")
+    return spray_record
+
+
+def eagerly_get_spray_record_by_id(id: int, session: Session) -> SprayRecord:
+    statement = (
+        select(SprayRecord)
+        .where(SprayRecord.id == id)
+        .options(
+            selectinload(SprayRecord.spray_record_chemicals).selectinload(
+                SprayRecordChemical.chemical
+            ),
+            selectinload(SprayRecord.management_unit)
+            .selectinload(ManagementUnit.variety)
+            .selectinload(Variety.wine_colour),
+            selectinload(SprayRecord.growth_stage),
+        )
+    )
+
+    spray_record = session.exec(statement).first()
+    if not spray_record:
+        fastapi_chameleon.not_found()
+    return spray_record
 
 
 def create_or_update_spray_record(

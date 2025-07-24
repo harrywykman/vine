@@ -32,6 +32,10 @@ class Vineyard(SQLModel, table=True):
         return f"{self.name}"
 
     @property
+    def name_slugified(self):
+        return f"{self.name.lower().strip().replace(' ', '-')}"
+
+    @property
     def boundary_coordinates(self):
         """Convert PostGIS geometry to GeoJSON for frontend use"""
         if self.boundary:
@@ -140,10 +144,16 @@ class ManagementUnit(SQLModel, table=True):
         return f"{self.name}"
 
     @property
+    def is_active(self):
+        print("self.status.status")
+        return self.status.status == "Active"
+
+    @property
     def name_with_variety(self):
-        if self.variety:
+        if self.name and self.variety:
             return f"{self.name} - {self.variety.name}"
-        return None
+        elif self.name:
+            return f"{self.name}"
 
     @property
     def area_coordinates_lat_long(self):

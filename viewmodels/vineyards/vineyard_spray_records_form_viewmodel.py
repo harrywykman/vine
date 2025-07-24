@@ -30,6 +30,8 @@ class VineyardSprayRecordsFormViewModel(ViewModelBase):
             session=session, role=UserRole.OPERATOR
         )
 
+        self.edit = False
+
         self.spray = spray_service.eagerly_get_spray_by_id(spray_id, session)
 
         self.chemicals = vineyard_service.get_spray_chemicals(spray_id, session)

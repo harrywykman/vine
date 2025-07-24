@@ -20,8 +20,17 @@
                         <tbody>
                             <tr tal:repeat="sp spray_programs" id="spray_row_${sp.id}">
                                 <td>
-                                    <strong><a href=" /spray_programs/${sp.id}">${sp.name} ${sp.year_start} /
-                                            ${sp.year_end}</a></strong>
+                                    <strong>
+                                        <a hx-get="/spray_programs/${sp.id}" hx-target="body" hx-swap="outerHTML"
+                                            hx-push-url="true" class="loading-button">
+                                            <span class="icon loading-spinner">
+                                                <i class="fas fa-spinner"></i>
+                                            </span>
+                                            <span class="normal-text">${sp.name} ${sp.year_start} /
+                                                ${sp.year_end}</span>
+                                            <span class="loading-text">Loading...</span>
+                                        </a>
+                                    </strong>
                                 </td>
                             </tr>
                         </tbody>

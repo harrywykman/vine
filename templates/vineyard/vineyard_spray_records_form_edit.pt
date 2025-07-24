@@ -1,0 +1,118 @@
+<div metal:use-macro="load: ../shared/_layout.pt">
+    <div metal:fill-slot="content" tal:omit-tag="True">
+
+        <div class="help is-success" tal:condition="info">${ info }</div>
+        <div id="message-area"></div>
+
+        <form method="post" action="/vineyards/${vineyard_id}/spray_records/${spray_record.spray_id}/submit">
+
+            <div class="field">
+                <label class="label">Operator</label>
+                <div class="control">
+                    <div class="select is-fullwidth">
+                        <select name="operator_id" required>
+                            <option value="${spray_record.operator.id}">${spray_record.operator.name}</option>
+                            <option tal:repeat="op operators" value="${op.id}">${op.name}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="label">Growth Stage</label>
+                <div class="control">
+                    <div class="select is-fullwidth">
+                        <select name="growth_stage_id" value="${spray_record.growth_stage.id}" required>
+                            <option value="${spray_record.growth_stage.id}">${spray_record.growth_stage.el_number} –
+                                ${spray_record.growth_stage.description}</option>
+                            <option tal:repeat="stage growth_stages" value="${stage.id}">${stage.el_number} –
+                                ${stage.description}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="label">Chemicals</label>
+                <div tal:repeat="src spray_record.spray_record_chemicals" class="content">
+                    <label class="label">${src.chemical.name} Batch #</label>
+                    <div class="control">
+                        <input type="hidden" name="chemical_ids" value="${src.chemical_id}" />
+                        <input class="input" type="text" name="batch_number_${src.chemical.id}"
+                            value="${src.batch_number}" required />
+                    </div>
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="label">Hours Taken</label>
+                <div class="control">
+                    <input class="input" type="number" name="hours_taken" step="0.1" min="0"
+                        value="${spray_record.hours_taken}" />
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="label">Temperature (°C)</label>
+                <div class="control">
+                    <input class="input" type="number" name="temperature" step="1" min="-10" max="50"
+                        value="${spray_record.temperature}" />
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="label">Relative Humidity (%)</label>
+                <div class="control">
+                    <input class="input" type="number" name="relative_humidity" step="1" min="0" max="100"
+                        value="${spray_record.relative_humidity}" />
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="label">Wind Speed (km/h)</label>
+                <div class="control">
+                    <input class="input" type="number" name="wind_speed" step="1" min="0"
+                        value="${spray_record.wind_speed}" />
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="label">Wind Direction</label>
+                <div class="control">
+                    <div class="select is-fullwidth">
+                        <select name="wind_direction" value="${spray_record.wind_direction.name}" required>
+                            <option value="${spray_record.wind_direction.name}">${spray_record.wind_direction.name}
+                            </option>
+                            <option tal:repeat="direction wind_directions" tal:attributes="value direction.name"
+                                tal:content="direction.name" />
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="label">Edit for:</label>
+                <div tal:repeat="spray_record spray_records" class="control">
+                    <label class="checkbox is-block mb-2">
+                        <input type="checkbox" name="management_unit_ids" value="${spray_record.management_unit.id}" />
+                        &nbsp;
+                        <i class="fas fa-wine-bottle"
+                            tal:attributes="class python:'fas fa-wine-bottle has-text-danger' if spray_record.management_unit.variety.wine_colour.name == 'Red' else 'fas fa-wine-bottle has-text-grey'">
+                        </i>&nbsp;
+                        ${spray_record.management_unit.name} &mdash; ${spray_record.management_unit.variety.name}
+                    </label>
+                </div>
+            </div>
+
+            <div class="field mt-4">
+                <div class="control">
+                    <button class="button is-primary is-fullwidth" type="submit">Update Spray Records</button>
+                    <a class="button is-link is-fullwidth" href="/vineyards/${vineyard_id}">
+                        ← Back to Vineyard Details
+                    </a>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>

@@ -15,6 +15,9 @@ from viewmodels.vineyards.details_viewmodel import DetailsViewModel
 from viewmodels.vineyards.edit_mu_viewmodel import EditMUViewModel
 from viewmodels.vineyards.list_viewmodel import ListViewModel
 from viewmodels.vineyards.vineyard_spray_record_details import VineyardSprayRecordDetail
+from viewmodels.vineyards.vineyard_spray_records_form_edit_viewmodel import (
+    VineyardSprayRecordsFormEditViewModel,
+)
 from viewmodels.vineyards.vineyard_spray_records_form_viewmodel import (
     VineyardSprayRecordsFormViewModel,
 )
@@ -58,6 +61,24 @@ def vineyard_spray_records_form(
     session: Session = Depends(get_session),
 ):
     vm = VineyardSprayRecordsFormViewModel(vineyard_id, spray_id, request, session)
+
+    return vm.to_dict()
+
+
+@router.get(
+    "/vineyards/{vineyard_id}/spray_records/{spray_record_id}/edit",
+    response_class=HTMLResponse,
+)
+@fastapi_chameleon.template("vineyard/vineyard_spray_records_form_edit.pt")
+def vineyard_spray_records_form_edit(
+    request: Request,
+    vineyard_id: int,
+    spray_record_id: int,
+    session: Session = Depends(get_session),
+):
+    vm = VineyardSprayRecordsFormEditViewModel(
+        vineyard_id, spray_record_id, request, session
+    )
 
     return vm.to_dict()
 

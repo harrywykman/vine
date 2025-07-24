@@ -189,10 +189,10 @@
                                                 <tr tal:repeat="sr mu.spray_records">
                                                     <div tal:condition="sr.spray.id == sp.id">
                                                         <td>
-                                                            <i class="fas fa-wine-bottle"
-                                                                tal:attributes="class python:'fas fa-wine-bottle has-text-danger' if mu.variety.wine_colour.name == 'Red' else 'fas fa-wine-bottle has-text-grey'">
+                                                            <i tal:condition="mu.variety" class="fas fa-wine-bottle"
+                                                                tal:attributes="class python:'fas fa-wine-bottle has-text-danger' if mu.variety.wine_colour.name == 'Red' else 'fas fa-wine-bottle has-text-white'">
                                                             </i>&nbsp;
-                                                            <a hx-get="/vineyards/${vineyard.id}/spray_record/${sr.id}"
+                                                            <a tal:condition="mu.variety" hx-get="/vineyards/${vineyard.id}/spray_record/${sr.id}"
                                                                 hx-target="body" hx-swap="outerHTML" hx-push-url="true"
                                                                 class="loading-button">
                                                                 <span class="icon loading-spinner">
@@ -202,10 +202,24 @@
                                                                     &mdash; ${mu.variety.name}</span>
                                                                 <span class="loading-text">Loading...</span>
                                                             </a>
+                                                            <tal:block tal:condition="not mu.variety"><i class="fas fa-wine-bottle has-text-grey"></i>&nbsp;${mu.name}
+                                                                &mdash; ${mu.status}
+                                                            </tal:block>
                                                         </td>
                                                         <td>
                                                             <span class="tag is-success" tal:condition="sr.complete">
-                                                                Complete - ${sr.formatted_date_completed}</span>
+                                                                Complete - ${sr.formatted_date_completed} </span>
+                                                            <span tal:condition="sr.complete">
+                                                            <a hx-get="/vineyards/${vineyard.id}/spray_records/${sp.id}/edit" hx-target="body"
+                                                                hx-swap="outerHTML" hx-push-url="true"
+                                                                class="button is-info is-outlined loading-button">
+                                                                <span class="icon loading-spinner">
+                                                                    <i class="fas fa-spinner"></i>
+                                                                </span>
+                                                                <span class="normal-text">Edit</span>
+                                                                <span class="loading-text">Loading...</span>
+                                                            </a>
+                                                            </span>
                                                             <span class="tag is-small is-danger"
                                                                 tal:condition="not sr.complete">
                                                                 Incomplete</span>
@@ -227,12 +241,14 @@
     </div>
 
     <div metal:fill-slot="additional-css" tal:omit-tag="True">
-        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-            integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+        <!-- <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+            integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" /> -->
+            <link rel="stylesheet" href="/static/external/js/leaflet/leaflet.css" />
     </div>
     <div metal:fill-slot="additional-js" tal:omit-tag="True">
-        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+        <!-- <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script> -->
+            <script src="/static/external/js/leaflet/leaflet.js"></script>
         <script tal:condition="vineyard.boundary_coordinates">
             var map = L.map('map').setView(${ vineyard.centroid }, 16);
             L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -248,15 +264,17 @@
             var vineyard_boundary = L.polygon(${ vineyard.boundary_coordinates }).addTo(map);
 
             <div tal:repeat="mu vineyard.management_units" tal:omit-tag="">
-                var mu_${mu.id} = L.polygon(${mu.area_coordinates_lat_long}, {
+                <div tal:condition="mu.area_coordinates_lat_long" tal:omit-tag="">
+                var mu_${mu.id} = L.polygon(${mu.area_coordinates_lat_long}<div tal:condition="mu.variety" tal:omit-tag="">, {
                     color: '${mu.variety.wine_colour}'
-                }).addTo(map);
+                }</div>).addTo(map);
 
-                mu_${mu.id}.bindTooltip("${mu.name} - ${mu.variety.name}", {
+                mu_${mu.id}.bindTooltip("${mu.name} - <div tal:condition="mu.variety" tal:omit-tag="">${mu.variety.name}</div>", {
                     permanent: true,
                     direction: "center",
                     className: "polygon-label"
                 });
+                </div>
             </div>
         </script>
     </div>

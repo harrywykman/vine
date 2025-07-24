@@ -111,7 +111,7 @@ class VineyardSprayRecordsSubmitViewModel(ViewModelBase):
 
             for chem_id, batch_number in chem_batch_map.items():
                 # Ensure no duplicates added
-                existing = self.session.exec(
+                existing: SprayRecordChemical = self.session.exec(
                     select(SprayRecordChemical).where(
                         SprayRecordChemical.spray_record_id == spray_record.id,
                         SprayRecordChemical.chemical_id == chem_id,
@@ -119,13 +119,15 @@ class VineyardSprayRecordsSubmitViewModel(ViewModelBase):
                 ).first()
 
                 if existing:
-                    continue
+                    existing.batch_number = batch_number
+                    src = existing
+                else:
+                    src = SprayRecordChemical(
+                        spray_record_id=spray_record.id,
+                        chemical_id=chem_id,
+                        batch_number=batch_number,
+                    )
 
-                src = SprayRecordChemical(
-                    spray_record_id=spray_record.id,
-                    chemical_id=chem_id,
-                    batch_number=batch_number,
-                )
                 self.session.add(src)
 
             self.session.add(spray_record)

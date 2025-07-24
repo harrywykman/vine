@@ -1,0 +1,33 @@
+<div class="box" id="${vineyard.name_slugified}-block">
+    <label class="label">
+        <h3>${vineyard.name}</h3>
+    </label>
+    <div class="buttons">
+        <button class="button is-primary is-small is-outlined" hx-get="/sprays/${vineyard.id}/select_none"
+            hx-target="#${vineyard.name_slugified}-block" hx-swap="outerHTML">
+            Unselect all ${vineyard.name} Units
+        </button>
+    </div>
+    <tal:block tal:repeat="management_unit vineyard.management_units">
+        <label tal:condition="management_unit.is_active" class="checkbox is-block mb-2">
+            <input type="checkbox" name="management_unit_ids" value="${management_unit.id}" checked />
+
+            ${management_unit.name_with_variety}
+            <span tal:condition="management_unit.variety_name_modifier and not 'null' in
+                                            management_unit.variety_name_modifier.lower().strip()">
+                (${management_unit.variety_name_modifier})</span>
+            <span tal:condition="not management_unit.variety">-
+                ${management_unit.status}</span>
+        </label>
+        <label tal:condition="not management_unit.is_active" class="checkbox is-block mb-2">
+            &nbsp;&nbsp;&nbsp;&nbsp;
+
+            ${management_unit.name_with_variety}
+            <span tal:condition="management_unit.variety_name_modifier and not 'null' in
+                                            management_unit.variety_name_modifier.lower().strip()">
+                (${management_unit.variety_name_modifier})</span>
+            <span tal:condition="not management_unit.variety">-
+                ${management_unit.status}</span>
+        </label>
+    </tal:block>
+</div>
