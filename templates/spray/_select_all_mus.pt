@@ -30,4 +30,10 @@
                 ${management_unit.status}</span>
         </label>
     </tal:block>
+    <div class="field is-grouped">
+        <div class="control">
+            <button type="submit" class="button is-primary is-small">Apply to
+                Selected</button>
+        </div>
+    </div>
 </div>

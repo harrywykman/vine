@@ -25,7 +25,7 @@
                                 <th>EL</th>
                                 <th>Chemicals</th>
                                 <th>Apply</th>
-                                <!-- <th>Actions</th> -->
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -82,17 +82,34 @@
                                         </a>
                                     </div>
                                 </td>
-                                <!--                                 <td class="buttons">
-                                    <button class="button is-info is-small" hx-get="/spray/${s.id}/edit"
-                                        hx-target="#spray_row_${s.id}" hx-swap="outerHTML">
-                                        Edit
-                                    </button>
-                                    <form method="post" action="/spray/${ s.id }/delete"
-                                        class="is-inline-block"
-                                        onsubmit="return confirm('Delete Spray Program ${s.name}?');">
-                                        <button class="button is-small is-danger is-light" type="submit">Delete</button>
-                                    </form>
-                                </td> -->
+                                <td class="buttons">
+                                    <div class="buttons">
+                                        <!--<button class="button is-info is-small" hx-get="/spray/${s.id}/edit"
+                                            hx-target="#spray_row_${s.id}" hx-swap="outerHTML">
+                                            Edit
+                                        </button>-->
+
+                                        <a hx-get="/spray/${s.id}/spray_program/${spray_program.id}" hx-target="body"
+                                            hx-swap="outerHTML" hx-push-url="true"
+                                            class="button is-info is-small loading-button">
+                                            <span class="icon loading-spinner">
+                                                <i class="fas fa-spinner"></i>
+                                            </span>
+                                            <span class="normal-text">Edit</span>
+                                            <span class="loading-text">Loading...</span>
+                                        </a>
+                                        <a hx-post="/spray_programs/${spray_program.id}/spray/${s.id}/delete"
+                                            hx-target="body" hx-swap="outerHTML" hx-push-url="false"
+                                            hx-confirm="Delete ${s.name} from ${spray_program.name}?"
+                                            class="button is-danger is-small loading-button">
+                                            <span class="icon loading-spinner">
+                                                <i class="fas fa-spinner"></i>
+                                            </span>
+                                            <span class="normal-text">Delete</span>
+                                            <span class="loading-text">Loading...</span>
+                                        </a>
+                                    </div>
+                                </td>
                             </tr>
                         </tbody>
                     </table>

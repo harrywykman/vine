@@ -30,30 +30,20 @@ class Vineyard(SQLModel, table=True):
     def __str__(self):
         return f"{self.name}"
 
-
-@property
-def boundary_geojson(self):
-    """Convert PostGIS geometry to GeoJSON for frontend use"""
-    if self.boundary:
-        shape = to_shape(self.boundary)
-
-        # Swap coordinates from (lon, lat) to [lat, lon] for Leaflet
-        # coordinates = [[lat, lon] for lon, lat in shape.exterior.coords]
-
-        return {
-            "type": "FeatureCollection",
-            "features": [
-                {
-                    "type": "Feature",
-                    "geometry": {
-                        "type": "Polygon",
-                        "coordinates": [coordinates],
-                    },
-                    "properties": {"name": self.name, "type": "vineyard"},
-                }
-            ],
-        }
-    return None
+    @property
+    def boundary_geojson(self):
+        """Convert PostGIS geometry to GeoJSON for frontend use"""
+        if self.boundary:
+            shape = to_shape(self.boundary)
+            return {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Polygon",
+                    "coordinates": [list(shape.exterior.coords)],
+                },
+                "properties": {"name": self.name, "type": "vineyard"},
+            }
+        return None
 
     def set_boundary_from_coordinates(self, coordinates: List[List[float]]):
         """Set boundary from list of [lng, lat] coordinates"""

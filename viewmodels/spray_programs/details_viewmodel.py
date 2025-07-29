@@ -1,3 +1,4 @@
+from icecream import ic
 from sqlmodel import Session
 from starlette.requests import Request
 
@@ -25,3 +26,5 @@ class DetailsViewModel(ViewModelBase):
                 session=session, spray_program_id=self.spray_program.id
             )
         )
+
+        ic(self.sprays)

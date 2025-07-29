@@ -54,7 +54,7 @@
                             <button type="submit" class="button is-primary">Create</button>
                         </div>
                         <div class="control">
-                            <a href="/sprays" class="button is-light">Cancel</a>
+                            <a href="/spray_programs/${spray_program.id}" class="button is-light">Cancel</a>
                         </div>
                     </div>
                 </form>

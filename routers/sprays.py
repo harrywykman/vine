@@ -1,4 +1,5 @@
 from decimal import Decimal
+from typing import Annotated
 
 import fastapi_chameleon
 from fastapi import APIRouter, Depends, Form, HTTPException, Request, responses
@@ -15,7 +16,11 @@ from viewmodels.sprays.apply_select_units_form_viewmodel import (
     ApplySelectMUsFormViewModel,
     SelectFormViewModel,
 )
+from viewmodels.sprays.apply_select_units_submit_viewmodel import (
+    ApplySelectUnitsSubmitViewModel,
+)
 from viewmodels.sprays.create_viewmodel import CreateViewModel
+from viewmodels.sprays.edit_form_viewmodel import EditFormViewModel
 from viewmodels.sprays.form_viewmodel import FormViewModel
 from viewmodels.sprays.list_viewmodel import ListViewModel
 
@@ -46,7 +51,7 @@ def get_chemical_row(session: Session = Depends(get_session)):
     return {"chemicals": chemicals, "targets": targets}
 
 
-# TODO refactor to use viewmodel
+# TODO refactor to use viewmodel / remove
 ## GET Editable Spray Program Row
 @router.get("/spray/{spray_id}/edit", response_class=HTMLResponse)
 @fastapi_chameleon.template("spray/_edit_row.pt")
@@ -64,7 +69,7 @@ def get_spray_row_as_form(spray_id: int, session: Session = Depends(get_session)
     return {"sp": spray, "chemicals": chemicals}
 
 
-# TODO refactor to use viewmodel
+# TODO refactor to use viewmodel / remove
 ## GET Spay program row
 @router.get("/spray/{spray_id}/view", response_class=HTMLResponse)
 @fastapi_chameleon.template("spray/_display_row.pt")
@@ -135,6 +140,25 @@ async def create_spray(request: Request, session: Session = Depends(get_session)
     return response
 
 
+## GET Edit Spray Form
+@router.get(
+    "/spray/{spray_id}/spray_program/{spray_program_id}", response_class=HTMLResponse
+)
+@fastapi_chameleon.template("spray/spray_form_edit.pt")
+def spray_spray_program_edit_form(
+    request: Request,
+    spray_id: int,
+    spray_program_id: int,
+    session: Session = Depends(get_session),
+):
+    vm = EditFormViewModel(
+        request, session, spray_program_id=spray_program_id, spray_id=spray_id
+    )
+    if not vm:
+        raise HTTPException(status_code=404, detail="No view model.")
+    return vm.to_dict()
+
+
 ## GET empty template
 @router.get("/empty", response_class=HTMLResponse)
 @fastapi_chameleon.template("shared/_empty.pt")
@@ -143,7 +167,7 @@ def get_no_html():
 
 
 # TODO refactor to use viewmodel
-## POST Delete Spray Program
+## POST Delete Spray
 # TODO use htmx table row fade rather than redirect
 @router.post("/spray/{spray_id}/delete")
 def delete_vineyard_html(
@@ -209,7 +233,6 @@ async def update_spray(
     return {"sp": updated_sp}
 
 
-# TODO refactor to use viewmodel
 @router.post("/sprays/{spray_id}/add_to_all_units")
 @fastapi_chameleon.template("partials/notification.pt")
 def add_program_to_all_units(
@@ -299,6 +322,35 @@ def apply_to_select_units(
     vm = ApplySelectMUsFormViewModel(
         request=request, session=session, spray_id=spray_id
     )
+
+    return vm.to_dict()
+
+
+@router.post("/sprays/{spray_id}/apply_to_select_units")
+@fastapi_chameleon.template("spray/select_mus_for_application.pt")
+async def apply_to_select_units_submit(
+    request: Request,
+    spray_id: int,
+    management_unit_ids: Annotated[list[int], Form()],
+    session: Session = Depends(get_session),
+):
+    vm = ApplySelectUnitsSubmitViewModel(
+        request=request,
+        spray_id=spray_id,
+        management_unit_ids=management_unit_ids,
+        session=session,
+    )
+
+    await vm.load()
+
+    if not vm:
+        raise HTTPException(status_code=404, detail="No view model.")
+
+    if vm.error:
+        print(f"[Form Error] {vm.error}")
+        return vm.to_dict()
+
+    vm.process_submission()
 
     return vm.to_dict()
 

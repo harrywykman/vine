@@ -1,0 +1,113 @@
+<div metal:use-macro="load: ../shared/_layout.pt">
+    <div metal:fill-slot="content" tal:omit-tag="True">
+        <section class="section">
+            <div class="container">
+                <h1 class="title">Edit ${spray.name}
+                    <span tal:condition="spray_program">in ${spray_program.name}
+                        ${spray_program.year_start} / ${spray_program.year_end}</span>
+                </h1>
+
+                <form method="post" tal:attributes="action string:/spray/${spray.id}/edit">
+                    <div class="field">
+                        <label class="label">Name</label>
+                        <div class="control">
+                            <input class="input" type="text" name="name" tal:attributes="value spray.name"
+                                placeholder="Fungicide 1" required>
+                            <input tal:condition="spray_program" type="hidden" name="spray_program_id"
+                                tal:attributes="value spray_program.id">
+                            <input tal:condition="not spray_program" type="hidden" name="spray_program_id" value="">
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label class="label">Water Spray Rate per Hectare (L)</label>
+                        <div class="control">
+                            <input class="input" type="number" step="50" name="water_spray_rate_per_hectare"
+                                tal:attributes="value spray.water_spray_rate_per_hectare" placeholder="e.g. 100.00"
+                                required>
+                        </div>
+                    </div>
+
+                    <label class="label">Growth Stage</label>
+                    <div class="field select is-fullwidth">
+                        <select name="growth_stage_id">
+                            <option value="">Select a growth stage</option>
+                            <option tal:repeat="growth_stage growth_stages"
+                                tal:attributes="value growth_stage.id; selected python:spray.growth_stage_id == growth_stage.id">
+                                ${growth_stage.el_number} &mdash; ${growth_stage.description}
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="help is-danger" tal:condition="error">${ error }</div>
+
+                    <section class="section">
+                        <h3 class="title is-5">Chemicals</h3>
+                        <div id="chemical-list">
+                            <!-- Existing chemical rows -->
+                            <div tal:repeat="spray_chemical spray.spray_chemicals">
+                                <div class="field is-grouped mb-2">
+                                    <div class="control is-expanded">
+                                        <label class="label">Chemical</label>
+                                        <div class="select is-fullwidth">
+                                            <select name="chemical_ids">
+                                                <option value="">Select a chemical</option>
+                                                <option tal:repeat="chemical chemicals"
+                                                    tal:attributes="value chemical.id; selected python:spray_chemical.chemical_id == chemical.id">
+                                                    ${chemical.name}
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="control">
+                                        <label class="label">Target</label>
+                                        <div class="select">
+                                            <select name="targets">
+                                                <option value="">Target</option>
+                                                <option tal:repeat="t targets"
+                                                    tal:attributes="value t; selected python:spray_chemical.target == t"
+                                                    tal:content="t">Target</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="control">
+                                        <label class="label">Concentration Factor</label>
+                                        <input class="input" type="number" step="0.01"
+                                            tal:attributes="value spray_chemical.concentration_factor"
+                                            name="concentration_factors" placeholder="Concentration Factor" required>
+                                    </div>
+
+                                    <div class="control">
+                                        <button hx-get="/empty" hx-target="closest .field" hx-swap="outerHTML"
+                                            type="button" class="button is-danger is-light">
+                                            Remove
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <button class="button is-link is-small" type="button" hx-get="/spray/chemical_row"
+                                hx-target="#chemical-list" hx-swap="beforeend">
+                                + Add Chemical
+                            </button>
+                        </div>
+                    </section>
+
+                    <div class="field is-grouped">
+                        <div class="control">
+                            <button type="submit" class="button is-primary">Update</button>
+                        </div>
+                        <div class="control">
+                            <a tal:attributes="href string:/spray_programs/${spray_program.id}"
+                                class="button is-light">Cancel</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </div>
+</div>

@@ -4,8 +4,9 @@ from fastapi.responses import HTMLResponse
 from sqlalchemy.orm import Session
 from starlette import status
 
+from auth import permissions_decorators
 from dependencies import get_session
-from services import spray_program_service
+from services import spray_program_service, spray_service
 from viewmodels.spray_programs.create_viewmodel import CreateViewModel
 from viewmodels.spray_programs.details_viewmodel import DetailsViewModel
 from viewmodels.spray_programs.form_viewmodel import FormViewModel
@@ -13,7 +14,6 @@ from viewmodels.spray_programs.list_viewmodel import ListViewModel
 
 router = APIRouter()
 
-from auth import permissions_decorators
 
 # HTML routes
 
@@ -39,6 +39,31 @@ def spray_program_details(
     vm = DetailsViewModel(request, session, spray_program_id=spray_program_id)
     if not vm:
         raise HTTPException(status_code=404, detail="No view model.")
+    return vm.to_dict()
+
+
+@router.post("/spray_programs/{spray_program_id}/spray/{spray_id}/delete")
+@fastapi_chameleon.template("spray_programs/spray_program_details.pt")
+def delete_spray_program_spray(
+    request: Request,
+    spray_id: int,
+    spray_program_id: int,
+    session: Session = Depends(get_session),
+):
+    spray = spray_service.eagerly_get_spray_by_id(session=session, id=spray_id)
+
+    spray_program = spray_program_service.get_spray_program_by_id(
+        session=session, spray_program_id=spray_program_id
+    )
+
+    spray_service.delete_spray(session, spray_id)
+
+    vm = DetailsViewModel(request, session, spray_program_id=spray_program_id)
+    if not vm:
+        raise HTTPException(status_code=404, detail="No view model.")
+
+    vm.set_success(message=f"Deleted {spray.name} from {spray_program.name}")
+
     return vm.to_dict()
 
 

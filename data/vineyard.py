@@ -145,7 +145,6 @@ class ManagementUnit(SQLModel, table=True):
 
     @property
     def is_active(self):
-        print("self.status.status")
         return self.status.status == "Active"
 
     @property

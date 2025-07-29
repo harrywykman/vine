@@ -46,7 +46,12 @@ def eagerly_get_all_spray_program_sprays(
     if not spray_program:
         raise ValueError(f"Spray program with ID {spray_program_id} not found")
 
-    return spray_program.sprays
+    return sorted(
+        spray_program.sprays,
+        key=lambda spray: spray.growth_stage.el_number
+        if spray.growth_stage
+        else float("inf"),
+    )
 
 
 def create_spray_program(
