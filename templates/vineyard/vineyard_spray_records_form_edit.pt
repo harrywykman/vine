@@ -93,14 +93,17 @@
             <div class="field">
                 <label class="label">Edit for:</label>
                 <div tal:repeat="spray_record spray_records" class="control">
-                    <label class="checkbox is-block mb-2">
-                        <input type="checkbox" name="management_unit_ids" value="${spray_record.management_unit.id}" />
-                        &nbsp;
-                        <i class="fas fa-wine-bottle"
-                            tal:attributes="class python:'fas fa-wine-bottle has-text-danger' if spray_record.management_unit.variety.wine_colour.name == 'Red' else 'fas fa-wine-bottle has-text-grey'">
-                        </i>&nbsp;
-                        ${spray_record.management_unit.name} &mdash; ${spray_record.management_unit.variety.name}
-                    </label>
+                    <div tal:condition="spray_record.complete">
+                        <label class="checkbox is-block mb-2">
+                            <input type="checkbox" name="management_unit_ids"
+                                value="${spray_record.management_unit.id}" />
+                            &nbsp;
+                            <i class="fas fa-wine-bottle"
+                                tal:attributes="class python:'fas fa-wine-bottle has-text-danger' if spray_record.management_unit.variety.wine_colour.name == 'Red' else 'fas fa-wine-bottle has-text-grey'">
+                            </i>&nbsp;
+                            ${spray_record.management_unit.name} &mdash; ${spray_record.management_unit.variety.name}
+                        </label>
+                    </div>
                 </div>
             </div>
 

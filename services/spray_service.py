@@ -7,7 +7,7 @@ from sqlalchemy.orm import selectinload
 from sqlmodel import Session, select
 from starlette import status
 
-from data.vineyard import GrowthStage, Spray, SprayChemical, SprayProgramSprayLink
+from data.vineyard import Chemical, GrowthStage, Spray, SprayChemical, SprayProgram
 
 
 def eagerly_get_all_sprays(session: Session) -> list[Spray]:
@@ -45,42 +45,67 @@ def create_spray(
     water_spray_rate_per_hectare: Optional[Decimal],
     chemicals_targets: list,
     growth_stage_id: int,
-    spray_program_id: Optional[int] = None,
+    spray_program_id: int,  # Now required, not optional
+    concentration_factors: Optional[list] = None,  # Added for completeness
 ) -> Spray:
+    # Validation
     if not name:
-        raise Exception("name is required")
+        raise ValueError("Name is required")
     if not water_spray_rate_per_hectare:
-        raise Exception("spray rate is required")
+        raise ValueError("Water spray rate is required")
     if not growth_stage_id:
-        raise Exception("A growth rate is required")
+        raise ValueError("A growth stage is required")
+    if not spray_program_id:
+        raise ValueError("Spray program ID is required")
 
-    spray = Spray()
-    spray.name = name
-    spray.water_spray_rate_per_hectare = water_spray_rate_per_hectare
-    spray.growth_stage_id = growth_stage_id  # check if growth stage exists
+    # Verify spray program exists
+    spray_program = session.get(SprayProgram, spray_program_id)
+    if not spray_program:
+        raise ValueError(f"Spray program with ID {spray_program_id} not found")
+
+    # Verify growth stage exists
+    growth_stage = session.get(GrowthStage, growth_stage_id)
+    if not growth_stage:
+        raise ValueError(f"Growth stage with ID {growth_stage_id} not found")
+
+    # Create spray with direct foreign key relationship
+    spray = Spray(
+        name=name,
+        water_spray_rate_per_hectare=water_spray_rate_per_hectare,
+        growth_stage_id=growth_stage_id,
+        spray_program_id=spray_program_id,  # Direct assignment
+    )
 
     session.add(spray)
-    session.flush()  # Get ID before commit
+    session.flush()  # Get ID before adding chemicals
 
     # Add associated chemicals
-    for chem_id, target in chemicals_targets:
+    for i, (chem_id, target) in enumerate(chemicals_targets):
         if not chem_id or not target:
             continue  # Skip empty rows
-        spc = SprayChemical(
+
+        # Get concentration factor if provided
+        concentration_factor = 1.0  # default
+        if concentration_factors and i < len(concentration_factors):
+            try:
+                concentration_factor = float(concentration_factors[i])
+            except (ValueError, TypeError):
+                concentration_factor = 1.0
+
+        # Verify chemical exists
+        chemical = session.get(Chemical, int(chem_id))
+        if not chemical:
+            raise ValueError(f"Chemical with ID {chem_id} not found")
+
+        spray_chemical = SprayChemical(
             spray_id=spray.id,
             chemical_id=int(chem_id),
             target=str(target),
+            concentration_factor=concentration_factor,
         )
-        session.add(spc)
-
-    if spray_program_id:
-        spray_program_spray_link = SprayProgramSprayLink()
-        spray_program_spray_link.spray_program_id = spray_program_id
-        spray_program_spray_link.spray_id = spray.id
-        session.add(spray_program_spray_link)
+        session.add(spray_chemical)
 
     session.commit()
-
     return spray
 
 
@@ -91,7 +116,7 @@ def delete_spray(session: Session, id: int):
 
     if not spray:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Spray Program not found"
+            status_code=status.HTTP_404_NOT_FOUND, detail="Spray not found"
         )
 
     try:
@@ -101,5 +126,5 @@ def delete_spray(session: Session, id: int):
         session.rollback()
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to delete spray program",
+            detail="Failed to delete spray",
         )

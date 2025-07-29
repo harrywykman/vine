@@ -31,7 +31,7 @@
                         <tbody>
                             <tr tal:repeat="s sprays" id="spray_row_${s.id}">
                                 <td>
-                                    <strong><a href=" /spray/${s.id}">${s.name}</a></strong>
+                                    <strong>${s.name}</strong>
                                 </td>
                                 <td>${s.water_spray_rate_per_hectare} L</td>
                                 <td>${s.growth_stage.el_number}</td>
@@ -89,8 +89,8 @@
                                             Edit
                                         </button>-->
 
-                                        <a hx-get="/spray/${s.id}/spray_program/${spray_program.id}" hx-target="body"
-                                            hx-swap="outerHTML" hx-push-url="true"
+                                        <a hx-get="/spray_program/${spray_program.id}/spray/${s.id}/edit"
+                                            hx-target="body" hx-swap="outerHTML" hx-push-url="true"
                                             class="button is-info is-small loading-button">
                                             <span class="icon loading-spinner">
                                                 <i class="fas fa-spinner"></i>

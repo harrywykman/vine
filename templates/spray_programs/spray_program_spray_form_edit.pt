@@ -3,11 +3,11 @@
         <section class="section">
             <div class="container">
                 <h1 class="title">Edit ${spray.name}
-                    <span tal:condition="spray_program">in ${spray_program.name}
-                        ${spray_program.year_start} / ${spray_program.year_end}</span>
+                    in ${spray_program.name}
+                    ${spray_program.year_start} / ${spray_program.year_end}
                 </h1>
 
-                <form method="post" tal:attributes="action string:/spray/${spray.id}/edit">
+                <form method="post" action="/spray_programs/${spray_program.id}/spray/${spray.id}/edit">
                     <div class="field">
                         <label class="label">Name</label>
                         <div class="control">
@@ -39,8 +39,6 @@
                         </select>
                     </div>
 
-                    <div class="help is-danger" tal:condition="error">${ error }</div>
-
                     <section class="section">
                         <h3 class="title is-5">Chemicals</h3>
                         <div id="chemical-list">
@@ -50,7 +48,7 @@
                                     <div class="control is-expanded">
                                         <label class="label">Chemical</label>
                                         <div class="select is-fullwidth">
-                                            <select name="chemical_ids">
+                                            <select name="chemical_ids" required>
                                                 <option value="">Select a chemical</option>
                                                 <option tal:repeat="chemical chemicals"
                                                     tal:attributes="value chemical.id; selected python:spray_chemical.chemical_id == chemical.id">
@@ -63,8 +61,8 @@
                                     <div class="control">
                                         <label class="label">Target</label>
                                         <div class="select">
-                                            <select name="targets">
-                                                <option value="">Target</option>
+                                            <select name="targets" required>
+                                                <option value="">Select target</option>
                                                 <option tal:repeat="t targets"
                                                     tal:attributes="value t; selected python:spray_chemical.target == t"
                                                     tal:content="t">Target</option>
@@ -102,8 +100,7 @@
                             <button type="submit" class="button is-primary">Update</button>
                         </div>
                         <div class="control">
-                            <a tal:attributes="href string:/spray_programs/${spray_program.id}"
-                                class="button is-light">Cancel</a>
+                            <a href="/spray_programs/${spray_program.id}" class="button is-light">Back to Spray List</a>
                         </div>
                     </div>
                 </form>

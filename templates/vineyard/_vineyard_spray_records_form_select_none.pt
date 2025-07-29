@@ -1,0 +1,34 @@
+<div id="selections">
+    <label class="label">Complete for:</label>
+    <div class="buttons">
+        <a hx-get="/vineyards/${vineyard_id}/spray_records/${spray_id}/select_all" hx-target="#selections"
+            hx-swap="outerHTML" hx-push-url="false" class="button is-info is-small loading-button is-outlined">
+            <span class="icon loading-spinner">
+                <i class="fas fa-spinner"></i>
+            </span>
+            <span class="normal-text">Select all Units</span>
+            <span class="loading-text">Loading...</span>
+        </a>
+    </div>
+    <div tal:repeat="spray_record spray_records" class="control">
+        <label tal:condition="not spray_record.complete" class="checkbox is-block mb-2">
+            <input type="checkbox" name="management_unit_ids" value="${spray_record.management_unit.id}" />
+            &nbsp;
+            <i class="fas fa-wine-bottle"
+                tal:attributes="class python:'fas fa-wine-bottle has-text-danger' if spray_record.management_unit.variety.wine_colour.name == 'Red' else 'fas fa-wine-bottle has-text-grey'">
+            </i>&nbsp;
+            ${spray_record.management_unit.name} &mdash; ${spray_record.management_unit.variety.name}
+        </label>
+    </div>
+    <div tal:repeat="spray_record spray_records" class="control">
+        <label tal:condition="spray_record.complete" class="is-block mb-2">
+            &nbsp;&nbsp;&nbsp;
+            &nbsp;
+            <i class="fas fa-wine-bottle"
+                tal:attributes="class python:'fas fa-wine-bottle has-text-danger' if spray_record.management_unit.variety.wine_colour.name == 'Red' else 'fas fa-wine-bottle has-text-grey'">
+            </i>&nbsp;
+            ${spray_record.management_unit.name} &mdash; ${spray_record.management_unit.variety.name}
+            &mdash; Complete
+        </label>
+    </div>
+</div>

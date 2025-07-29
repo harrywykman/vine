@@ -3,7 +3,7 @@ from typing import List, Optional
 from sqlalchemy.orm import selectinload
 from sqlmodel import Session, select
 
-from data.vineyard import Spray, SprayProgram, SprayProgramSprayLink
+from data.vineyard import GrowthStage, Spray, SprayProgram
 
 
 def get_all_spray_programs(session: Session) -> List[SprayProgram]:
@@ -32,7 +32,7 @@ def get_sprays_by_program_id(session: Session, spray_program_id: int) -> List[Sp
     return sprays
 
 
-def eagerly_get_all_spray_program_sprays(
+""" def eagerly_get_all_spray_program_sprays(
     session: Session, spray_program_id: int
 ) -> List[Spray]:
     statement = (
@@ -51,7 +51,30 @@ def eagerly_get_all_spray_program_sprays(
         key=lambda spray: spray.growth_stage.el_number
         if spray.growth_stage
         else float("inf"),
+    ) """
+
+
+def eagerly_get_all_spray_program_sprays(
+    session: Session, spray_program_id: int
+) -> List[Spray]:
+    statement = (
+        select(Spray)
+        .where(Spray.spray_program_id == spray_program_id)
+        .join(GrowthStage, isouter=True)  # Left join in case growth_stage is None
+        .order_by(GrowthStage.el_number.nulls_last())
+        .options(selectinload(Spray.growth_stage))
     )
+    sprays = session.exec(statement).all()
+
+    # Verify spray program exists
+    spray_program_exists = session.exec(
+        select(SprayProgram).where(SprayProgram.id == spray_program_id)
+    ).one_or_none()
+
+    if not spray_program_exists:
+        raise ValueError(f"Spray program with ID {spray_program_id} not found")
+
+    return sprays
 
 
 def create_spray_program(

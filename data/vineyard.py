@@ -223,20 +223,6 @@ class GrowthStage(SQLModel, table=True):
         return f"{self.el_number} - {self.description}"
 
 
-class SprayProgramSprayLink(SQLModel, table=True):
-    __tablename__ = "spray_program_spray_links"
-
-    spray_program_id: Optional[int] = Field(
-        default=None,
-        foreign_key="spray_programs.id",
-        primary_key=True,
-        ondelete="CASCADE",
-    )
-    spray_id: Optional[int] = Field(
-        default=None, foreign_key="sprays.id", primary_key=True, ondelete="CASCADE"
-    )
-
-
 class SprayProgram(SQLModel, table=True):
     __tablename__ = "spray_programs"
 
@@ -249,9 +235,7 @@ class SprayProgram(SQLModel, table=True):
     )
 
     # Many-to-many relationship with Spray
-    sprays: List["Spray"] = Relationship(
-        back_populates="spray_programs", link_model=SprayProgramSprayLink
-    )
+    sprays: List["Spray"] = Relationship(back_populates="spray_program")
 
     def __str__(self):
         return f"{self.name} ({self.year_start} / {self.year_end})"
@@ -259,9 +243,14 @@ class SprayProgram(SQLModel, table=True):
 
 class Spray(SQLModel, table=True):
     __tablename__ = "sprays"
+    __table_args__ = (
+        sa.UniqueConstraint(
+            "name", "spray_program_id", name="unique_spray_name_per_program"
+        ),
+    )
 
     id: Optional[int] = Field(default=None, primary_key=True)
-    name: str
+    name: str = Field(nullable=False)
     water_spray_rate_per_hectare: int
 
     date_created: datetime.datetime = Field(
@@ -269,13 +258,12 @@ class Spray(SQLModel, table=True):
     )
 
     growth_stage_id: int | None = Field(foreign_key="growth_stages.id")
-    # spray_program_id: int = Field(foreign_key="spray_programs.id", nullable=False)
+
+    spray_program_id: int = Field(foreign_key="spray_programs.id", nullable=False)
 
     growth_stage: GrowthStage = Relationship(back_populates="sprays")
 
-    spray_programs: List["SprayProgram"] = Relationship(
-        back_populates="sprays", link_model=SprayProgramSprayLink
-    )
+    spray_program: SprayProgram = Relationship(back_populates="sprays")
 
     spray_chemicals: List["SprayChemical"] = Relationship(
         back_populates="spray", cascade_delete=True
@@ -286,6 +274,17 @@ class Spray(SQLModel, table=True):
 
     def __str__(self):
         return f"{self.name}"
+
+    @property
+    def has_completed_spray_records(self) -> bool:
+        """
+        Returns True if this spray has at least one completed spray record.
+        """
+        return any(
+            record.complete
+            for record in self.spray_records
+            if record.complete is not None
+        )
 
 
 class WindDirection(str, enum.Enum):

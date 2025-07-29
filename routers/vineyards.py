@@ -9,6 +9,7 @@ from sqlalchemy.orm import Session
 from sqlmodel import Session
 from starlette import status
 
+from auth.permissions_decorators import require_operator
 from dependencies import get_session
 from services import vineyard_service
 from viewmodels.vineyards.details_viewmodel import DetailsViewModel
@@ -17,6 +18,9 @@ from viewmodels.vineyards.list_viewmodel import ListViewModel
 from viewmodels.vineyards.vineyard_spray_record_details import VineyardSprayRecordDetail
 from viewmodels.vineyards.vineyard_spray_records_form_edit_viewmodel import (
     VineyardSprayRecordsFormEditViewModel,
+)
+from viewmodels.vineyards.vineyard_spray_records_form_select_viewmodel import (
+    VineyardSprayRecordsFormSelectViewModel,
 )
 from viewmodels.vineyards.vineyard_spray_records_form_viewmodel import (
     VineyardSprayRecordsFormViewModel,
@@ -104,8 +108,9 @@ def mangement_unit_view_inline(
 
 
 @router.get("/vineyards", response_class=HTMLResponse)
+@require_operator()
 @fastapi_chameleon.template("vineyard/vineyard_list.pt")
-def vineyard_list(request: Request, session: Session = Depends(get_session)):
+async def vineyard_list(request: Request, session: Session = Depends(get_session)):
     vm = ListViewModel(request, session)
     return vm.to_dict()
 
@@ -181,5 +186,41 @@ async def submit_spray_records(
     vm = VineyardSprayRecordsFormViewModel(vineyard_id, spray_id, request, session)
 
     vm.set_success("Successfully created spray record")
+
+    return vm.to_dict()
+
+
+@router.get(
+    "/vineyards/{vineyard_id}/spray_records/{spray_id}/select_all",
+    response_class=HTMLResponse,
+)
+@fastapi_chameleon.template("vineyard/_vineyard_spray_records_form_select_all.pt")
+def vineyard_spray_records_form_select_all(
+    request: Request,
+    vineyard_id: int,
+    spray_id: int,
+    session: Session = Depends(get_session),
+):
+    vm = VineyardSprayRecordsFormSelectViewModel(
+        vineyard_id=vineyard_id, spray_id=spray_id, request=request, session=session
+    )
+
+    return vm.to_dict()
+
+
+@router.get(
+    "/vineyards/{vineyard_id}/spray_records/{spray_id}/select_none",
+    response_class=HTMLResponse,
+)
+@fastapi_chameleon.template("vineyard/_vineyard_spray_records_form_select_none.pt")
+def vineyard_spray_records_form_select_none(
+    request: Request,
+    vineyard_id: int,
+    spray_id: int,
+    session: Session = Depends(get_session),
+):
+    vm = VineyardSprayRecordsFormSelectViewModel(
+        vineyard_id=vineyard_id, spray_id=spray_id, request=request, session=session
+    )
 
     return vm.to_dict()

@@ -20,7 +20,6 @@ from viewmodels.sprays.apply_select_units_submit_viewmodel import (
     ApplySelectUnitsSubmitViewModel,
 )
 from viewmodels.sprays.create_viewmodel import CreateViewModel
-from viewmodels.sprays.edit_form_viewmodel import EditFormViewModel
 from viewmodels.sprays.form_viewmodel import FormViewModel
 from viewmodels.sprays.list_viewmodel import ListViewModel
 
@@ -138,25 +137,6 @@ async def create_spray(request: Request, session: Session = Depends(get_session)
         )
 
     return response
-
-
-## GET Edit Spray Form
-@router.get(
-    "/spray/{spray_id}/spray_program/{spray_program_id}", response_class=HTMLResponse
-)
-@fastapi_chameleon.template("spray/spray_form_edit.pt")
-def spray_spray_program_edit_form(
-    request: Request,
-    spray_id: int,
-    spray_program_id: int,
-    session: Session = Depends(get_session),
-):
-    vm = EditFormViewModel(
-        request, session, spray_program_id=spray_program_id, spray_id=spray_id
-    )
-    if not vm:
-        raise HTTPException(status_code=404, detail="No view model.")
-    return vm.to_dict()
 
 
 ## GET empty template

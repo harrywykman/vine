@@ -44,35 +44,3 @@ class VineyardSprayRecordsFormViewModel(ViewModelBase):
             )
         )
         self.wind_directions = list(WindDirection)
-
-
-""" class VineyardSprayRecordsFormViewModel(ViewModelBase):
-    def __init__(
-        self,
-        vineyard_id: int,
-        spray_id: int,
-        request: Request,
-        session: Session,
-    ):
-        super().__init__(request, session)
-
-        self.id: int = vineyard_id
-        self.vineyard: Vineyard = vineyard_service.get_vineyard_by_id(
-            self.session, vineyard_id
-        )
-
-        self.spray = spray_service.eagerly_get_spray_by_id(
-            spray_id, self.session
-        )
-
-        self.management_units: Optional(List[ManagementUnit]) = (
-            vineyard_service.eagerly_get_vineyard_managment_units_by_id(
-                self.session, self.id
-            )
-        )
-
-        self.spray_records: list[SprayRecord] = (
-            vineyard_service.eagerly_get_vineyard_spray_spray_records(
-                self.session, self.id, spray_id
-            )
-        ) """

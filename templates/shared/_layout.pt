@@ -3,21 +3,14 @@
 
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Vine</title>
 
   <link rel="stylesheet" href="/static/css/site.css" />
   <link rel="stylesheet" href="/static/css/nav.css" />
-
-  <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css" /> -->
   <link rel="stylesheet" href="/static/external/css/bulma/css/bulma.min.css" />
-  <!-- <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.5/dist/htmx.min.js"
-    integrity="sha384-t4DxZSyQK+0Uv4jzy5B0QyHyWQD2GFURUmxKMBVww9+e2EJ0ei/vCvv7+79z0fkr"
-    crossorigin="anonymous"></script>-->
   <script src="/static/external/js/htmx/htmx.min.js"></script>
-  <!-- <script src="https://unpkg.com/htmx.org@1.9.12/dist/ext/debug.js"></script> -->
   <script src="/static/external/js/htmx/debug.js"></script>
-  <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-    crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
   <link rel="stylesheet" href="/static/external/css/font_awesome/fontawesome-free-7.0.0-web/css/all.min.css" />
 
   <div metal:define-slot="additional-css" tal:omit-tag="True"></div>
@@ -25,10 +18,10 @@
 
 <body hx-ext="debug">
 
-  <nav class="navbar" role="navigation" aria-label="main navigation">
+  <nav class="navbar is-fixed-top" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
       <a tal:condition="is_logged_in" class="navbar-item">
-        <img src="/static/img/logo.png" />
+        <img src="/static/img/logo.png" style="height: 28px;" />
       </a>
 
       <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
@@ -42,32 +35,28 @@
     <div id="navbarBasicExample" class="navbar-menu">
       <div class="navbar-start">
         <a tal:condition="is_logged_in" href="/vineyards" class="navbar-item"> Vineyards </a>
-
-
-        <!-- <div tal:condition="is_logged_in" class="navbar-item has-dropdown is-hoverable">
-          <a class="navbar-link"> More </a>
-
-          <div class="navbar-dropdown">
-            <a class="navbar-item"> About </a>
-            <a class="navbar-item is-selected"> Jobs </a>
-            <a class="navbar-item"> Contact </a>
-            <hr class="navbar-divider" />
-            <a class="navbar-item"> Report an issue </a>
-          </div>
-        </div> -->
       </div>
 
       <div class="navbar-end">
-        <div tal:condition="is_logged_in" class="navbar-item">
+        <!-- Mobile-friendly user info -->
+        <div tal:condition="is_logged_in" class="navbar-item is-hidden-desktop">
+          <div class="is-flex is-flex-direction-column">
+            <span class="is-size-7">${user.name}</span>
+            <span class="tag is-info is-small">${user.role.value}</span>
+          </div>
+        </div>
+
+        <!-- Desktop user info -->
+        <div tal:condition="is_logged_in" class="navbar-item is-hidden-touch">
           <span>Welcome, ${user.name}</span>
           <span class="tag is-info ml-2">${user.role.value}</span>
         </div>
+
         <div class="navbar-item">
-          <div class="buttons">
+          <div class="buttons are-small">
             <div tal:condition="not is_logged_in">
               <a href="/account/login/" class="button is-light"> Log in </a>
             </div>
-
 
             <div tal:condition="is_logged_in">
               <a href="/account/" class="button is-primary">
@@ -75,11 +64,12 @@
               </a>
             </div>
 
-            <div class="navbar-item" tal:condition="is_admin">
+            <div tal:condition="is_admin">
               <a class="button is-warning" href="/administration/dashboard">
                 Admin
               </a>
             </div>
+
             <div tal:condition="is_logged_in">
               <a href="/account/logout/" class="button is-light"> Log out </a>
             </div>
@@ -89,16 +79,22 @@
     </div>
   </nav>
 
-  <div class="columns is-variable is-1 is-multiline is-mobile">
-    <!-- Optional Left Spacer (hide on mobile) -->
-    <div class="column is-hidden-mobile is-1-tablet is-2-desktop"></div>
+  <!-- Add padding to account for fixed navbar -->
+  <div class="navbar-spacer" style="height: 52px;"></div>
 
-    <!-- Main Content Column (full width on mobile, centered on desktop) -->
-    <div class="column is-12-mobile is-10-tablet is-8-desktop">
-      <div class="container main_content px-3 py-4">
+  <div class="columns is-gapless is-multiline">
+    <!-- Optional Left Spacer (hide on mobile/tablet) -->
+    <div class="column is-hidden-touch is-1-desktop is-2-widescreen"></div>
+
+    <!-- Main Content Column -->
+    <div class="column is-12-mobile is-12-tablet is-10-desktop is-8-widescreen">
+      <div class="container main_content px-4 py-5">
+        <!-- Message Area -->
         <div id="message-area">
           <!-- Messages will be injected here -->
         </div>
+
+        <!-- Notification Messages -->
         <div tal:condition="success" class="notification is-success is-light">
           <button class="delete" hx-get="/empty" hx-target="closest .notification" hx-swap="outerHTML"></button>
           <span tal:content="structure success"></span>
@@ -118,33 +114,54 @@
           <button class="delete" hx-get="/empty" hx-target="closest .notification" hx-swap="outerHTML"></button>
           <span tal:content="structure info"></span>
         </div>
+
+        <!-- Logo for non-logged in users -->
         <div tal:condition="not is_logged_in" class="section has-text-centered">
           <figure class="image is-inline-block">
-            <img src="/static/img/logo.png" style="max-width: 300px; width: 100%;" alt="Logo">
+            <img src="/static/img/logo.png" style="max-width: min(300px, 80vw); width: 100%;" alt="Logo">
           </figure>
         </div>
 
+        <!-- Main Content Slot -->
         <div tal:condition="is_logged_in" metal:define-slot="content" tal:omit-tag="True">No content</div>
-
       </div>
     </div>
 
-    <!-- Optional Right Spacer (hide on mobile) -->
-    <div class="column is-hidden-mobile is-1-tablet is-2-desktop"></div>
+    <!-- Optional Right Spacer (hide on mobile/tablet) -->
+    <div class="column is-hidden-touch is-1-desktop is-2-widescreen"></div>
   </div>
 
-  <footer tal:condition="is_logged_in" class="footer">
+  <footer tal:condition="is_logged_in" class="footer mt-6">
     <div class="content has-text-centered copyright">
-      <p>
+      <p class="is-size-7-mobile">
         <strong>Copyright &copy;
           <a href="http://www.ahaviticulture.com.au/">AHA Viticulture</a></strong>
       </p>
+    </div>
   </footer>
 
-  <div metal:define-slot="additional-js" tal:omit-tag="True">
+  <div metal:define-slot="additional-js" tal:omit-tag="True"></div>
 
+  <!-- Mobile navbar toggle script -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Get all "navbar-burger" elements
+      const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
 
-  </div>
+      // Add a click event on each of them
+      $navbarBurgers.forEach(el => {
+        el.addEventListener('click', () => {
+          // Get the target from the "data-target" attribute
+          const target = el.dataset.target;
+          const $target = document.getElementById(target);
+
+          // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
+          el.classList.toggle('is-active');
+          $target.classList.toggle('is-active');
+        });
+      });
+    });
+  </script>
 
 </body>
 

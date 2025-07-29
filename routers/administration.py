@@ -26,6 +26,7 @@ router = APIRouter(prefix="/administration", tags=["admin"])
 
 
 @router.get("/dashboard", response_class=HTMLResponse)
+@require_admin()
 @fastapi_chameleon.template("admin/dashboard.pt")
 async def admin_dashboard(request: Request, session: Session = Depends(get_session)):
     """Admin dashboard - accessible to admins and superadmins"""
@@ -40,6 +41,7 @@ async def admin_dashboard(request: Request, session: Session = Depends(get_sessi
 
 
 @router.get("/reports/spray_progress", response_class=HTMLResponse)
+@require_admin()
 @fastapi_chameleon.template("admin/spray_progress.pt")
 async def spray_progress_report(
     request: Request, session: Session = Depends(get_session)
@@ -53,6 +55,7 @@ async def spray_progress_report(
 
 
 @router.get("/users", response_class=HTMLResponse)
+@require_admin()
 async def manage_users(request: Request, session: Session = Depends(get_session)):
     """User management page - accessible to admins and superadmins"""
     try:
@@ -66,6 +69,7 @@ async def manage_users(request: Request, session: Session = Depends(get_session)
 
 
 @router.post("/users/{user_id}/role")
+@require_admin()
 async def change_user_role(
     user_id: int,
     new_role: UserRole,
@@ -123,6 +127,7 @@ async def system_admin(
 
 
 @router.delete("/users/{user_id}")
+@require_admin()
 async def delete_user(
     user_id: int,
     current_user: User = Depends(require_superadmin_user()),

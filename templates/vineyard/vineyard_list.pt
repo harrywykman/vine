@@ -2,15 +2,34 @@
     <div metal:fill-slot="content" tal:omit-tag="True">
         <section class="section">
             <div class="container">
-                <h2 class="title is-3">Vineyards</h2>
+                <h2 class="title is-3 is-size-4-mobile">Vineyards</h2>
 
-                <div class="table-container">
-                    <table class="table is-fullwidth is-striped is-hoverable is-narrow">
+                <!-- Mobile Card View (hidden on desktop) -->
+                <div class="is-hidden-tablet">
+                    <div tal:repeat="v vineyards" class="card mb-4">
+                        <div class="card-content">
+                            <div class="media">
+                                <div class="media-content">
+                                    <p class="title is-5">
+                                        <a href="/vineyards/${v.id}">${v.name}</a>
+                                    </p>
+                                </div>
+                                <div class="media-right">
+                                    <span class="icon">
+                                        <i class="fas fa-chevron-right"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Desktop Table View (hidden on mobile) -->
+                <div class="table-container is-hidden-mobile">
+                    <table class="table is-fullwidth is-striped is-hoverable">
                         <thead>
                             <tr>
                                 <th>Name</th>
-                                <!-- <th>Address</th> -->
-                                <!-- <th>Actions</th> -->
                             </tr>
                         </thead>
                         <tbody>
@@ -18,14 +37,6 @@
                                 <td>
                                     <a href="/vineyards/${v.id}">${v.name}</a>
                                 </td>
-                                <!--  <td>${v.address}</td> -->
-                                <!--                                 <td class="is-flex is-flex-wrap-wrap is-align-items-center is-gap-2">
-                                    <a href="/vineyards/${v.id}" class="button is-info is-small mr-2">Edit</a>
-                                    <form method="post" action="/vineyards/${v.id}/delete" class="inline"
-                                        onsubmit="return confirm('Delete?');">
-                                        <button type="submit" class="button is-danger is-light is-small">Delete</button>
-                                    </form>
-                                </td> -->
                             </tr>
                         </tbody>
                     </table>
@@ -35,6 +46,6 @@
     </div>
 
     <div metal:fill-slot="additional-css" tal:omit-tag="True">
-        <!-- additional CSS -->
+        <!-- Additional CSS if needed -->
     </div>
 </div>
