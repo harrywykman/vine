@@ -6,7 +6,7 @@ from sqlmodel import Session
 from starlette import status
 from starlette.requests import Request
 
-from auth.permissions_decorators import require_admin
+from auth.permissions_decorators import require_admin, require_user
 from dependencies import get_session
 from infrastructure import cookie_auth
 from services import user_service
@@ -19,6 +19,7 @@ router = fastapi.APIRouter()
 
 
 @router.get("/account")
+@require_user()
 @template()
 def index(request: Request, session: Session = Depends(get_session)):
     vm = AccountViewModel(request, session)

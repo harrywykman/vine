@@ -2,6 +2,7 @@
 Permission decorators and dependencies for role-based access control.
 """
 
+import asyncio
 from functools import wraps
 from typing import Callable, Optional
 
@@ -57,8 +58,8 @@ def require_permission(required_role: UserRole, redirect_url: str = "/login"):
 
             if not current_user.has_permission(required_role):
                 if request and hasattr(request, "url"):
-                    # For template routes, redirect to unauthorized page
-                    return RedirectResponse(url="/unauthorized", status_code=302)
+                    # For template routes, redirect to unauthorised page
+                    return RedirectResponse(url="/unauthorised", status_code=302)
                 else:
                     # For API routes, return 403
                     raise HTTPException(
@@ -66,7 +67,11 @@ def require_permission(required_role: UserRole, redirect_url: str = "/login"):
                         detail=f"Insufficient permissions. Required: {required_role.value}",
                     )
 
-            return await func(*args, **kwargs)
+            # return await func(*args, **kwargs)
+            if asyncio.iscoroutinefunction(func):
+                return await func(*args, **kwargs)
+            else:
+                return func(*args, **kwargs)
 
         return wrapper
 
@@ -87,6 +92,11 @@ def require_admin(redirect_url: str = "/account/login"):
 def require_operator(redirect_url: str = "/account/login"):
     """Decorator that requires operator role or higher"""
     return require_permission(UserRole.OPERATOR, redirect_url)
+
+
+def require_user(redirect_url: str = "/account/login"):
+    """Decorator that requires operator role or higher"""
+    return require_permission(UserRole.USER, redirect_url)
 
 
 # FastAPI dependencies for permission checking

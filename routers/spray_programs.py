@@ -36,6 +36,7 @@ router = APIRouter()
 
 ## GET List Spray Programs
 @router.get("/spray_programs", response_class=HTMLResponse)
+@permissions_decorators.require_admin()
 @fastapi_chameleon.template("spray_programs/index.pt")
 def spray_program_index(request: Request, session: Session = Depends(get_session)):
     vm = ListViewModel(request, session)
@@ -46,6 +47,7 @@ def spray_program_index(request: Request, session: Session = Depends(get_session
 
 ## GET Spray Program Details
 @router.get("/spray_programs/{spray_program_id}", response_class=HTMLResponse)
+@permissions_decorators.require_admin()
 @fastapi_chameleon.template("spray_programs/spray_program_details.pt")
 def spray_program_details(
     request: Request,
@@ -60,6 +62,7 @@ def spray_program_details(
 
 ## POST Delete a Spray for a Spray Program
 @router.post("/spray_programs/{spray_program_id}/spray/{spray_id}/delete")
+@permissions_decorators.require_admin()
 @fastapi_chameleon.template("spray_programs/spray_program_details.pt")
 def delete_spray_program_spray(
     request: Request,
@@ -141,6 +144,7 @@ async def create_spray(request: Request, session: Session = Depends(get_session)
 
 ## GET Spray Form
 @router.get("/spray_program/{spray_program_id}/spray/new", response_class=HTMLResponse)
+@permissions_decorators.require_admin()
 @fastapi_chameleon.template("spray_programs/spray_program_spray_form.pt")
 def spray_spray_program_form(
     request: Request, spray_program_id: int, session: Session = Depends(get_session)
@@ -154,6 +158,7 @@ def spray_spray_program_form(
 # TODO refactor to use viewmodel
 ## POST Create Spray
 @router.post("/spray_program/{spray_program_id}/spray/new")
+@permissions_decorators.require_admin()
 @fastapi_chameleon.template("spray_programs/spray_program_spray_form.pt")
 async def create_spray(request: Request, session: Session = Depends(get_session)):
     vm = CreateSprayProgramSprayViewModel(request, session)
@@ -182,6 +187,7 @@ async def create_spray(request: Request, session: Session = Depends(get_session)
     "/spray_program/{spray_program_id}/spray/{spray_id}/edit",
     response_class=HTMLResponse,
 )
+@permissions_decorators.require_admin()
 @fastapi_chameleon.template("spray_programs/spray_program_spray_form_edit.pt")
 def spray_program_spray_edit_form(
     request: Request,
@@ -198,6 +204,7 @@ def spray_program_spray_edit_form(
 
 
 @router.post("/spray_programs/{spray_program_id}/spray/{spray_id}/edit")
+@permissions_decorators.require_admin()
 @fastapi_chameleon.template("spray_programs/spray_program_spray_form_edit.pt")
 async def update_spray_route(
     request: Request,

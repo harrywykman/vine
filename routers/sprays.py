@@ -8,6 +8,7 @@ from sqlalchemy.orm import Session, selectinload
 from sqlmodel import select
 from starlette import status
 
+from auth import permissions_decorators
 from data.vineyard import Chemical, Spray, SprayChemical, Target
 from dependencies import get_session
 from services import spray_record_service, spray_service, vineyard_service
@@ -26,8 +27,9 @@ router = APIRouter()
 # HTML routes
 
 
-## GET List Spray Programs
+## GET List Sprays
 @router.get("/sprays", response_class=HTMLResponse)
+@permissions_decorators.require_admin()
 @fastapi_chameleon.template("spray/index.pt")
 def spray_index(request: Request, session: Session = Depends(get_session)):
     vm = ListViewModel(request, session)
@@ -89,6 +91,7 @@ def get_no_html():
 ## POST Delete Spray
 # TODO use htmx table row fade rather than redirect
 @router.post("/spray/{spray_id}/delete")
+@permissions_decorators.require_admin()
 def delete_vineyard_html(
     spray_id: int,
     session: Session = Depends(get_session),
@@ -104,6 +107,7 @@ def delete_vineyard_html(
 
 # TODO refactor with ViewModel / resolve refresh required for seeing updated Chemical name or mix rate
 @router.post("/spray/{spray_id}/edit", response_class=HTMLResponse)
+@permissions_decorators.require_admin()
 @fastapi_chameleon.template("spray/_display_row.pt")
 async def update_spray(
     spray_id: int,
@@ -153,6 +157,7 @@ async def update_spray(
 
 
 @router.post("/sprays/{spray_id}/add_to_all_units")
+@permissions_decorators.require_admin()
 @fastapi_chameleon.template("partials/notification.pt")
 def add_program_to_all_units(
     request: Request, spray_id: int, session: Session = Depends(get_session)
@@ -184,6 +189,7 @@ def add_program_to_all_units(
 
 
 @router.post("/sprays/{spray_id}/add_to_all_reds")
+@permissions_decorators.require_admin()
 @fastapi_chameleon.template("partials/notification.pt")
 def add_program_to_all_red(
     request: Request, spray_id: int, session: Session = Depends(get_session)
@@ -209,6 +215,7 @@ def add_program_to_all_red(
 
 
 @router.post("/sprays/{spray_id}/add_to_all_whites")
+@permissions_decorators.require_admin()
 @fastapi_chameleon.template("partials/notification.pt")
 def add_program_to_all_white(
     request: Request, spray_id: int, session: Session = Depends(get_session)
@@ -234,6 +241,7 @@ def add_program_to_all_white(
 
 
 @router.get("/sprays/{spray_id}/apply_to_select_units")
+@permissions_decorators.require_admin()
 @fastapi_chameleon.template("spray/select_mus_for_application.pt")
 def apply_to_select_units(
     request: Request, spray_id: int, session: Session = Depends(get_session)
@@ -246,6 +254,7 @@ def apply_to_select_units(
 
 
 @router.post("/sprays/{spray_id}/apply_to_select_units")
+@permissions_decorators.require_admin()
 @fastapi_chameleon.template("spray/select_mus_for_application.pt")
 async def apply_to_select_units_submit(
     request: Request,
@@ -275,6 +284,7 @@ async def apply_to_select_units_submit(
 
 
 @router.get("/sprays/{vineyard_id}/select_all")
+@permissions_decorators.require_admin()
 @fastapi_chameleon.template("spray/_select_all_mus.pt")
 def select_all_vineyard_units(
     request: Request, vineyard_id: int, session: Session = Depends(get_session)
@@ -285,6 +295,7 @@ def select_all_vineyard_units(
 
 
 @router.get("/sprays/{vineyard_id}/select_none")
+@permissions_decorators.require_admin()
 @fastapi_chameleon.template("spray/_select_no_mus.pt")
 def select_no_vineyard_units(
     request: Request, vineyard_id: int, session: Session = Depends(get_session)

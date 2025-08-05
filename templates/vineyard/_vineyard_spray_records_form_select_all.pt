@@ -6,7 +6,7 @@
             <span class="icon loading-spinner">
                 <i class="fas fa-spinner"></i>
             </span>
-            <span class="normal-text">Select all Units</span>
+            <span class="normal-text">Unselect all Units</span>
             <span class="loading-text">Loading...</span>
         </a>
     </div>

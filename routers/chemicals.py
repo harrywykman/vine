@@ -3,6 +3,7 @@ from fastapi import APIRouter, Depends, Request
 from fastapi.responses import HTMLResponse
 from sqlalchemy.orm import Session
 
+from auth.permissions_decorators import require_user
 from dependencies import get_session
 from viewmodels.chemicals.list_viewmodel import ListViewModel
 
@@ -12,6 +13,7 @@ router = APIRouter()
 
 
 @router.get("/chemicals", response_class=HTMLResponse)
+@require_user()
 @fastapi_chameleon.template("chemical/index.pt")
 def chemical_index(request: Request, session: Session = Depends(get_session)):
     vm = ListViewModel(request, session)

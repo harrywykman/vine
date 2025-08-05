@@ -9,7 +9,7 @@ from sqlalchemy.orm import Session
 from sqlmodel import Session
 from starlette import status
 
-from auth.permissions_decorators import require_operator
+from auth.permissions_decorators import require_operator, require_user
 from dependencies import get_session
 from services import vineyard_service
 from viewmodels.vineyards.details_viewmodel import DetailsViewModel
@@ -37,6 +37,7 @@ router = APIRouter()
 
 
 @router.get("/", response_class=HTMLResponse)
+@require_user()
 @fastapi_chameleon.template("vineyard/index.pt")
 def vineyard_index(request: Request, session: Session = Depends(get_session)):
     vm = ListViewModel(request, session)
@@ -44,6 +45,7 @@ def vineyard_index(request: Request, session: Session = Depends(get_session)):
 
 
 @router.get("/vineyards/{vineyard_id}", response_class=HTMLResponse)
+@require_user()
 @fastapi_chameleon.template("vineyard/vineyard_details.pt")
 def vineyard_details(
     request: Request, vineyard_id: int, session: Session = Depends(get_session)
@@ -57,6 +59,7 @@ def vineyard_details(
     "/vineyards/{vineyard_id}/spray_records/{spray_id}",
     response_class=HTMLResponse,
 )
+@require_operator()
 @fastapi_chameleon.template("vineyard/vineyard_spray_records_form.pt")
 def vineyard_spray_records_form(
     request: Request,
@@ -73,6 +76,7 @@ def vineyard_spray_records_form(
     "/vineyards/{vineyard_id}/spray_records/{spray_record_id}/edit",
     response_class=HTMLResponse,
 )
+@require_operator()
 @fastapi_chameleon.template("vineyard/vineyard_spray_records_form_edit.pt")
 def vineyard_spray_records_form_edit(
     request: Request,
@@ -117,6 +121,7 @@ async def vineyard_list(request: Request, session: Session = Depends(get_session
 
 # Spray Record Detail
 @router.get("/vineyards/{vineyard_id}/spray_record/{spray_record_id}")
+@require_operator()
 @fastapi_chameleon.template("vineyard/vineyard_spray_record_detail.pt")
 async def spray_record_detail(
     spray_record_id: int, request: Request, session: Session = Depends(get_session)
@@ -133,6 +138,7 @@ async def spray_record_detail(
 
 
 @router.post("/vineyards/{vineyard_id}/spray_records/{spray_id}/submit")
+@require_operator()
 @fastapi_chameleon.template("vineyard/vineyard_spray_records_form.pt")
 async def submit_spray_records(
     request: Request,
@@ -194,6 +200,7 @@ async def submit_spray_records(
     "/vineyards/{vineyard_id}/spray_records/{spray_id}/select_all",
     response_class=HTMLResponse,
 )
+@require_operator()
 @fastapi_chameleon.template("vineyard/_vineyard_spray_records_form_select_all.pt")
 def vineyard_spray_records_form_select_all(
     request: Request,
@@ -212,6 +219,7 @@ def vineyard_spray_records_form_select_all(
     "/vineyards/{vineyard_id}/spray_records/{spray_id}/select_none",
     response_class=HTMLResponse,
 )
+@require_operator()
 @fastapi_chameleon.template("vineyard/_vineyard_spray_records_form_select_none.pt")
 def vineyard_spray_records_form_select_none(
     request: Request,
