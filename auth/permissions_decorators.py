@@ -74,17 +74,17 @@ def require_permission(required_role: UserRole, redirect_url: str = "/login"):
 
 
 # Convenience decorators for common roles
-def require_superadmin(redirect_url: str = "/login"):
+def require_superadmin(redirect_url: str = "/account/login"):
     """Decorator that requires superadmin role"""
     return require_permission(UserRole.SUPERADMIN, redirect_url)
 
 
-def require_admin(redirect_url: str = "/login"):
+def require_admin(redirect_url: str = "/account/login"):
     """Decorator that requires admin role or higher"""
     return require_permission(UserRole.ADMIN, redirect_url)
 
 
-def require_operator(redirect_url: str = "/login"):
+def require_operator(redirect_url: str = "/account/login"):
     """Decorator that requires operator role or higher"""
     return require_permission(UserRole.OPERATOR, redirect_url)
 

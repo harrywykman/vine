@@ -6,6 +6,7 @@ from sqlmodel import Session
 from starlette import status
 from starlette.requests import Request
 
+from auth.permissions_decorators import require_admin
 from dependencies import get_session
 from infrastructure import cookie_auth
 from services import user_service
@@ -26,6 +27,7 @@ def index(request: Request, session: Session = Depends(get_session)):
 
 
 @router.get("/account/register")
+@require_admin()
 @template()
 def register(request: Request, session: Session = Depends(get_session)):
     vm = RegisterViewModel(request, session)
@@ -33,6 +35,7 @@ def register(request: Request, session: Session = Depends(get_session)):
 
 
 @router.post("/account/register")
+@require_admin()
 @template()
 async def register(request: Request, session: Session = Depends(get_session)):
     vm = RegisterViewModel(request, session)
