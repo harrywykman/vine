@@ -5,14 +5,12 @@
                 <h1 class="title">Add Spray <span tal:condition="spray_program">to ${spray_program.name}
                         ${spray_program.year_start} / ${spray_program.year_end}</span></h1>
 
-                <form method="post" action="/spray/new">
+                <form method="post" action="/spray_program/{spray_program_id}/spray/new">
                     <div class="field">
                         <label class="label">Name</label>
                         <div class="control">
                             <input class="input" type="text" name="name" placeholder="Fungicide 1">
-                            <input tal:condition="spray_program" type="hidden" name="spray_program_id"
-                                tal:attributes="value spray_program.id">
-                            <input tal:condition="not spray_program" type="hidden" name="spray_program_id" value="">
+                            <input type="hidden" name="spray_program_id" tal:attributes="value spray_program.id">
                         </div>
                     </div>
 
@@ -34,7 +32,6 @@
                         </select>
                     </div>
 
-                    <div class="help is-danger" tal:condition="error">${ error }</div>
                     <section class="section">
                         <h3 class="title is-5">Chemicals</h3>
                         <div id="chemical-list">

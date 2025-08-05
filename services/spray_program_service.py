@@ -1,5 +1,6 @@
 from typing import List, Optional
 
+from sqlalchemy import desc
 from sqlalchemy.orm import selectinload
 from sqlmodel import Session, select
 
@@ -7,7 +8,7 @@ from data.vineyard import GrowthStage, Spray, SprayProgram
 
 
 def get_all_spray_programs(session: Session) -> List[SprayProgram]:
-    statement = select(SprayProgram).order_by(SprayProgram.year_start)
+    statement = select(SprayProgram).order_by(desc(SprayProgram.year_start))
     spray_programs = session.exec(statement).all()
     return spray_programs
 

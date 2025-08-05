@@ -15,6 +15,7 @@ class Settings(BaseSettings):
     super_admin_name: Optional[str] = None
     super_admin_email: Optional[str] = None
     super_admin_password: Optional[str] = None
+    deploy: Optional[str] = None
 
     model_config = SettingsConfigDict(env_file=".env")
 

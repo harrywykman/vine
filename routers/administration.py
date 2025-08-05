@@ -25,7 +25,7 @@ from viewmodels.admin.admin_viewmodels import (
 router = APIRouter(prefix="/administration", tags=["admin"])
 
 
-@router.get("/dashboard", response_class=HTMLResponse)
+@router.get("/dashboard", response_class=HTMLResponse, include_in_schema=False)
 @require_admin()
 @fastapi_chameleon.template("admin/dashboard.pt")
 async def admin_dashboard(request: Request, session: Session = Depends(get_session)):
@@ -40,7 +40,9 @@ async def admin_dashboard(request: Request, session: Session = Depends(get_sessi
             return RedirectResponse(url="/unauthorised", status_code=302)
 
 
-@router.get("/reports/spray_progress", response_class=HTMLResponse)
+@router.get(
+    "/reports/spray_progress", response_class=HTMLResponse, include_in_schema=False
+)
 @require_admin()
 @fastapi_chameleon.template("admin/spray_progress.pt")
 async def spray_progress_report(
@@ -54,7 +56,7 @@ async def spray_progress_report(
 ## Example routes from Claude
 
 
-@router.get("/users", response_class=HTMLResponse)
+@router.get("/users", response_class=HTMLResponse, include_in_schema=False)
 @require_admin()
 async def manage_users(request: Request, session: Session = Depends(get_session)):
     """User management page - accessible to admins and superadmins"""
@@ -68,7 +70,7 @@ async def manage_users(request: Request, session: Session = Depends(get_session)
             return RedirectResponse(url="/unauthorised", status_code=302)
 
 
-@router.post("/users/{user_id}/role")
+@router.post("/users/{user_id}/role", include_in_schema=False)
 @require_admin()
 async def change_user_role(
     user_id: int,
@@ -90,7 +92,7 @@ async def change_user_role(
         raise HTTPException(status_code=400, detail=str(e))
 
 
-@router.get("/reports", response_class=HTMLResponse)
+@router.get("/reports", response_class=HTMLResponse, include_in_schema=False)
 @require_admin()
 async def admin_reports(
     request: Request,
@@ -113,7 +115,7 @@ async def admin_reports(
 
 
 # Superadmin-only routes
-@router.get("/system", response_class=HTMLResponse)
+@router.get("/system", response_class=HTMLResponse, include_in_schema=False)
 @require_superadmin()
 async def system_admin(
     request: Request,
@@ -126,7 +128,7 @@ async def system_admin(
     )
 
 
-@router.delete("/users/{user_id}")
+@router.delete("/users/{user_id}", include_in_schema=False)
 @require_admin()
 async def delete_user(
     user_id: int,

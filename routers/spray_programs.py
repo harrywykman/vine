@@ -15,8 +15,14 @@ from viewmodels.spray_programs.details_viewmodel import DetailsViewModel
 from viewmodels.spray_programs.form_viewmodel import FormViewModel
 from viewmodels.spray_programs.list_viewmodel import ListViewModel
 from viewmodels.spray_programs.spray_edit_form_viewmodel import SprayEditFormViewModel
+from viewmodels.spray_programs.spray_program_spray_create_viewmodel import (
+    CreateSprayProgramSprayViewModel,
+)
 from viewmodels.spray_programs.spray_program_spray_delete_viewmodel import (
     SprayDeleteViewModel,
+)
+from viewmodels.spray_programs.spray_program_spray_form_viewmodel import (
+    SprayFormViewModel,
 )
 from viewmodels.spray_programs.spray_program_spray_update_view_model import (
     SprayUpdateViewModel,
@@ -131,6 +137,44 @@ async def create_spray(request: Request, session: Session = Depends(get_session)
         url="/spray_programs", status_code=status.HTTP_302_FOUND
     )
     return response
+
+
+## GET Spray Form
+@router.get("/spray_program/{spray_program_id}/spray/new", response_class=HTMLResponse)
+@fastapi_chameleon.template("spray_programs/spray_program_spray_form.pt")
+def spray_spray_program_form(
+    request: Request, spray_program_id: int, session: Session = Depends(get_session)
+):
+    vm = SprayFormViewModel(request, session, spray_program_id=spray_program_id)
+    if not vm:
+        raise HTTPException(status_code=404, detail="No view model.")
+    return vm.to_dict()
+
+
+# TODO refactor to use viewmodel
+## POST Create Spray
+@router.post("/spray_program/{spray_program_id}/spray/new")
+@fastapi_chameleon.template("spray_programs/spray_program_spray_form.pt")
+async def create_spray(request: Request, session: Session = Depends(get_session)):
+    vm = CreateSprayProgramSprayViewModel(request, session)
+    await vm.load()
+
+    if not vm:
+        raise HTTPException(status_code=404, detail="No view model.")
+    if vm.error:
+        print(vm.error)
+        return vm.to_dict()
+
+    spray = vm.create_spray()
+
+    if not spray:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Spray program not created"
+        )
+    else:
+        vm.set_success(f"Successfully created {spray.name}.")
+
+    return vm.to_dict()
 
 
 ## GET Edit Spray Form

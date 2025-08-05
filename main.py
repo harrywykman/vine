@@ -15,6 +15,7 @@ from data.admin import (
     ManagementUnitAdmin,
     SprayAdmin,
     SprayChemicalAdmin,
+    SprayProgramAdmin,
     SprayRecordAdmin,
     SprayRecordChemicalAdmin,
     StatusAdmin,
@@ -35,7 +36,12 @@ from routers import (
 from services import user_service
 
 # Initialise Fast API app
-app = FastAPI()
+
+if SETTINGS.deploy == "True":
+    app = FastAPI(docs_url=None, redoc_url=None)
+else:
+    app = FastAPI()
+
 
 admin = Admin(app, engine)
 
@@ -85,3 +91,4 @@ admin.add_view(GrowthStageAdmin)
 admin.add_view(ChemicalGroupAdmin)
 admin.add_view(SprayChemicalAdmin)
 admin.add_view(SprayRecordChemicalAdmin)
+admin.add_view(SprayProgramAdmin)

@@ -6,7 +6,7 @@
                     <h1 class="title">${spray_program.name} ${spray_program.year_start} / ${spray_program.year_end}</h1>
                     <h2 class="title">Sprays</h2>
                     <div class="content">
-                        <a hx-get="/spray/new/spray_program/${spray_program.id}" hx-target="body" hx-swap="outerHTML"
+                        <a hx-get="/spray_program/${spray_program.id}/spray/new" hx-target="body" hx-swap="outerHTML"
                             hx-push-url="true" class="button is-link is-small loading-button">
                             <span class="icon loading-spinner">
                                 <i class="fas fa-spinner"></i>

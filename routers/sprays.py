@@ -19,8 +19,6 @@ from viewmodels.sprays.apply_select_units_form_viewmodel import (
 from viewmodels.sprays.apply_select_units_submit_viewmodel import (
     ApplySelectUnitsSubmitViewModel,
 )
-from viewmodels.sprays.create_viewmodel import CreateViewModel
-from viewmodels.sprays.form_viewmodel import FormViewModel
 from viewmodels.sprays.list_viewmodel import ListViewModel
 
 router = APIRouter()
@@ -78,65 +76,6 @@ def spray_view_inline(
     spray = spray_service.eagerly_get_spray_by_id(spray_id, session)
 
     return {"sp": spray}
-
-
-## GET Spray Form
-@router.get("/spray/new/spray_program/{spray_program_id}", response_class=HTMLResponse)
-@fastapi_chameleon.template("spray/spray_form.pt")
-def spray_spray_program_form(
-    request: Request, spray_program_id: int, session: Session = Depends(get_session)
-):
-    vm = FormViewModel(request, session, spray_program_id=spray_program_id)
-    if not vm:
-        raise HTTPException(status_code=404, detail="No view model.")
-    return vm.to_dict()
-
-
-# TODO refactor to use viewmodel
-## POST Create Spray Program
-@router.post("/spray/new")
-@fastapi_chameleon.template("spray/spray_form.pt")
-async def create_spray(request: Request, session: Session = Depends(get_session)):
-    vm = CreateViewModel(request, session)
-    await vm.load()
-
-    if not vm:
-        raise HTTPException(status_code=404, detail="No view model.")
-    if vm.error:
-        print(vm.error)
-        return vm.to_dict()
-
-    # Create the spray
-
-    spray = spray_service.create_spray(
-        session,
-        vm.name,
-        vm.water_spray_rate_per_hectare,
-        vm.chemicals_targets,
-        vm.growth_stage_id,
-        vm.spray_program_id,
-    )
-
-    if not spray:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Spray program not created"
-        )
-
-    if vm.error:
-        print(vm.error)
-        return vm.to_dict()
-
-    if vm.spray_program_id:
-        response = responses.RedirectResponse(
-            url=f"/spray_programs/{vm.spray_program_id}",
-            status_code=status.HTTP_302_FOUND,
-        )
-    else:
-        response = responses.RedirectResponse(
-            url="/sprays", status_code=status.HTTP_302_FOUND
-        )
-
-    return response
 
 
 ## GET empty template

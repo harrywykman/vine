@@ -151,7 +151,7 @@
 
                 /* Map container responsive */
                 #map {
-                    height: 250px !important;
+                    height: 400px !important;
                     border-radius: 6px;
                 }
             }
