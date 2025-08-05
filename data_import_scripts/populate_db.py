@@ -4,10 +4,11 @@ from data_import_scripts import (
     import_EL_growth_stage,
     import_management_units,
     import_states,
-    import_users,
+    import_users_from_json,
     import_varieties,
     import_vineyards,
 )
+from data_import_scripts.geo_data import polygon_import
 
 # Run as module from root dir:  python -m data_import_scripts.populate_db
 
@@ -22,8 +23,10 @@ def populate_db():
     import_chemicals_and_groups.import_chemicals_from_json(
         "./data_import_scripts/chemicals_export.json"
     )
-    import_users.import_new_users()
+    import_users_from_json.import_new_users()
+    # import_users.import_new_users()
     # import_chemicals.import_chemicals("./data_import_scripts/chemicals.csv")
+    polygon_import.main()
 
 
 if __name__ == "__main__":
