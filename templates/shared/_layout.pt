@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="/static/css/site.css" />
   <link rel="stylesheet" href="/static/css/nav.css" />
   <link rel="stylesheet" href="/static/external/css/bulma/css/bulma.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
   <script src="/static/external/js/htmx/htmx.min.js"></script>
   <script src="/static/external/js/htmx/debug.js"></script>
   <link rel="stylesheet" href="/static/external/css/font_awesome/fontawesome-free-7.0.0-web/css/all.min.css" />
