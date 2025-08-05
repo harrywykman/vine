@@ -3,7 +3,7 @@ Description=gunicorn uvicorn service for Vine App
 After=syslog.target
 
 [Service]
-ExecStart=/apps/venv/bin/gunicorn -b 127.0.0.1:8000 -w 4 -k uvicorn.workers.UvicornWorker main:api --name weather_svc --chdir /apps/vine/ --access-logfile /apps/logs/vine/access.log --error-logfile /apps/logs/vine/errors.log --user archaeon
+ExecStart=/apps/venv/bin/gunicorn -b 127.0.0.1:8000 -w 4 -k uvicorn.workers.UvicornWorker main:app --name vine --chdir /apps/vine/ --access-logfile /apps/logs/vine/access.log --error-logfile /apps/logs/vine/errors.log --user vine
 
 # \/ \/ <- Added post recording for better restart perf.
 ExecReload=/bin/kill -s HUP $MAINPID

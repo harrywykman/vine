@@ -1,6 +1,6 @@
 server {
     listen 80;
-    server_name vine.harrywykman.com 45.79.118.203;
+    server_name vine.harrywykman.com 172.105.173.97;
     server_tokens off;
     charset utf-8;
 
