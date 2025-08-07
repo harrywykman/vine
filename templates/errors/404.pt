@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Page Not Found</title>
+</head>
+
+<body>
+    <h1>404 - Page Not Found</h1>
+    <p tal:content="message">Default message</p>
+    <a href="/">Go Home</a>
+</body>
+
+</html>

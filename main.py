@@ -29,6 +29,7 @@ from routers import (
     account,
     administration,
     chemicals,
+    handlers,
     spray_programs,
     sprays,
     vineyards,
@@ -42,16 +43,20 @@ if SETTINGS.deploy == "True":
 else:
     app = FastAPI()
 
-
-admin = Admin(app, engine)
-
 # Chameleon templates
 
-dev_mode = True
+if SETTINGS.deploy == "True":
+    dev_mode = False
+else:
+    dev_mode = True
 
 BASE_DIR = Path(__file__).resolve().parent
 template_folder = str(BASE_DIR / "templates")
 fastapi_chameleon.global_init(template_folder, auto_reload=dev_mode)
+
+
+app.exception_handler(404)(handlers.not_found_error)
+app.exception_handler(500)(handlers.internal_error)
 
 # routers
 
@@ -78,17 +83,19 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 
 templates = Jinja2Templates(directory="templates")
 
-admin.add_view(UserAdmin)
-admin.add_view(VineyardAdmin)
-admin.add_view(ManagementUnitAdmin)
-admin.add_view(VarietyAdmin)
-admin.add_view(WineColourAdmin)
-admin.add_view(StatusAdmin)
-admin.add_view(SprayAdmin)
-admin.add_view(SprayRecordAdmin)
-admin.add_view(ChemicalAdmin)
-admin.add_view(GrowthStageAdmin)
-admin.add_view(ChemicalGroupAdmin)
-admin.add_view(SprayChemicalAdmin)
-admin.add_view(SprayRecordChemicalAdmin)
-admin.add_view(SprayProgramAdmin)
+if SETTINGS.deploy != "True":
+    admin = Admin(app, engine)
+    admin.add_view(UserAdmin)
+    admin.add_view(VineyardAdmin)
+    admin.add_view(ManagementUnitAdmin)
+    admin.add_view(VarietyAdmin)
+    admin.add_view(WineColourAdmin)
+    admin.add_view(StatusAdmin)
+    admin.add_view(SprayAdmin)
+    admin.add_view(SprayRecordAdmin)
+    admin.add_view(ChemicalAdmin)
+    admin.add_view(GrowthStageAdmin)
+    admin.add_view(ChemicalGroupAdmin)
+    admin.add_view(SprayChemicalAdmin)
+    admin.add_view(SprayRecordChemicalAdmin)
+    admin.add_view(SprayProgramAdmin)

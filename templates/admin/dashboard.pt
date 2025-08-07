@@ -28,12 +28,12 @@
                                     </span>
                                     <span>Manage Spray Programs</span>
                                 </a>
-                                <a class="button is-primary" href="/admin/users">
+                                <!-- <a class="button is-primary" href="/administration/users">
                                     <span class="icon">
                                         <i class="fas fa-users"></i>
                                     </span>
                                     <span>Manage Users</span>
-                                </a>
+                                </a> -->
                                 <a class="button is-info" href="/administration/reports/spray_progress">
                                     <span class="icon">
                                         <i class="fas fa-chart-bar"></i>

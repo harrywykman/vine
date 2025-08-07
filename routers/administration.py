@@ -65,7 +65,7 @@ async def manage_users(request: Request, session: Session = Depends(get_session)
         return templates.TemplateResponse("admin/users.html", vm.to_dict())
     except PermissionError as e:
         if "Login required" in str(e):
-            return RedirectResponse(url="/login", status_code=302)
+            return RedirectResponse(url="/account/login", status_code=302)
         else:
             return RedirectResponse(url="/unauthorised", status_code=302)
 
