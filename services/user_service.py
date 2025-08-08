@@ -15,7 +15,7 @@ def user_count(session: Session) -> int:
     return result.all()[0]
 
 
-def create_account(
+def create_user(
     session: Session,
     name: Optional[str],
     email: Optional[str],
@@ -38,6 +38,61 @@ def create_account(
     session.add(user)
     session.commit()
     return user
+
+
+def update_user(
+    session: Session,
+    user_id: int,
+    name: str,
+    email: str,
+    role: str,
+    password: str = None,
+):
+    user = session.get(User, user_id)
+    if not user:
+        return None
+
+    user.name = name
+    user.email = email
+    user.role = UserRole(role)
+
+    if password:  # Only update password if provided
+        user.hash_password = crypto.hash(password, rounds=172_434)
+
+    session.add(user)
+    session.commit()
+    session.refresh(user)
+    return user
+
+
+def delete_user(session: Session, user_id: int) -> bool:
+    """
+    Delete a user by ID
+
+    Args:
+        session: Database session
+        user_id: ID of the user to delete
+
+    Returns:
+        bool: True if user was deleted successfully, False otherwise
+    """
+    try:
+        user = session.get(User, user_id)
+        if not user:
+            return False
+
+        # You might want to handle related records here
+        # For example, if you have foreign key constraints,
+        # you might need to delete or update related records first
+
+        session.delete(user)
+        session.commit()
+        return True
+
+    except Exception as e:
+        session.rollback()
+        print(f"Error deleting user {user_id}: {e}")
+        return False
 
 
 def login_user(session: Session, email: str, password: str) -> Optional[User]:

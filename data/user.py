@@ -30,6 +30,11 @@ class User(SQLModel, table=True):
 
     spray_records: List["SprayRecord"] | None = Relationship(back_populates="operator")  # noqa: F821
 
+    @property
+    def has_spray_records(self) -> bool:
+        """Check if user has any associated spray records"""
+        return bool(self.spray_records and len(self.spray_records) > 0)
+
     def has_permission(self, required_role: UserRole) -> bool:
         """Check if user has required permission level"""
         role_hierarchy = {
@@ -47,7 +52,3 @@ class User(SQLModel, table=True):
     def is_superadmin(self) -> bool:
         """Check if user is superadmin"""
         return self.role == UserRole.SUPERADMIN
-
-
-# Uncomment when running import modules - Define the relationship after both classes are available
-# User.spray_records = Relationship(back_populates="operator")

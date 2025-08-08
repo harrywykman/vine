@@ -1,0 +1,73 @@
+<div class="box" id="users-box">
+    <table class="table is-fullwidth is-striped is-hoverable">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Created</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr tal:repeat="user users">
+                <td>
+                    <div class="is-flex is-align-items-center">
+                        <span class="icon-text">
+                            <span class="icon has-text-primary">
+                                <i class="fas fa-user"></i>
+                            </span>
+                            <span tal:content="user.name">User Name</span>
+                        </span>
+                    </div>
+                </td>
+                <td tal:content="user.email">user@example.com</td>
+                <td>
+                    <span class="tag"
+                        tal:attributes="class python: 'tag is-success' if user.role.value == 'SUPERADMIN' else ('tag is-warning' if user.role.value == 'ADMIN' else ('tag is-info' if user.role.value == 'OPERATOR' else 'tag'))"
+                        tal:content="user.role.value">USER</span>
+                </td>
+                <td
+                    tal:content="python: user.created_at.strftime('%Y-%m-%d') if hasattr(user, 'created_at') and user.created_at else 'N/A'">
+                    2024-01-01</td>
+                <td>
+                    <div class="buttons has-addons">
+                        <button class="button is-small is-info" hx-get="/administration/users/${user.id}/edit-form"
+                            hx-target="#user-modal .modal-card-body" hx-swap="innerHTML"
+                            onclick="document.getElementById('user-modal').classList.add('is-active')"
+                            title="Edit User">
+                            <span class="icon is-small">
+                                <i class="fas fa-edit"></i>
+                            </span>
+                        </button>
+
+                        <!-- Show role change button only if current user has permission -->
+                        <button tal:condition="python: user.role.value != 'SUPERADMIN' or is_superadmin"
+                            class="button is-small is-warning" hx-get="/administration/users/${user.id}/role-form"
+                            hx-target="#role-modal .modal-card-body" hx-swap="innerHTML"
+                            onclick="document.getElementById('role-modal').classList.add('is-active')"
+                            title="Change Role">
+                            <span class="icon is-small">
+                                <i class="fas fa-user-cog"></i>
+                            </span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+
+            <!-- Empty state -->
+            <tr tal:condition="not users">
+                <td colspan="5" class="has-text-centered">
+                    <div class="content">
+                        <p class="has-text-grey">
+                            <span class="icon">
+                                <i class="fas fa-users fa-2x"></i>
+                            </span>
+                        </p>
+                        <p class="has-text-grey">No users found</p>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

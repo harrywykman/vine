@@ -45,7 +45,7 @@ def import_new_users():
             if existing:
                 print(f"User with email: {entry['email']} already exists")
             else:
-                new_user = user_service.create_account(
+                new_user = user_service.create_user(
                     session,
                     entry["name"],
                     entry["email"],

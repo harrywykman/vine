@@ -1,4 +1,5 @@
 import re
+from typing import List
 
 from fastapi import HTTPException, status
 from icecream import ic
@@ -38,7 +39,7 @@ def sort_mus(vineyard: Vineyard) -> Vineyard:
     return vineyard
 
 
-def all_vineyards(session: Session):
+def all_vineyards(session: Session) -> List[Vineyard]:
     query = select(Vineyard).order_by(Vineyard.name)
 
     vineyards = session.exec(query).all()

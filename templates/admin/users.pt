@@ -1,0 +1,142 @@
+<div metal:use-macro="load: ../shared/_layout.pt">
+    <div metal:fill-slot="content" tal:omit-tag="True">
+
+        <section class="section">
+            <div class="container">
+                <div class="level">
+                    <div class="level-left">
+                        <div class="level-item">
+                            <h1 class="title">User Management</h1>
+                        </div>
+                    </div>
+                    <div class="level-right">
+                        <div class="level-item">
+                            <a hx-get="/administration/users/new" hx-target="body" hx-swap="outerHTML"
+                                hx-push-url="true" class="button is-primary loading-button">
+                                <span class="icon loading-spinner">
+                                    <i class="fas fa-spinner"></i>
+                                </span>
+                                <span class="icon">
+                                    <i class="fas fa-plus"></i>
+                                </span>
+                                <span class="normal-text">Add User</span>
+                                <span class="loading-text">Loading...</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Search and Filter Section -->
+                <div class="box">
+                    <div class="columns">
+                        <div class="column is-half">
+                            <div class="field">
+                                <label class="label">Search Users</label>
+                                <div class="control has-icons-left">
+                                    <input class="input" type="text" placeholder="Search by name or email..."
+                                        hx-get="/administration/users/table" hx-trigger="keyup changed delay:300ms"
+                                        hx-target="#users-box" hx-swap="outerHTML" hx-include="[name='role_filter']"
+                                        name="search">
+                                    <span class="icon is-left">
+                                        <i class="fas fa-search"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="column is-half">
+                            <div class="field">
+                                <label class="label">Filter by Role</label>
+                                <div class="control">
+                                    <div class="select is-fullwidth">
+                                        <select name="role_filter" hx-get="/administration/users/table"
+                                            hx-trigger="change" hx-target="#users-box" hx-swap="outerHTML"
+                                            hx-include="[name='search']">
+                                            <option value="">All Roles</option>
+                                            <option tal:repeat="role available_roles" tal:attributes="value role"
+                                                tal:content="role">Role</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Users Table -->
+                <div class="box" id="users-box">
+                    <table class="table is-fullwidth is-striped is-hoverable">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                                <th>Created</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr tal:repeat="user_in_table users">
+                                <td>
+                                    <div class="is-flex is-align-items-center">
+                                        <span class="icon-text">
+                                            <span class="icon has-text-primary">
+                                                <i class="fas fa-user"></i>
+                                            </span>
+                                            <span tal:content="user_in_table.name">User Name</span>
+                                        </span>
+                                    </div>
+                                </td>
+                                <td tal:content="user_in_table.email">user@example.com</td>
+                                <td>
+                                    <span class="tag"
+                                        tal:attributes="class python: 'tag is-success' if user_in_table.role == 'SUPERADMIN' else ('tag is-warning' if user_in_table.role.value == 'ADMIN' else ('tag is-info' if user_in_table.role.value == 'OPERATOR' else 'tag'))"
+                                        tal:content="user_in_table.role.value">USER</span>
+                                </td>
+                                <td
+                                    tal:content="python: user_in_table.created_date.strftime('%Y-%m-%d') if hasattr(user, 'created_date') and user_in_table.created_date else 'N/A'">
+                                    2024-01-01</td>
+                                <td>
+                                    <div class="buttons has-addons">
+                                        <button class="button is-small is-info"
+                                            hx-get="/administration/users/${user_in_table.id}/edit" hx-target="body"
+                                            hx-push-url="true" hx-swap="innerHTML" title="Edit User">
+                                            <span class="icon is-small">
+                                                <i class="fas fa-edit"></i>
+                                            </span>
+                                        </button>
+                                        <!-- Delete button - only show if user can be deleted -->
+                                        <button class="button is-small is-danger"
+                                            tal:condition="python: user_in_table.id != user.id and (user_in_table.role.value != 'SUPERADMIN' or is_superadmin)"
+                                            tal:attributes="
+                                                hx-delete string:/administration/users/${user_in_table.id};
+                                                hx-confirm string:Are you sure you want to delete user '${user_in_table.name}'? This action cannot be undone.;
+                                                data-user-name user_in_table.name" hx-target="body" hx-swap="outerHTML"
+                                            hx-push-url="true" title="Delete User">
+                                            <span class="icon is-small">
+                                                <i class="fas fa-trash"></i>
+                                            </span>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- Empty state -->
+                            <tr tal:condition="not users">
+                                <td colspan="5" class="has-text-centered">
+                                    <div class="content">
+                                        <p class="has-text-grey">
+                                            <span class="icon">
+                                                <i class="fas fa-users fa-2x"></i>
+                                            </span>
+                                        </p>
+                                        <p class="has-text-grey">No users found</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>

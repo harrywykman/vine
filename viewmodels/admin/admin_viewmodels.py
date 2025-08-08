@@ -1,8 +1,8 @@
-from typing import List
+from typing import List, Optional
 
 from sqlalchemy import func
 from sqlalchemy.orm import Session
-from sqlmodel import select
+from sqlmodel import or_, select
 from starlette.requests import Request
 
 from data.user import User, UserRole
@@ -54,23 +54,51 @@ class SprayProgressReportViewModel(ViewModelBase):
 
 
 class UserManagementViewModel(ViewModelBase):
-    def __init__(self, request: Request, session: Session):
+    def __init__(
+        self,
+        request: Request,
+        session: Session,
+        search: Optional[str] = None,
+        role_filter: Optional[str] = None,
+        success: str = "",
+    ):
         super().__init__(request, session)
 
         # Ensure user has admin permissions
         self.require_permission(UserRole.ADMIN)
 
-        # Load all users for management
-        self.users: List[User] = session.exec(select(User)).all()
+        # Build query with filters
+        query = select(User).order_by(User.name)
+
+        # Apply search filter
+        if search and search.strip():
+            search_term = f"%{search.strip()}%"
+            query = query.where(
+                or_(User.name.ilike(search_term), User.email.ilike(search_term))
+            )
+
+        # Apply role filter
+        if role_filter and role_filter.strip():
+            query = query.where(User.role == role_filter)
+
+        # Load filtered users
+        self.users: List[User] = session.exec(query).all()
         self.available_roles = [role.value for role in UserRole]
 
         # Current user can't promote to superadmin unless they are superadmin
-        if not self.is_superadmin():
+        if not self.is_superadmin:
             self.available_roles = [
                 role
                 for role in self.available_roles
                 if role != UserRole.SUPERADMIN.value
             ]
+
+        # Store filter values for template
+        self.search = search or ""
+        self.role_filter = role_filter or ""
+
+        if success:
+            self.set_success(message=success)
 
 
 class SystemAdminViewModel(ViewModelBase):

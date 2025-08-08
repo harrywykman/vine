@@ -1,15 +1,18 @@
 import datetime
 from decimal import Decimal
+from typing import List
 
 from fastapi import Request
 from sqlmodel import Session, select
 
+from data.user import User, UserRole
 from data.vineyard import (
     SprayChemical,
     SprayRecord,
     SprayRecordChemical,
     WindDirection,
 )
+from services import user_service, vineyard_service
 from viewmodels.shared.viewmodel import ViewModelBase
 
 
@@ -25,7 +28,7 @@ class VineyardSprayRecordsSubmitViewModel(ViewModelBase):
         relative_humidity: int | None,
         wind_speed: int | None,
         wind_direction: str | None,
-        management_unit_ids: list[int],
+        management_unit_ids: list[int] | None,
         request: Request,
         session: Session,
     ):
@@ -43,24 +46,38 @@ class VineyardSprayRecordsSubmitViewModel(ViewModelBase):
         self.management_unit_ids = management_unit_ids
         self.form = {}
         self.wd_enum = None
+        self.operator: User | None = user_service.get_user_by_id(
+            self.session, self.user_id
+        )
+        self.operators: List[User] = user_service.get_users_by_role(
+            session=session, role=UserRole.OPERATOR
+        )
+        self.growth_stages = vineyard_service.all_growth_stages(session)
+        self.chemicals = vineyard_service.get_spray_chemicals(spray_id, session)
+        self.wind_directions = list(WindDirection)
+        self.spray_records: list[SprayRecord] = (
+            vineyard_service.eagerly_get_vineyard_spray_spray_records(
+                self.session, self.vineyard_id, spray_id
+            )
+        )
 
     async def load(self):
         self.form = await self.request.form()
 
         if not self.operator_id:
             self.error = "An operator must be assigned to a completed"
-            return
 
         if not self.management_unit_ids:
             self.error = "At least one management unit must be selected."
-            return
+
+        if self.management_unit_ids:
+            self.error = f"Alt case - {self.management_unit_ids}At least one management unit must be selected."
 
         if self.wind_direction:
             try:
                 self.wd_enum = WindDirection[self.wind_direction]
             except KeyError:
                 self.error = f"Invalid wind direction: {self.wind_direction}"
-                return
 
         # Validate batch numbers
         program_chems = self.session.exec(

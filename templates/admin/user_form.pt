@@ -1,0 +1,156 @@
+<div metal:use-macro="load: ../shared/_layout.pt">
+    <div metal:fill-slot="content" tal:omit-tag="True">
+
+        <section class="section">
+            <div class="container">
+                <div class="level">
+                    <div class="level-left">
+                        <div class="level-item">
+                            <h1 class="title">Create New User</h1>
+                        </div>
+                    </div>
+                    <div class="level-right">
+                        <div class="level-item">
+                            <a hx-get="/administration/users" hx-target="body" hx-swap="outerHTML" hx-push-url="true"
+                                class="button loading-button">
+                                <span class="icon loading-spinner">
+                                    <i class="fas fa-spinner"></i>
+                                </span>
+                                <span class="icon">
+                                    <i class="fas fa-arrow-left"></i>
+                                </span>
+                                <span class="normal-text">Back to Users</span>
+                                <span class="loading-text">Loading...</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Create User Form -->
+                <div class="box">
+
+                    <!-- Success Message -->
+                    <div tal:condition="success_message" class="notification is-success">
+                        <p tal:content="success_message">Success message</p>
+                    </div>
+
+                    <form hx-post="/administration/users/new" hx-target="body" hx-swap="outerHTML" hx-push-url="true">
+
+                        <div class="columns">
+                            <div class="column is-half">
+                                <!-- Name Field -->
+                                <div class="field">
+                                    <label class="label">Name</label>
+                                    <div class="control has-icons-left">
+                                        <input class="input" type="text" name="name" placeholder="Enter name"
+                                            tal:attributes="value name" required>
+                                        <span class="icon is-left">
+                                            <i class="fas fa-user"></i>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <!-- Email Field -->
+                                <div class="field">
+                                    <label class="label">Email Address</label>
+                                    <div class="control has-icons-left">
+                                        <input class="input" type="email" name="email" placeholder="Enter email address"
+                                            tal:attributes="value email" required>
+                                        <span class="icon is-left">
+                                            <i class="fas fa-envelope"></i>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <!-- Role Field -->
+                                <div class="field">
+                                    <label class="label">User Role</label>
+                                    <div class="control has-icons-left">
+                                        <div class="select is-fullwidth">
+                                            <select name="role" required>
+                                                <option value="">Select a role</option>
+                                                <option tal:repeat="available_role available_roles" tal:attributes="value available_role;
+                            selected python: available_role == role" tal:content="python: available_role.title()">Role
+                                                </option>
+                                            </select>
+                                        </div>
+                                        <span class="icon is-left">
+                                            <i class="fas fa-user-tag"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="column is-half">
+                                <!-- Password Field -->
+                                <div class="field">
+                                    <label class="label">Password</label>
+                                    <div class="control has-icons-left">
+                                        <input class="input" type="password" name="password"
+                                            placeholder="Enter password" minlength="8" required>
+                                        <span class="icon is-left">
+                                            <i class="fas fa-lock"></i>
+                                        </span>
+                                    </div>
+                                    <p class="help">Password must be at least 8 characters long</p>
+                                </div>
+
+                                <!-- Confirm Password Field -->
+                                <div class="field">
+                                    <label class="label">Confirm Password</label>
+                                    <div class="control has-icons-left">
+                                        <input class="input" type="password" name="confirm_password"
+                                            placeholder="Confirm password" minlength="8" required>
+                                        <span class="icon is-left">
+                                            <i class="fas fa-lock"></i>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <!-- Role Information -->
+                                <div class="field">
+                                    <div class="content">
+                                        <p class="is-size-7 has-text-grey">
+                                            <strong>Role Permissions:</strong><br>
+                                            <strong>User:</strong> Basic access<br>
+                                            <strong>Operator:</strong> Can manage spray records<br>
+                                            <strong>Admin:</strong> Can manage users and spray programs<br>
+                                            <span tal:condition="is_superadmin"><strong>Superadmin:</strong> Full system
+                                                access</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Form Actions -->
+                        <div class="field is-grouped is-grouped-right">
+                            <div class="control">
+                                <button type="button" hx-get="/administration/users" hx-target="body"
+                                    hx-swap="outerHTML" hx-push-url="true" class="button loading-button">
+                                    <span class="icon loading-spinner">
+                                        <i class="fas fa-spinner"></i>
+                                    </span>
+                                    <span class="normal-text">Cancel</span>
+                                    <span class="loading-text">Loading...</span>
+                                </button>
+                            </div>
+                            <div class="control">
+                                <button type="submit" class="button is-primary loading-button">
+                                    <span class="icon loading-spinner">
+                                        <i class="fas fa-spinner"></i>
+                                    </span>
+                                    <span class="icon">
+                                        <i class="fas fa-user-plus"></i>
+                                    </span>
+                                    <span class="normal-text">Create User</span>
+                                    <span class="loading-text">Creating...</span>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>

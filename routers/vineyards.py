@@ -145,7 +145,7 @@ async def submit_spray_records(
     vineyard_id: int,
     spray_id: int,
     operator_id: Annotated[int, Form()],
-    management_unit_ids: Annotated[list[int], Form()],
+    management_unit_ids: Annotated[Optional[list[int]], Form()] = None,
     growth_stage_id: Annotated[Optional[int], Form()] = None,
     hours_taken: Annotated[Optional[Decimal], Form()] = None,
     temperature: Annotated[Optional[int], Form()] = None,
