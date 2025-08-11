@@ -90,14 +90,26 @@
                                             <span>Vineyard / Management Unit</span>
                                         </span>
                                     </th>
-                                    <th tal:repeat="program sprays" class="has-text-centered">
-                                        <div class="is-flex is-flex-direction-column is-align-items-center">
+                                    <th tal:repeat="spray sprays" class="has-text-centered">
+                                        <div class="is-flex is-flex-direction-column is-align-items-center"
+                                            tal:define="stats python: spray_completion_stats_display.get(spray.id, {'display': '0 / 0', 'percent': 0})">
+
                                             <span class="icon">
                                                 <i class="fas fa-spray-can"></i>
                                             </span>
-                                            <span tal:content="program.name">Program</span>
+
+                                            <span tal:content="spray.name">Spray</span>
+
+                                            <small class="has-text-grey">
+                                                <span tal:content="stats['display']">0 / 0</span>
+                                            </small>
+
+                                            <progress class="progress is-small is-primary" max="100"
+                                                tal:attributes="value stats['percent']">
+                                            </progress>
                                         </div>
                                     </th>
+
                                 </tr>
                             </thead>
                             <tbody>

@@ -99,6 +99,36 @@ class SprayProgressReportViewModel(ViewModelBase):
             self.sprays = []
             self.spray_records = []
 
+        from collections import defaultdict
+
+        # Dict keyed by spray_id -> {"complete": X, "assigned": Y}
+        self.spray_completion_stats = defaultdict(
+            lambda: {"complete": 0, "assigned": 0}
+        )
+
+        for record in self.spray_records:
+            if record is None or record.spray_id is None:
+                continue
+
+            self.spray_completion_stats[record.spray_id]["assigned"] += 1
+
+            if record.complete:
+                self.spray_completion_stats[record.spray_id]["complete"] += 1
+
+        self.spray_completion_stats_display = {}
+        for spray_id, stats in self.spray_completion_stats.items():
+            complete = stats["complete"]
+            assigned = stats["assigned"]
+            display = f"{complete} / {assigned}"
+            percent = int((complete / assigned) * 100) if assigned else 0
+
+            self.spray_completion_stats_display[spray_id] = {
+                "display": display,
+                "percent": percent,
+                "complete": complete,
+                "assigned": assigned,
+            }
+
         self.spray_lookup = {
             (rec.management_unit_id, rec.spray_id): rec for rec in self.spray_records
         }
