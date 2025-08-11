@@ -34,6 +34,12 @@
                                     </span>
                                     <span>Manage Users</span>
                                 </a>
+                                <a class="button is-primary" href="/administration/chemicals">
+                                    <span class="icon">
+                                        <i class="fas fa-flask"></i>
+                                    </span>
+                                    <span>Manage Chemicals</span>
+                                </a>
                                 <a class="button is-info" href="/administration/reports/spray_progress">
                                     <span class="icon">
                                         <i class="fas fa-chart-bar"></i>

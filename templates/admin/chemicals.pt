@@ -1,0 +1,176 @@
+<div metal:use-macro="load: ../shared/_layout.pt">
+    <div metal:fill-slot="content" tal:omit-tag="True">
+
+        <section class="section">
+            <div class="container">
+                <div class="level">
+                    <div class="level-left">
+                        <div class="level-item">
+                            <h1 class="title">Chemical Management</h1>
+                        </div>
+                    </div>
+                    <div class="level-right">
+                        <div class="level-item">
+                            <a hx-get="/administration/chemicals/new" hx-target="body" hx-swap="outerHTML"
+                                hx-push-url="true" class="button is-primary loading-button">
+                                <span class="icon loading-spinner">
+                                    <i class="fas fa-spinner"></i>
+                                </span>
+                                <span class="icon">
+                                    <i class="fas fa-plus"></i>
+                                </span>
+                                <span class="normal-text">Add Chemical</span>
+                                <span class="loading-text">Loading...</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Success Message -->
+                <div tal:condition="success" class="notification is-success">
+                    <button class="delete"></button>
+                    <p tal:content="success">Success message</p>
+                </div>
+
+                <!-- Error Message -->
+                <div tal:condition="error" class="notification is-danger">
+                    <button class="delete"></button>
+                    <p tal:content="error">Error message</p>
+                </div>
+
+                <!-- Search and Filter Section -->
+                <div class="box">
+                    <div class="columns">
+                        <div class="column is-half">
+                            <div class="field">
+                                <label class="label">Search Chemicals</label>
+                                <div class="control has-icons-left">
+                                    <input class="input" type="text"
+                                        placeholder="Search by name or active ingredient..."
+                                        hx-get="/administration/chemicals/table" hx-trigger="keyup changed delay:300ms"
+                                        hx-target="#chemicals-box" hx-swap="outerHTML"
+                                        hx-include="[name='group_filter']" name="search" tal:attributes="value search">
+                                    <span class="icon is-left">
+                                        <i class="fas fa-search"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="column is-half">
+                            <div class="field">
+                                <label class="label">Filter by Chemical Group</label>
+                                <div class="control">
+                                    <div class="select is-fullwidth">
+                                        <select name="group_filter" hx-get="/administration/chemicals/table"
+                                            hx-trigger="change" hx-target="#chemicals-box" hx-swap="outerHTML"
+                                            hx-include="[name='search']">
+                                            <option value="">All Groups</option>
+                                            <option tal:repeat="group available_groups"
+                                                tal:attributes="value group.id; selected python: str(group.id) == group_filter"
+                                                tal:content="group.name">Group</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chemicals Table -->
+                <div class="box" id="chemicals-box">
+                    <table class="table is-fullwidth is-striped is-hoverable">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Active Ingredient</th>
+                                <th>Rate</th>
+                                <th>Chemical Groups</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr tal:repeat="chemical chemicals">
+                                <td>
+                                    <div class="is-flex is-align-items-center">
+                                        <span class="icon-text">
+                                            <span class="icon has-text-primary">
+                                                <i class="fas fa-flask"></i>
+                                            </span>
+                                            <span tal:content="chemical.name">Chemical Name</span>
+                                        </span>
+                                    </div>
+                                </td>
+                                <td tal:content="chemical.active_ingredient">Active Ingredient</td>
+                                <td>
+                                    <span tal:condition="chemical.rate_per_100l"
+                                        tal:content="python: f'{chemical.rate_per_100l} {chemical.rate_unit.value}' if chemical.rate_unit else f'{chemical.rate_per_100l}'">
+                                        Rate
+                                    </span>
+                                    <span tal:condition="not chemical.rate_per_100l" class="has-text-grey">
+                                        Not specified
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="tags">
+                                        <span tal:repeat="group chemical.chemical_groups" class="tag is-small"
+                                            tal:attributes="class python: f'tag is-small is-{group.type.value.lower()}' if hasattr(group, 'type') and group.type else 'tag is-small'"
+                                            tal:content="group.name">Group</span>
+                                        <span tal:condition="not chemical.chemical_groups"
+                                            class="tag is-light is-small">
+                                            No groups
+                                        </span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="buttons has-addons">
+                                        <button class="button is-small is-info"
+                                            tal:attributes="hx-get string:/administration/chemicals/${chemical.id}/edit"
+                                            hx-target="body" hx-push-url="true" hx-swap="outerHTML"
+                                            title="Edit Chemical">
+                                            <span class="icon is-small">
+                                                <i class="fas fa-edit"></i>
+                                            </span>
+                                        </button>
+                                        <!-- Delete button - only show if chemical is not in use -->
+                                        <button class="button is-small is-danger"
+                                            tal:condition="not chemical.spray_chemicals" tal:attributes="
+                                                hx-delete string:/administration/chemicals/${chemical.id};
+                                                hx-confirm string:Are you sure you want to delete chemical '${chemical.name}'? This action cannot be undone.;
+                                                data-chemical-name chemical.name" hx-target="body" hx-swap="outerHTML"
+                                            hx-push-url="true" title="Delete Chemical">
+                                            <span class="icon is-small">
+                                                <i class="fas fa-trash"></i>
+                                            </span>
+                                        </button>
+                                        <!-- Show warning if chemical is in use -->
+                                        <button class="button is-small is-light"
+                                            tal:condition="chemical.spray_chemicals"
+                                            title="Cannot delete - chemical is used in spray programs" disabled>
+                                            <span class="icon is-small">
+                                                <i class="fas fa-lock"></i>
+                                            </span>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- Empty state -->
+                            <tr tal:condition="not chemicals">
+                                <td colspan="5" class="has-text-centered">
+                                    <div class="content">
+                                        <p class="has-text-grey">
+                                            <span class="icon">
+                                                <i class="fas fa-flask fa-2x"></i>
+                                            </span>
+                                        </p>
+                                        <p class="has-text-grey">No chemicals found</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>

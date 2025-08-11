@@ -18,13 +18,16 @@ from auth.permissions_decorators import (
 )
 from data.user import User, UserRole
 from dependencies import get_current_user, get_session
-from services import user_service
+from services import chemical_service, user_service
 from services.user_service import get_users_by_role
 from viewmodels.admin.admin_viewmodels import (
     AdminDashboardViewModel,
+    ChemicalManagementViewModel,
     SprayProgressReportViewModel,
     UserManagementViewModel,
 )
+from viewmodels.chemicals.create_viewmodel import CreateChemicalViewModel
+from viewmodels.chemicals.edit_viewmodel import EditChemicalViewModel
 from viewmodels.user.create_viewmodel import CreateUserViewModel
 from viewmodels.user.edit_viewmodel import EditUserViewModel
 
@@ -340,3 +343,217 @@ async def delete_user(
     session.delete(user)
     session.commit()
     return {"message": "User deleted successfully"}
+
+
+################## CHEMICAL MANAGEMENT ROUTES ###############################
+
+
+@router.get("/chemicals", response_class=HTMLResponse, include_in_schema=False)
+@fastapi_chameleon.template("admin/chemicals.pt")
+@require_admin()
+async def manage_chemicals(
+    request: Request,
+    session: Session = Depends(get_session),
+    search: Optional[str] = None,
+    group_filter: Optional[str] = None,
+    success: str = "",
+):
+    """Chemical management page - accessible to admins and superadmins"""
+    try:
+        vm = ChemicalManagementViewModel(
+            request, session, search, group_filter, success=success
+        )
+        return vm.to_dict()
+    except PermissionError as e:
+        if "Login required" in str(e):
+            return RedirectResponse(url="/account/login", status_code=302)
+        else:
+            return RedirectResponse(url="/unauthorised", status_code=302)
+
+
+@router.get("/chemicals/table", response_class=HTMLResponse, include_in_schema=False)
+@fastapi_chameleon.template("admin/_chemicals_table.pt")
+@require_admin()
+async def chemicals_table_htmx(
+    request: Request,
+    session: Session = Depends(get_session),
+    search: Optional[str] = None,
+    group_filter: Optional[str] = None,
+):
+    """HTMX endpoint for chemical table content"""
+    try:
+        vm = ChemicalManagementViewModel(request, session, search, group_filter)
+        return vm.to_dict()
+    except PermissionError as e:
+        if "Login required" in str(e):
+            return RedirectResponse(url="/account/login", status_code=302)
+        else:
+            return RedirectResponse(url="/unauthorised", status_code=302)
+
+
+@router.get("/chemicals/new")
+@require_admin()
+@fastapi_chameleon.template("admin/chemical_form.pt")
+async def chemicals_new_get(request: Request, session: Session = Depends(get_session)):
+    """Display form for creating a new chemical"""
+    vm = CreateChemicalViewModel(request, session)
+
+    if not vm:
+        raise HTTPException(status_code=404, detail="No view model.")
+    if vm.error:
+        print(vm.error)
+        return vm.to_dict()
+    return vm.to_dict()
+
+
+@router.post("/chemicals/new")
+@require_admin()
+@fastapi_chameleon.template("admin/chemical_form.pt")
+async def chemicals_new_post(
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    vm = CreateChemicalViewModel(request, session)
+
+    if not vm:
+        raise HTTPException(status_code=404, detail="No view model.")
+
+    await vm.load()
+
+    if vm.error:
+        print(vm.error)
+        return vm.to_dict()
+
+    ic(vm)
+
+    chemical = chemical_service.create_chemical(
+        session=session,
+        name=vm.name,
+        active_ingredient=vm.active_ingredient,
+        rate_per_100l=vm.rate_per_100l,
+        rate_unit=vm.rate_unit,
+        chemical_group_ids=vm.chemical_group_ids,
+    )
+
+    if chemical:
+        # Redirect back to chemical management with success message
+        params = urlencode({"success": "Chemical created successfully"})
+        response = RedirectResponse(
+            url=f"/administration/chemicals?{params}",
+            status_code=303,
+        )
+        response.headers["HX-Push-Url"] = "/administration/chemicals"
+        return response
+
+    # Return form with errors
+    return vm.to_dict()
+
+
+@router.get("/chemicals/{chemical_id}/edit")
+@require_admin()
+@fastapi_chameleon.template("admin/edit_chemical_form.pt")
+async def chemicals_edit_get(
+    request: Request, chemical_id: int, session: Session = Depends(get_session)
+):
+    """Display form for editing an existing chemical"""
+    vm = EditChemicalViewModel(request, session, chemical_id)
+    ic(vm)
+    if not vm:
+        raise HTTPException(status_code=404, detail="No view model.")
+    if vm.error:
+        print(vm.error)
+        return vm.to_dict()
+    return vm.to_dict()
+
+
+@router.post("/chemicals/{chemical_id}/edit")
+@require_admin()
+@fastapi_chameleon.template("admin/edit_chemical_form.pt")
+async def chemicals_edit_post(
+    request: Request,
+    chemical_id: int,
+    session: Session = Depends(get_session),
+):
+    vm = EditChemicalViewModel(request, session, chemical_id)
+
+    if not vm:
+        raise HTTPException(status_code=404, detail="No view model.")
+
+    await vm.load()
+
+    if vm.error:
+        print(vm.error)
+        return vm.to_dict()
+
+    ic(vm)
+
+    # Update the chemical
+    updated_chemical = chemical_service.update_chemical(
+        session=session,
+        chemical_id=chemical_id,
+        name=vm.name,
+        active_ingredient=vm.active_ingredient,
+        rate_per_100l=vm.rate_per_100l,
+        rate_unit=vm.rate_unit,
+        chemical_group_ids=vm.chemical_group_ids,
+    )
+
+    if updated_chemical:
+        # Redirect back to chemical management with success message
+        params = urlencode({"success": "Chemical updated successfully"})
+        response = RedirectResponse(
+            url=f"/administration/chemicals?{params}",
+            status_code=303,
+        )
+        response.headers["HX-Push-Url"] = "/administration/chemicals"
+        return response
+
+    # Return form with errors
+    vm.error = "Failed to update chemical"
+    return vm.to_dict()
+
+
+@router.delete("/chemicals/{chemical_id}")
+@require_admin()
+@fastapi_chameleon.template("admin/chemicals.pt")
+async def chemicals_delete(
+    request: Request,
+    chemical_id: int,
+    session: Session = Depends(get_session),
+):
+    """Delete a chemical"""
+    vm = ChemicalManagementViewModel(request, session)
+
+    if not vm:
+        raise HTTPException(status_code=404, detail="No view model.")
+
+    # Get the chemical to delete
+    chemical_to_delete = chemical_service.get_chemical_by_id(session, chemical_id)
+    if not chemical_to_delete:
+        vm.error = "Chemical not found"
+        return vm.to_dict()
+
+    # Security checks - check if chemical is in use
+    if chemical_to_delete.spray_chemicals:
+        vm.error = f"Chemical '{chemical_to_delete.name}' cannot be deleted because it is used in spray programs."
+        return vm.to_dict()
+
+    # Attempt to delete the chemical
+    try:
+        deleted = chemical_service.delete_chemical(session, chemical_id)
+        if not deleted:
+            vm.error = "Failed to delete chemical"
+    except Exception as e:
+        print(f"Error deleting chemical: {e}")
+        vm.error = "An error occurred while deleting the chemical"
+
+    vm = ChemicalManagementViewModel(request, session)
+
+    if not vm:
+        raise HTTPException(status_code=404, detail="No view model.")
+
+    vm.set_success(
+        message=f"Chemical '{chemical_to_delete.name}' has been deleted successfully"
+    )
+
+    return vm.to_dict()

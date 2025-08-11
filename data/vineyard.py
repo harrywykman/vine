@@ -84,7 +84,7 @@ class Variety(SQLModel, table=True):
 
     id: Optional[int] = Field(default=None, primary_key=True)
     name: str = Field(index=True, unique=True)  # e.g. "Cabernet Sauvignon"
-    wine_colour_id: int = Field(foreign_key="wine_colours.id")
+    wine_colour_id: int = Field(foreign_key="wine_colours.id", index=True)
 
     wine_colour: "WineColour" = Relationship(back_populates="varieties")
     management_units: List["ManagementUnit"] = Relationship(back_populates="variety")
@@ -130,11 +130,11 @@ class ManagementUnit(SQLModel, table=True):
 
     spray_records: List["SprayRecord"] = Relationship(back_populates="management_unit")
 
-    variety_id: int | None = Field(default=None, foreign_key="varieties.id")
+    variety_id: int | None = Field(default=None, foreign_key="varieties.id", index=True)
     vineyard_id: int | None = Field(
-        default=None, foreign_key="vineyards.id", ondelete="CASCADE"
+        default=None, foreign_key="vineyards.id", ondelete="CASCADE", index=True
     )
-    status_id: int | None = Field(default=None, foreign_key="states.id")
+    status_id: int | None = Field(default=None, foreign_key="states.id", index=True)
 
     variety: Variety | None = Relationship(back_populates="management_units")
     vineyard: Vineyard | None = Relationship(back_populates="management_units")
@@ -257,9 +257,11 @@ class Spray(SQLModel, table=True):
         sa_column=sa.Column(sa.DateTime, default=datetime.datetime.now, index=True)
     )
 
-    growth_stage_id: int | None = Field(foreign_key="growth_stages.id")
+    growth_stage_id: int | None = Field(foreign_key="growth_stages.id", index=True)
 
-    spray_program_id: int = Field(foreign_key="spray_programs.id", nullable=False)
+    spray_program_id: int = Field(
+        foreign_key="spray_programs.id", nullable=False, index=True
+    )
 
     growth_stage: GrowthStage = Relationship(back_populates="sprays")
 
@@ -333,7 +335,7 @@ class SprayRecord(SQLModel, table=True):
             index=True,
         )
     )
-    growth_stage_id: int | None = Field(foreign_key="growth_stages.id")
+    growth_stage_id: int | None = Field(foreign_key="growth_stages.id", index=True)
     growth_stage: GrowthStage = Relationship(back_populates="spray_records")
     hours_taken: Decimal | None = Field(sa_column=sa.Column(sa.Numeric(2, 1)))
 
@@ -412,8 +414,10 @@ class SprayChemical(SQLModel, table=True):
     )
 
     id: Optional[int] = Field(default=None, primary_key=True)
-    spray_id: int = Field(foreign_key="sprays.id", nullable=False, ondelete="CASCADE")
-    chemical_id: int = Field(foreign_key="chemicals.id", nullable=False)
+    spray_id: int = Field(
+        foreign_key="sprays.id", nullable=False, ondelete="CASCADE", index=True
+    )
+    chemical_id: int = Field(foreign_key="chemicals.id", nullable=False, index=True)
     concentration_factor: Decimal = Field(
         default=1.00, max_digits=3, decimal_places=2, nullable=False
     )
@@ -434,13 +438,18 @@ class ChemicalGroupLink(SQLModel, table=True):
     __table_args__ = {"extend_existing": True}
 
     chemical_id: Optional[int] = Field(
-        default=None, foreign_key="chemicals.id", primary_key=True, ondelete="CASCADE"
+        default=None,
+        foreign_key="chemicals.id",
+        primary_key=True,
+        ondelete="CASCADE",
+        index=True,
     )
     group_id: Optional[int] = Field(
         default=None,
         foreign_key="chemical_groups.id",
         primary_key=True,
         ondelete="CASCADE",
+        index=True,
     )
 
 

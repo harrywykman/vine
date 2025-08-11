@@ -5,7 +5,15 @@ from fastapi import HTTPException
 from sqlalchemy.orm import selectinload
 from sqlmodel import Session, select
 
-from data.vineyard import ManagementUnit, SprayRecord, SprayRecordChemical, Variety
+from data.vineyard import (
+    Chemical,
+    ManagementUnit,
+    Spray,
+    SprayChemical,
+    SprayRecord,
+    SprayRecordChemical,
+    Variety,
+)
 
 
 def get_spray_record_by_id(session: Session, id: int) -> SprayRecord:
@@ -21,13 +29,20 @@ def eagerly_get_spray_record_by_id(id: int, session: Session) -> SprayRecord:
         select(SprayRecord)
         .where(SprayRecord.id == id)
         .options(
-            selectinload(SprayRecord.spray_record_chemicals).selectinload(
-                SprayRecordChemical.chemical
-            ),
+            selectinload(SprayRecord.spray_record_chemicals)
+            .selectinload(SprayRecordChemical.chemical)
+            .selectinload(Chemical.chemical_groups),
             selectinload(SprayRecord.management_unit)
             .selectinload(ManagementUnit.variety)
             .selectinload(Variety.wine_colour),
+            selectinload(SprayRecord.management_unit).selectinload(
+                ManagementUnit.vineyard
+            ),
             selectinload(SprayRecord.growth_stage),
+            selectinload(SprayRecord.operator),
+            selectinload(SprayRecord.spray)
+            .selectinload(Spray.spray_chemicals)
+            .selectinload(SprayChemical.chemical),
         )
     )
 

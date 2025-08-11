@@ -10,4 +10,4 @@ class ListViewModel(ViewModelBase):
     def __init__(self, request: Request, session: Session):
         super().__init__(request, session)
 
-        self.chemicals: list[Chemical] = chemical_service.all_chemicals(session)
+        self.chemicals: list[Chemical] = chemical_service.get_all_chemicals(session)

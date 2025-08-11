@@ -1,0 +1,173 @@
+<div metal:use-macro="load: ../shared/_layout.pt">
+    <div metal:fill-slot="content" tal:omit-tag="True">
+
+        <section class="section">
+            <div class="container">
+                <div class="level">
+                    <div class="level-left">
+                        <div class="level-item">
+                            <h1 class="title">Edit Chemical</h1>
+                        </div>
+                    </div>
+                    <div class="level-right">
+                        <div class="level-item">
+                            <a hx-get="/administration/chemicals" hx-target="body" hx-swap="outerHTML"
+                                hx-push-url="true" class="button loading-button">
+                                <span class="icon loading-spinner">
+                                    <i class="fas fa-spinner"></i>
+                                </span>
+                                <span class="icon">
+                                    <i class="fas fa-arrow-left"></i>
+                                </span>
+                                <span class="normal-text">Back to Chemicals</span>
+                                <span class="loading-text">Loading...</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Edit Chemical Form -->
+                <div class="box">
+
+                    <!-- Error Message -->
+                    <div tal:condition="error" class="notification is-danger">
+                        <p tal:content="error">Error message</p>
+                    </div>
+
+                    <form tal:attributes="hx-post string:/administration/chemicals/${chemical_id}/edit" hx-target="body"
+                        hx-swap="outerHTML" hx-push-url="true">
+
+                        <div class="columns">
+                            <div class="column is-half">
+                                <!-- Name Field -->
+                                <div class="field">
+                                    <label class="label">Chemical Name</label>
+                                    <div class="control has-icons-left">
+                                        <input class="input" type="text" name="name" placeholder="Enter chemical name"
+                                            tal:attributes="value name" required>
+                                        <span class="icon is-left">
+                                            <i class="fas fa-flask"></i>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <!-- Active Ingredient Field -->
+                                <div class="field">
+                                    <label class="label">Active Ingredient</label>
+                                    <div class="control has-icons-left">
+                                        <input class="input" type="text" name="active_ingredient"
+                                            placeholder="Enter active ingredient"
+                                            tal:attributes="value active_ingredient" required>
+                                        <span class="icon is-left">
+                                            <i class="fas fa-atom"></i>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <!-- Rate per 100L Field -->
+                                <div class="field">
+                                    <label class="label">Rate per 100L</label>
+                                    <div class="control has-icons-left">
+                                        <input class="input" type="number" name="rate_per_100l"
+                                            placeholder="Enter rate (optional)" min="1"
+                                            tal:attributes="value rate_per_100l">
+                                        <span class="icon is-left">
+                                            <i class="fas fa-tint"></i>
+                                        </span>
+                                    </div>
+                                    <p class="help">Optional - leave blank if not applicable</p>
+                                </div>
+
+                                <!-- Rate Unit Field -->
+                                <div class="field">
+                                    <label class="label">Rate Unit</label>
+                                    <div class="control has-icons-left">
+                                        <div class="select is-fullwidth">
+                                            <select name="rate_unit" required>
+                                                <option tal:repeat="unit available_rate_units"
+                                                    tal:attributes="value unit; selected python: unit == rate_unit"
+                                                    tal:content="unit">Unit</option>
+                                            </select>
+                                        </div>
+                                        <span class="icon is-left">
+                                            <i class="fas fa-balance-scale"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="column is-half">
+                                <!-- Chemical Groups Field -->
+                                <div class="field">
+                                    <label class="label">Chemical Groups</label>
+                                    <div class="control">
+                                        <div class="box" style="max-height: 200px; overflow-y: auto;">
+                                            <div tal:repeat="group available_chemical_groups" class="field">
+                                                <label class="checkbox">
+                                                    <input type="checkbox"
+                                                        tal:attributes="name string:chemical_group_${group.id}; 
+                                                                        value group.id;
+                                                                        checked python: group.id in chemical_group_ids">
+                                                    <span tal:content="group.name">Group Name</span>
+                                                    <span class="tag is-small is-light ml-2"
+                                                        tal:content="group.type.value">Type</span>
+                                                </label>
+                                            </div>
+                                            <div tal:condition="not available_chemical_groups" class="has-text-grey">
+                                                No chemical groups available
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <p class="help">Select all applicable chemical groups</p>
+                                </div>
+
+                                <!-- Usage Information -->
+                                <div class="field" tal:condition="existing_chemical">
+                                    <div class="content">
+                                        <p class="is-size-7 has-text-grey">
+                                            <strong>Usage Information:</strong><br>
+                                            <span tal:condition="existing_chemical.spray_chemicals">
+                                                This chemical is used in <strong
+                                                    tal:content="python: len(existing_chemical.spray_chemicals)">0</strong>
+                                                spray program(s).
+                                            </span>
+                                            <span tal:condition="not existing_chemical.spray_chemicals">
+                                                This chemical is not currently used in any spray programs.
+                                            </span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Form Actions -->
+                        <div class="field is-grouped is-grouped-right">
+                            <div class="control">
+                                <button type="button" hx-get="/administration/chemicals" hx-target="body"
+                                    hx-swap="outerHTML" hx-push-url="true" class="button loading-button">
+                                    <span class="icon loading-spinner">
+                                        <i class="fas fa-spinner"></i>
+                                    </span>
+                                    <span class="normal-text">Cancel</span>
+                                    <span class="loading-text">Loading...</span>
+                                </button>
+                            </div>
+                            <div class="control">
+                                <button type="submit" class="button is-primary loading-button">
+                                    <span class="icon loading-spinner">
+                                        <i class="fas fa-spinner"></i>
+                                    </span>
+                                    <span class="icon">
+                                        <i class="fas fa-flask"></i>
+                                    </span>
+                                    <span class="normal-text">Update Chemical</span>
+                                    <span class="loading-text">Updating...</span>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>

@@ -6,7 +6,7 @@ from sqlmodel import or_, select
 from starlette.requests import Request
 
 from data.user import User, UserRole
-from data.vineyard import SprayRecord, Vineyard
+from data.vineyard import Chemical, ChemicalGroup, SprayRecord, Vineyard
 from services import spray_service, vineyard_service
 from services.user_service import get_users_by_role
 from viewmodels.shared.viewmodel import ViewModelBase
@@ -99,6 +99,54 @@ class UserManagementViewModel(ViewModelBase):
 
         if success:
             self.set_success(message=success)
+
+
+class ChemicalManagementViewModel(ViewModelBase):
+    def __init__(
+        self,
+        request: Request,
+        session: Session,
+        search: Optional[str] = None,
+        group_filter: Optional[str] = None,
+        success: str = "",
+    ):
+        super().__init__(request, session)
+
+        self.require_permission(UserRole.ADMIN)
+
+        self.search = search
+        self.group_filter = group_filter
+        self.success = success
+
+        # Get all chemical groups for filter dropdown
+        self.available_groups = session.exec(select(ChemicalGroup)).all()
+
+        # Get filtered chemicals
+        self.chemicals = self._get_filtered_chemicals()
+
+    def _get_filtered_chemicals(self) -> List[Chemical]:
+        """Get chemicals based on search and filter criteria"""
+        query = select(Chemical)
+
+        # Apply search filter
+        if self.search and self.search.strip():
+            search_term = f"%{self.search.strip()}%"
+            query = query.where(
+                or_(
+                    Chemical.name.ilike(search_term),
+                    Chemical.active_ingredient.ilike(search_term),
+                )
+            )
+
+        # Apply group filter
+        if self.group_filter and self.group_filter.strip():
+            # Join with chemical groups through the many-to-many relationship
+            query = query.join(Chemical.chemical_groups).where(
+                ChemicalGroup.id == int(self.group_filter)
+            )
+
+        chemicals = self.session.exec(query).all()
+        return sorted(chemicals, key=lambda x: x.name.lower())
 
 
 class SystemAdminViewModel(ViewModelBase):
