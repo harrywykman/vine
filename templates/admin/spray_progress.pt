@@ -3,59 +3,230 @@
 
         <section class="section">
             <div class="container">
-                <h1 class="title is-3 has-text-light">Spray Season Progress</h1>
+                <div class="level">
+                    <div class="level-left">
+                        <div class="level-item">
+                            <h1 class="title">Spray Season Progress</h1>
+                        </div>
+                    </div>
+                    <div class="level-right">
+                        <div class="level-item">
+                            <a hx-get="/administration/dashboard" hx-target="body" hx-swap="outerHTML"
+                                hx-push-url="true" class="button loading-button">
+                                <span class="icon loading-spinner">
+                                    <i class="fas fa-spinner"></i>
+                                </span>
+                                <span class="icon">
+                                    <i class="fas fa-arrow-left"></i>
+                                </span>
+                                <span class="normal-text">Back to Dashboard</span>
+                                <span class="loading-text">Loading...</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
 
-                <div class="table-container">
-                    <table
-                        class="table is-scrollable is-bordered is-striped is-narrow is-hoverable is-fullwidth has-background-dark has-text-light">
-                        <thead>
-                            <tr>
-                                <th class="has-text-light">Vineyard / Management Unit</th>
-                                <th tal:repeat="program sprays" class="has-text-light">
-                                    ${program.name}
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tal:block tal:repeat="vineyard vineyards">
-                                <!-- Vineyard Row -->
-                                <tr class="has-background-grey-darker">
-                                    <td colspan="${1 + len(sprays)}">
-                                        <strong class="has-text-white">${vineyard.name}</strong>
-                                    </td>
+                <!-- Spray Program Selector -->
+                <div class="box mb-5" tal:condition="all_spray_programs">
+                    <div class="field">
+                        <label class="label">Spray Program</label>
+                        <div class="control">
+                            <div class="select is-fullwidth">
+                                <select hx-get="/administration/reports/spray_progress" hx-target="body"
+                                    hx-swap="outerHTML" hx-push-url="true" name="spray_program_id">
+                                    <option tal:repeat="program all_spray_programs"
+                                        tal:attributes="value program.id; selected python: program.id == (selected_spray_program.id if selected_spray_program else None)"
+                                        tal:content="program">Program Name</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Progress Overview Stats -->
+                <div class="columns is-multiline mb-5">
+                    <div class="column is-3">
+                        <div class="box has-text-centered">
+                            <p class="heading">Total Sprays</p>
+                            <p class="title is-3 has-text-primary" tal:content="python: len(sprays)">0</p>
+                        </div>
+                    </div>
+                    <div class="column is-3">
+                        <div class="box has-text-centered">
+                            <p class="heading">Management Units</p>
+                            <p class="title is-3 has-text-info"
+                                tal:content="python: sum(v.total_management_units_count for v in vineyards)">0</p>
+                        </div>
+                    </div>
+                    <div class="column is-3">
+                        <div class="box has-text-centered">
+                            <p class="heading">Completed Sprays</p>
+                            <p class="title is-3 has-text-success"
+                                tal:content="python: sum(1 for records in spray_lookup.values() for record in [records] if record and record.complete)">
+                                0</p>
+                        </div>
+                    </div>
+                    <div class="column is-3">
+                        <div class="box has-text-centered">
+                            <p class="heading">Pending Sprays</p>
+                            <p class="title is-3 has-text-warning"
+                                tal:content="python: sum(1 for records in spray_lookup.values() for record in [records] if record and not record.complete)">
+                                0</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Progress Table -->
+                <div class="box">
+                    <div class="table-container">
+                        <table class="table is-fullwidth is-striped is-hoverable">
+                            <thead>
+                                <tr>
+                                    <th class="is-narrow">
+                                        <span class="icon-text">
+                                            <span class="icon">
+                                                <i class="fas fa-map-marker-alt"></i>
+                                            </span>
+                                            <span>Vineyard / Management Unit</span>
+                                        </span>
+                                    </th>
+                                    <th tal:repeat="program sprays" class="has-text-centered">
+                                        <div class="is-flex is-flex-direction-column is-align-items-center">
+                                            <span class="icon">
+                                                <i class="fas fa-spray-can"></i>
+                                            </span>
+                                            <span tal:content="program.name">Program</span>
+                                        </div>
+                                    </th>
                                 </tr>
+                            </thead>
+                            <tbody>
+                                <tal:block tal:repeat="vineyard vineyards">
+                                    <!-- Vineyard Header Row -->
+                                    <tr class="has-background-dark">
+                                        <td tal:attributes="colspan python: 1 + len(sprays)">
+                                            <strong class="icon-text has-text-white">
+                                                <span class="icon has-text-primary">
+                                                    <i class="fas fa-seedling"></i>
+                                                </span>
+                                                <span tal:content="vineyard.name">Vineyard Name</span>
+                                            </strong>
+                                        </td>
+                                    </tr>
 
-                                <!-- Management Units -->
-                                <tr tal:repeat="unit vineyard.management_units">
-                                    <td>
-                                        <span class="ml-4 has-text-light">${unit.name_with_variety}</span>
-                                    </td>
-                                    <td tal:repeat="program sprays">
-                                        <div tal:define="record spray_lookup.get((unit.id, program.id))">
+                                    <!-- Management Unit Rows -->
+                                    <tr tal:repeat="unit vineyard.management_units">
+                                        <td class="is-narrow">
+                                            <div class="ml-4">
+                                                <span class="icon-text">
+                                                    <!-- Inactive units -->
+                                                    <span tal:condition="not unit.is_active" class="icon has-text-grey"
+                                                        tal:attributes="title unit.wine_bottle_tooltip">
+                                                        <i class="fas fa-wine-bottle"></i>
+                                                    </span>
 
-                                            <!-- Complete -->
-                                            <span tal:condition="record and record.complete" class="tag is-success">
-                                                <span class="icon is-small"><i class="fas fa-check-circle"></i></span>
-                                                <span>${record.formatted_date_completed}</span>
-                                            </span>
+                                                    <!-- Active red wine units -->
+                                                    <span tal:condition="unit.is_active and unit.is_red_wine"
+                                                        class="icon has-text-danger"
+                                                        tal:attributes="title unit.wine_bottle_tooltip">
+                                                        <i class="fas fa-wine-bottle"></i>
+                                                    </span>
 
-                                            <!-- Pending -->
-                                            <span tal:condition="record and not record.complete" class="tag is-warning">
-                                                <span class="icon is-small"><i class="fas fa-hourglass-half"></i></span>
-                                                <span>Spray pending</span>
-                                            </span>
+                                                    <!-- Active white wine units -->
+                                                    <span tal:condition="unit.is_active and unit.is_white_wine"
+                                                        class="icon has-text-light"
+                                                        tal:attributes="title unit.wine_bottle_tooltip">
+                                                        <i class="fas fa-wine-bottle"></i>
+                                                    </span>
 
-                                            <!-- Unassigned -->
-                                            <span tal:condition="not record" class="is-dark has-text-centered">
-                                                <p>-</p>
-                                            </span>
+                                                    <!-- Active units with unknown/other wine color -->
+                                                    <span tal:condition="unit.is_active and not unit.has_wine_colour"
+                                                        class="icon has-text-info"
+                                                        tal:attributes="title unit.wine_bottle_tooltip">
+                                                        <i class="fas fa-wine-bottle"></i>
+                                                    </span>
 
+                                                    <span tal:content="unit.name_with_variety">Management Unit</span>
+                                                </span>
+                                            </div>
+                                        </td>
+                                        <td tal:repeat="program sprays" class="has-text-centered">
+                                            <div tal:define="record spray_lookup.get((unit.id, program.id))">
+
+                                                <!-- Complete -->
+                                                <div tal:condition="record and record.complete">
+                                                    <span class="tag is-success">
+                                                        <span class="icon is-small">
+                                                            <i class="fas fa-check-circle"></i>
+                                                        </span>
+                                                        <span tal:content="record.formatted_date_completed">Date</span>
+                                                    </span>
+                                                </div>
+
+                                                <!-- Pending -->
+                                                <div tal:condition="record and not record.complete">
+                                                    <span class="tag is-warning">
+                                                        <span class="icon is-small">
+                                                            <i class="fas fa-clock"></i>
+                                                        </span>
+                                                        <span>Pending</span>
+                                                    </span>
+                                                </div>
+
+                                                <!-- Unassigned -->
+                                                <div tal:condition="not record" class="has-text-grey has-text-centered">
+                                                    <span>-</span>
+                                                </div>
+
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tal:block>
+
+                                <!-- Empty state -->
+                                <tr tal:condition="not vineyards">
+                                    <td tal:attributes="colspan python: 1 + len(sprays)" class="has-text-centered">
+                                        <div class="content">
+                                            <p class="has-text-grey">
+                                                <span class="icon">
+                                                    <i class="fas fa-wine-bottle fa-2x"></i>
+                                                </span>
+                                            </p>
+                                            <p class="has-text-grey">No vineyards or management units found</p>
                                         </div>
                                     </td>
                                 </tr>
-                            </tal:block>
-                        </tbody>
-                    </table>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Legend -->
+                <div class="box">
+                    <h2 class="subtitle">Status Legend</h2>
+                    <div class="columns">
+                        <div class="column">
+                            <div class="content">
+                                <div class="tags">
+                                    <span class="tag is-success">
+                                        <span class="icon is-small">
+                                            <i class="fas fa-check-circle"></i>
+                                        </span>
+                                        <span>Completed</span>
+                                    </span>
+                                    <span class="tag is-warning">
+                                        <span class="icon is-small">
+                                            <i class="fas fa-clock"></i>
+                                        </span>
+                                        <span>Pending</span>
+                                    </span>
+                                    <span class="has-text-grey">
+                                        <span>-</span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>

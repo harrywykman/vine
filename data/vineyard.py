@@ -48,6 +48,41 @@ class Vineyard(SQLModel, table=True):
         return None
 
     @property
+    def has_active_management_units(self) -> bool:
+        """
+        Returns True if this vineyard has any active management units.
+        """
+        return any(unit.is_active for unit in self.management_units)
+
+    @property
+    def has_red_wine_units(self) -> bool:
+        """
+        Returns True if this vineyard has any red wine management units.
+        """
+        return any(unit.is_red_wine for unit in self.management_units)
+
+    @property
+    def has_white_wine_units(self) -> bool:
+        """
+        Returns True if this vineyard has any white wine management units.
+        """
+        return any(unit.is_white_wine for unit in self.management_units)
+
+    @property
+    def active_management_units_count(self) -> int:
+        """
+        Returns the count of active management units in this vineyard.
+        """
+        return sum(1 for unit in self.management_units if unit.is_active)
+
+    @property
+    def total_management_units_count(self) -> int:
+        """
+        Returns the total count of management units in this vineyard.
+        """
+        return len(self.management_units)
+
+    @property
     def centroid(self):
         """Calculate the centroid of the vineyard boundary for Leaflet setView"""
         if self.boundary:
@@ -175,6 +210,50 @@ class ManagementUnit(SQLModel, table=True):
 
             polygon = Polygon(coordinates)
             self.area_polygon = from_shape(polygon, srid=4326)
+
+    @property
+    def is_red_wine(self) -> bool:
+        """
+        Returns True if this management unit grows red wine varieties.
+        """
+        return (
+            self.variety
+            and self.variety.wine_colour
+            and self.variety.wine_colour.is_red()
+        )
+
+    @property
+    def is_white_wine(self) -> bool:
+        """
+        Returns True if this management unit grows white wine varieties.
+        """
+        return (
+            self.variety
+            and self.variety.wine_colour
+            and self.variety.wine_colour.is_white()
+        )
+
+    @property
+    def has_wine_colour(self) -> bool:
+        """
+        Returns True if this management unit has a variety with a defined wine colour.
+        """
+        return self.variety and self.variety.wine_colour is not None
+
+    @property
+    def wine_bottle_tooltip(self) -> str:
+        """
+        Returns a tooltip description for the wine bottle icon.
+        """
+        if not self.is_active:
+            return (
+                f"Inactive - {self.variety.name if self.variety else 'Unknown variety'}"
+            )
+
+        if self.variety and self.variety.wine_colour:
+            return f"{self.variety.wine_colour.name} wine - {self.variety.name}"
+
+        return "Active management unit"
 
 
 class WineColour(SQLModel, table=True):

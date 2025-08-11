@@ -55,10 +55,11 @@ async def admin_dashboard(request: Request, session: Session = Depends(get_sessi
 @require_admin()
 @fastapi_chameleon.template("admin/spray_progress.pt")
 async def spray_progress_report(
-    request: Request, session: Session = Depends(get_session)
+    request: Request,
+    session: Session = Depends(get_session),
+    spray_program_id: Optional[int] = None,
 ):
-    vm = SprayProgressReportViewModel(request, session)
-
+    vm = SprayProgressReportViewModel(request, session, spray_program_id)
     return vm.to_dict()
 
 

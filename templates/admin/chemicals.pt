@@ -115,8 +115,7 @@
                                         <span tal:repeat="group chemical.chemical_groups" class="tag is-small"
                                             tal:attributes="class python: f'tag is-small is-{group.type.value.lower()}' if hasattr(group, 'type') and group.type else 'tag is-small'"
                                             tal:content="group.name">Group</span>
-                                        <span tal:condition="not chemical.chemical_groups"
-                                            class="tag is-light is-small">
+                                        <span tal:condition="not chemical.chemical_groups" class="tag is-small">
                                             No groups
                                         </span>
                                     </div>

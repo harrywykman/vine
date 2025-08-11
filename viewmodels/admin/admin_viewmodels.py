@@ -6,8 +6,15 @@ from sqlmodel import or_, select
 from starlette.requests import Request
 
 from data.user import User, UserRole
-from data.vineyard import Chemical, ChemicalGroup, SprayRecord, Vineyard
-from services import spray_service, vineyard_service
+from data.vineyard import (
+    Chemical,
+    ChemicalGroup,
+    Spray,
+    SprayProgram,
+    SprayRecord,
+    Vineyard,
+)
+from services import vineyard_service
 from services.user_service import get_users_by_role
 from viewmodels.shared.viewmodel import ViewModelBase
 
@@ -35,19 +42,63 @@ class AdminDashboardViewModel(ViewModelBase):
 
 
 class SprayProgressReportViewModel(ViewModelBase):
-    def __init__(self, request: Request, session: Session):
+    def __init__(
+        self, request: Request, session: Session, spray_program_id: Optional[int] = None
+    ):
         super().__init__(request, session)
-
         # Ensure user has admin permissions
         self.require_permission(UserRole.ADMIN)
 
+        # Get all vineyards
         self.vineyards: List[Vineyard] = vineyard_service.all_vineyards(session)
 
-        # self.vineyards = session.exec(select(Vineyard).order_by(Vineyard.name)).all()
-        self.sprays = spray_service.eagerly_get_all_sprays(session)
+        # Get all spray programs for dropdown (ordered by most recent first)
+        self.all_spray_programs = session.exec(
+            select(SprayProgram).order_by(
+                SprayProgram.year_start.desc(), SprayProgram.date_created.desc()
+            )
+        ).all()
 
-        # Build lookup: {(management_unit_id, spray_id): SprayRecord}
-        self.spray_records = session.exec(select(SprayRecord)).all()
+        # Determine which spray program to use
+        if spray_program_id:
+            # Use specified spray program
+            selected_program = session.get(SprayProgram, spray_program_id)
+            if not selected_program:
+                # Fallback to most recent if specified program doesn't exist
+                selected_program = (
+                    self.all_spray_programs[0] if self.all_spray_programs else None
+                )
+        else:
+            # Default to most recent spray program
+            selected_program = (
+                self.all_spray_programs[0] if self.all_spray_programs else None
+            )
+
+        self.selected_spray_program = selected_program
+
+        # Get sprays for selected program only
+        if selected_program:
+            self.sprays = session.exec(
+                select(Spray)
+                .where(Spray.spray_program_id == selected_program.id)
+                .order_by(Spray.name)
+            ).all()
+
+            # Build lookup: {(management_unit_id, spray_id): SprayRecord}
+            # Only include spray records for this program's sprays
+            spray_ids = [spray.id for spray in self.sprays]
+
+            if spray_ids:
+                self.spray_records = session.exec(
+                    select(SprayRecord).where(SprayRecord.spray_id.in_(spray_ids))
+                ).all()
+            else:
+                self.spray_records = []
+        else:
+            # No spray programs exist
+            self.sprays = []
+            self.spray_records = []
+
         self.spray_lookup = {
             (rec.management_unit_id, rec.spray_id): rec for rec in self.spray_records
         }
