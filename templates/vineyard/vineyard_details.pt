@@ -320,7 +320,7 @@
                                             <tr>
                                                 <td>
                                                     <strong>
-                                                        <a href="/vineyards/${vineyard.id}/spray_records/${sp.id}">${sp.name}</a>
+                                                        <a href="/vineyards/${vineyard.id}/spray_records/${sp.id}/new">${sp.name}</a>
                                                     </strong>
                                                 </td>
                                                 <td>${sp.water_spray_rate_per_hectare} L</td>
@@ -353,7 +353,7 @@
                                     <div class="spray-details-mobile">
                                         <div class="spray-info-card">
                                             <h4 class="is-size-6 has-text-weight-semibold mb-2">
-                                                <a href="/vineyards/${vineyard.id}/spray_records/${sp.id}">${sp.name}</a>
+                                                <a href="/vineyards/${vineyard.id}/spray_records/${sp.id}/new">${sp.name}</a>
                                             </h4>
                                             <div class="columns is-mobile">
                                                 <div class="column">
@@ -379,7 +379,7 @@
 
                                 <!-- Create Spray Record Button -->
                                 <div class="section has-text-centered">
-                                    <a hx-get="/vineyards/${vineyard.id}/spray_records/${sp.id}" hx-target="body"
+                                    <a hx-get="/vineyards/${vineyard.id}/spray_records/${sp.id}/new" hx-target="body"
                                         hx-swap="outerHTML" hx-push-url="true"
                                         class="button is-primary is-outlined loading-button">
                                         <span class="icon loading-spinner">

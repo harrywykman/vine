@@ -4,27 +4,32 @@
         <div class="help is-success" tal:condition="info">${ info }</div>
         <div id="message-area"></div>
 
-        <form method="post" action="/vineyards/${vineyard_id}/spray_records/${spray_id}/submit">
+        <form method="post" action="/vineyards/${vineyard_id}/spray_records/${spray_id}/new">
 
             <div class="field">
                 <label class="label">Operator</label>
                 <div class="control">
                     <div class="select is-fullwidth">
                         <select name="operator_id" required>
-                            <option value="${operator.id}">${operator.name}</option>
-                            <option tal:repeat="operator operators" value="${operator.id}">${operator.name}</option>
+                            <option value="">-- Select Operator --</option>
+                            <option tal:repeat="op operators" tal:attributes="value op.id; 
+                                       selected python:op.id == operator.id if operator else False"
+                                tal:content="op.name">
+                            </option>
                         </select>
                     </div>
                 </div>
             </div>
 
-            <div class="field">
+            <div class=" field">
                 <label class="label">Growth Stage</label>
                 <div class="control">
                     <div class="select is-fullwidth">
                         <select name="growth_stage_id" required>
                             <option value="">-- Select Growth Stage --</option>
-                            <option tal:repeat="stage growth_stages" value="${stage.id}">${stage.el_number} –
+                            <option tal:repeat="stage growth_stages" value="${stage.id}"
+                                tal:attributes="selected python:stage.id == growth_stage_id if growth_stage_id else False">
+                                ${stage.el_number} –
                                 ${stage.description}</option>
                         </select>
                     </div>
@@ -37,7 +42,9 @@
                     <label class="label">${chem.name} Batch #</label>
                     <div class="control">
                         <input type="hidden" name="chemical_ids" value="${chem.id}" />
-                        <input class="input" type="text" name="batch_number_${chem.id}" required />
+                        <input class="input" type="text" name="batch_number_${chem.id}"
+                            tal:attributes="value python:form.get(f'batch_number_{chem.id}', '') if form else ''"
+                            required />
                     </div>
                 </div>
             </div>
@@ -45,28 +52,32 @@
             <div class="field">
                 <label class="label">Hours Taken</label>
                 <div class="control">
-                    <input class="input" type="number" name="hours_taken" step="0.1" min="0" />
+                    <input class="input" type="number" name="hours_taken" step="0.1" min="0"
+                        tal:attributes="value hours_taken" />
                 </div>
             </div>
 
             <div class="field">
                 <label class="label">Temperature (°C)</label>
                 <div class="control">
-                    <input class="input" type="number" name="temperature" step="1" min="-10" max="50" />
+                    <input class="input" type="number" name="temperature" step="1" min="-10" max="50"
+                        tal:attributes="value temperature" />
                 </div>
             </div>
 
             <div class="field">
                 <label class="label">Relative Humidity (%)</label>
                 <div class="control">
-                    <input class="input" type="number" name="relative_humidity" step="1" min="0" max="100" />
+                    <input class="input" type="number" name="relative_humidity" step="1" min="0" max="100"
+                        tal:attributes="value relative_humidity" />
                 </div>
             </div>
 
             <div class="field">
                 <label class="label">Wind Speed (km/h)</label>
                 <div class="control">
-                    <input class="input" type="number" name="wind_speed" step="1" min="0" />
+                    <input class="input" type="number" name="wind_speed" step="1" min="0"
+                        tal:attributes="value wind_speed" />
                 </div>
             </div>
 
@@ -76,7 +87,8 @@
                     <div class="select is-fullwidth">
                         <select name="wind_direction" required>
                             <option value="">-- Select Wind Direction --</option>
-                            <option tal:repeat="direction wind_directions" tal:attributes="value direction.name"
+                            <option tal:repeat="direction wind_directions" tal:attributes="value direction.name;
+                                       selected python:direction.name == wind_direction if wind_direction else False"
                                 tal:content="direction.name" />
                         </select>
                     </div>
@@ -105,7 +117,8 @@
                             <i class="fas fa-wine-bottle"
                                 tal:attributes="class python:'fas fa-wine-bottle has-text-danger' if spray_record.management_unit.variety.wine_colour.name == 'Red' else 'fas fa-wine-bottle has-text-grey'">
                             </i>&nbsp;
-                            ${spray_record.management_unit.name} &mdash; ${spray_record.management_unit.variety.name}
+                            ${spray_record.management_unit.name} &mdash;
+                            ${spray_record.management_unit.variety.name}
                         </label>
                     </div>
                     <div tal:repeat="spray_record spray_records" class="control">
@@ -115,7 +128,8 @@
                             <i class="fas fa-wine-bottle"
                                 tal:attributes="class python:'fas fa-wine-bottle has-text-danger' if spray_record.management_unit.variety.wine_colour.name == 'Red' else 'fas fa-wine-bottle has-text-grey'">
                             </i>&nbsp;
-                            ${spray_record.management_unit.name} &mdash; ${spray_record.management_unit.variety.name}
+                            ${spray_record.management_unit.name} &mdash;
+                            ${spray_record.management_unit.variety.name}
                             &mdash; Complete
                         </label>
                     </div>

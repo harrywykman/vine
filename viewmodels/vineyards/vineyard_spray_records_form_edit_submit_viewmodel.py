@@ -1,4 +1,3 @@
-import datetime
 from decimal import Decimal
 from typing import List
 
@@ -9,18 +8,17 @@ from data.user import User, UserRole
 from data.vineyard import (
     SprayChemical,
     SprayRecord,
-    SprayRecordChemical,
     WindDirection,
 )
-from services import user_service, vineyard_service
+from services import spray_record_service, user_service, vineyard_service
 from viewmodels.shared.viewmodel import ViewModelBase
 
 
-class VineyardSprayRecordsSubmitViewModel(ViewModelBase):
+class VineyardSprayRecordsEditSubmitViewModel(ViewModelBase):
     def __init__(
         self,
         vineyard_id: int,
-        spray_id: int,
+        spray_record_id,
         operator_id: str,
         growth_stage_id: int | None,
         hours_taken: Decimal | None,
@@ -34,8 +32,12 @@ class VineyardSprayRecordsSubmitViewModel(ViewModelBase):
     ):
         super().__init__(request, session)
 
+        self.spray_record = spray_record_service.get_spray_record_by_id(
+            session=self.session, id=spray_record_id
+        )
+        self.spray_record_id = spray_record_id
         self.vineyard_id = vineyard_id
-        self.spray_id = spray_id
+        self.spray_id = self.spray_record.spray_id
         self.operator_id = operator_id
         self.growth_stage_id = growth_stage_id
         self.hours_taken = hours_taken
@@ -53,11 +55,11 @@ class VineyardSprayRecordsSubmitViewModel(ViewModelBase):
             session=session, role=UserRole.OPERATOR
         )
         self.growth_stages = vineyard_service.all_growth_stages(session)
-        self.chemicals = vineyard_service.get_spray_chemicals(spray_id, session)
+        self.chemicals = vineyard_service.get_spray_chemicals(self.spray_id, session)
         self.wind_directions = list(WindDirection)
         self.spray_records: list[SprayRecord] = (
             vineyard_service.eagerly_get_vineyard_spray_spray_records(
-                self.session, self.vineyard_id, spray_id
+                self.session, self.vineyard_id, self.spray_id
             )
         )
 
@@ -78,7 +80,9 @@ class VineyardSprayRecordsSubmitViewModel(ViewModelBase):
 
         # Validate batch numbers
         program_chems = self.session.exec(
-            select(SprayChemical).where(SprayChemical.spray_id == self.spray_id)
+            select(SprayChemical)
+            .order_by(SprayChemical.id)
+            .where(SprayChemical.spray_id == self.spray_id)
         ).all()
 
         for pc in program_chems:
@@ -102,48 +106,19 @@ class VineyardSprayRecordsSubmitViewModel(ViewModelBase):
             for pc in program_chems
         }
 
-        for mu_id in self.management_unit_ids:
-            spray_record = self.session.exec(
-                select(SprayRecord).where(
-                    SprayRecord.management_unit_id == int(mu_id),
-                    SprayRecord.spray_id == self.spray_id,
-                )
-            ).first()
-
-            if not spray_record:
-                continue
-
-            spray_record.operator_id = self.operator_id
-            spray_record.growth_stage_id = self.growth_stage_id
-            spray_record.hours_taken = self.hours_taken
-            spray_record.temperature = self.temperature
-            spray_record.relative_humidity = self.relative_humidity
-            spray_record.wind_speed = self.wind_speed
-            spray_record.wind_direction = self.wd_enum
-            spray_record.complete = True
-            spray_record.date_completed = datetime.datetime.now()
-
-            for chem_id, batch_number in chem_batch_map.items():
-                # Ensure no duplicates added
-                existing: SprayRecordChemical = self.session.exec(
-                    select(SprayRecordChemical).where(
-                        SprayRecordChemical.spray_record_id == spray_record.id,
-                        SprayRecordChemical.chemical_id == chem_id,
-                    )
-                ).first()
-
-                if existing:
-                    existing.batch_number = batch_number
-                    src = existing
-                else:
-                    src = SprayRecordChemical(
-                        spray_record_id=spray_record.id,
-                        chemical_id=chem_id,
-                        batch_number=batch_number,
-                    )
-
-                self.session.add(src)
-
-            self.session.add(spray_record)
-
-        self.session.commit()
+        try:
+            spray_record_service.update_multiple_spray_records(
+                session=self.session,
+                spray_id=self.spray_id,
+                management_unit_ids=self.management_unit_ids,
+                operator_id=self.operator_id,
+                growth_stage_id=self.growth_stage_id,
+                hours_taken=self.hours_taken,
+                temperature=self.temperature,
+                relative_humidity=self.relative_humidity,
+                wind_speed=self.wind_speed,
+                wind_direction=self.wd_enum,
+                chem_batch_map=chem_batch_map,
+            )
+        except Exception as e:
+            self.error = f"Failed to update spray records: {e}"

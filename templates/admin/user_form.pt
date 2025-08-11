@@ -29,10 +29,10 @@
                 <!-- Create User Form -->
                 <div class="box">
 
-                    <!-- Success Message -->
+                    <!-- Success Message 
                     <div tal:condition="success_message" class="notification is-success">
                         <p tal:content="success_message">Success message</p>
-                    </div>
+                    </div>-->
 
                     <form hx-post="/administration/users/new" hx-target="body" hx-swap="outerHTML" hx-push-url="true">
 

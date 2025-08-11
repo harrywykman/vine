@@ -16,6 +16,9 @@ from viewmodels.vineyards.details_viewmodel import DetailsViewModel
 from viewmodels.vineyards.edit_mu_viewmodel import EditMUViewModel
 from viewmodels.vineyards.list_viewmodel import ListViewModel
 from viewmodels.vineyards.vineyard_spray_record_details import VineyardSprayRecordDetail
+from viewmodels.vineyards.vineyard_spray_records_form_edit_submit_viewmodel import (
+    VineyardSprayRecordsEditSubmitViewModel,
+)
 from viewmodels.vineyards.vineyard_spray_records_form_edit_viewmodel import (
     VineyardSprayRecordsFormEditViewModel,
 )
@@ -56,12 +59,12 @@ def vineyard_details(
 
 
 @router.get(
-    "/vineyards/{vineyard_id}/spray_records/{spray_id}",
+    "/vineyards/{vineyard_id}/spray_records/{spray_id}/new",
     response_class=HTMLResponse,
 )
 @require_operator()
 @fastapi_chameleon.template("vineyard/vineyard_spray_records_form.pt")
-def vineyard_spray_records_form(
+async def vineyard_spray_records_form(
     request: Request,
     vineyard_id: int,
     spray_id: int,
@@ -72,72 +75,7 @@ def vineyard_spray_records_form(
     return vm.to_dict()
 
 
-@router.get(
-    "/vineyards/{vineyard_id}/spray_records/{spray_record_id}/edit",
-    response_class=HTMLResponse,
-)
-@require_operator()
-@fastapi_chameleon.template("vineyard/vineyard_spray_records_form_edit.pt")
-def vineyard_spray_records_form_edit(
-    request: Request,
-    vineyard_id: int,
-    spray_record_id: int,
-    session: Session = Depends(get_session),
-):
-    vm = VineyardSprayRecordsFormEditViewModel(
-        vineyard_id, spray_record_id, request, session
-    )
-
-    return vm.to_dict()
-
-
-@router.get("/management_unit/{management_unit_id}/edit", response_class=HTMLResponse)
-@fastapi_chameleon.template("management_unit/edit_inline.pt")
-def mangement_unit_edit_inline(
-    request: Request, management_unit_id: int, session: Session = Depends(get_session)
-):
-    vm = EditMUViewModel(management_unit_id, request, session)
-
-    return vm.to_dict()
-
-
-@router.get("/management_unit/{management_unit_id}/view", response_class=HTMLResponse)
-@fastapi_chameleon.template("management_unit/display_row.pt")
-def mangement_unit_view_inline(
-    request: Request, management_unit_id: int, session: Session = Depends(get_session)
-):
-    vm = EditMUViewModel(management_unit_id, request, session)
-
-    return vm.to_dict()
-
-
-@router.get("/vineyards", response_class=HTMLResponse)
-@require_operator()
-@fastapi_chameleon.template("vineyard/vineyard_list.pt")
-async def vineyard_list(request: Request, session: Session = Depends(get_session)):
-    vm = ListViewModel(request, session)
-    return vm.to_dict()
-
-
-# Spray Record Detail
-@router.get("/vineyards/{vineyard_id}/spray_record/{spray_record_id}")
-@require_operator()
-@fastapi_chameleon.template("vineyard/vineyard_spray_record_detail.pt")
-async def spray_record_detail(
-    spray_record_id: int, request: Request, session: Session = Depends(get_session)
-):
-    vm = VineyardSprayRecordDetail(spray_record_id, request, session)
-
-    if not vm:
-        raise HTTPException(status_code=404, detail="No view model.")
-    if vm.error:
-        print(vm.error)
-        return vm.to_dict()
-
-    return vm.to_dict()
-
-
-@router.post("/vineyards/{vineyard_id}/spray_records/{spray_id}/submit")
+@router.post("/vineyards/{vineyard_id}/spray_records/{spray_id}/new")
 @require_operator()
 @fastapi_chameleon.template("vineyard/vineyard_spray_records_form.pt")
 async def submit_spray_records(
@@ -192,6 +130,132 @@ async def submit_spray_records(
     vm = VineyardSprayRecordsFormViewModel(vineyard_id, spray_id, request, session)
 
     vm.set_success("Successfully created spray record")
+
+    return vm.to_dict()
+
+
+@router.get(
+    "/vineyards/{vineyard_id}/spray_records/{spray_record_id}/edit",
+    response_class=HTMLResponse,
+)
+@require_operator()
+@fastapi_chameleon.template("vineyard/vineyard_spray_records_form_edit.pt")
+def vineyard_spray_records_form_edit(
+    request: Request,
+    vineyard_id: int,
+    spray_record_id: int,
+    session: Session = Depends(get_session),
+):
+    vm = VineyardSprayRecordsFormEditViewModel(
+        vineyard_id, spray_record_id, request, session
+    )
+
+    return vm.to_dict()
+
+
+@router.post("/vineyards/{vineyard_id}/spray_records/{spray_record_id}/edit")
+@require_operator()
+@fastapi_chameleon.template("vineyard/vineyard_spray_records_form_edit.pt")
+async def submit_spray_records(
+    request: Request,
+    vineyard_id: int,
+    spray_record_id: int,
+    operator_id: Annotated[int, Form()],
+    management_unit_ids: Annotated[Optional[list[int]], Form()] = None,
+    growth_stage_id: Annotated[Optional[int], Form()] = None,
+    hours_taken: Annotated[Optional[Decimal], Form()] = None,
+    temperature: Annotated[Optional[int], Form()] = None,
+    relative_humidity: Annotated[Optional[int], Form()] = None,
+    wind_speed: Annotated[Optional[int], Form()] = None,
+    wind_direction: Annotated[Optional[str], Form()] = None,
+    session: Session = Depends(get_session),
+):
+    vm = VineyardSprayRecordsEditSubmitViewModel(
+        vineyard_id=vineyard_id,
+        spray_record_id=spray_record_id,
+        operator_id=operator_id,
+        growth_stage_id=growth_stage_id,
+        hours_taken=hours_taken,
+        temperature=temperature,
+        relative_humidity=relative_humidity,
+        wind_speed=wind_speed,
+        wind_direction=wind_direction,
+        management_unit_ids=management_unit_ids,
+        request=request,
+        session=session,
+    )
+
+    await vm.load()
+
+    if not vm:
+        raise HTTPException(status_code=404, detail="No view model.")
+
+    if vm.error:
+        print(f"[Form Error] {vm.error}")
+        return vm.to_dict()  # Render back in template using Chameleon
+
+    vm.process_submission()
+
+    if vineyard_service.spray_complete_for_vineyard(
+        session=session, spray_id=vm.spray_id, vineyard_id=vineyard_id
+    ):
+        response = fastapi.responses.RedirectResponse(
+            f"/vineyards/{vineyard_id}",
+            status_code=status.HTTP_302_FOUND,
+        )
+        return response
+
+    vm = VineyardSprayRecordsFormEditViewModel(
+        vineyard_id, spray_record_id, request, session
+    )
+
+    vm.set_success("Spray record edited successfully")
+
+    return vm.to_dict()
+
+
+@router.get("/management_unit/{management_unit_id}/edit", response_class=HTMLResponse)
+@fastapi_chameleon.template("management_unit/edit_inline.pt")
+def mangement_unit_edit_inline(
+    request: Request, management_unit_id: int, session: Session = Depends(get_session)
+):
+    vm = EditMUViewModel(management_unit_id, request, session)
+
+    return vm.to_dict()
+
+
+@router.get("/management_unit/{management_unit_id}/view", response_class=HTMLResponse)
+@fastapi_chameleon.template("management_unit/display_row.pt")
+def mangement_unit_view_inline(
+    request: Request, management_unit_id: int, session: Session = Depends(get_session)
+):
+    vm = EditMUViewModel(management_unit_id, request, session)
+
+    return vm.to_dict()
+
+
+@router.get("/vineyards", response_class=HTMLResponse)
+@require_operator()
+@fastapi_chameleon.template("vineyard/vineyard_list.pt")
+async def vineyard_list(request: Request, session: Session = Depends(get_session)):
+    vm = ListViewModel(request, session)
+    return vm.to_dict()
+
+
+# Spray Record Detail
+@router.get("/vineyards/{vineyard_id}/spray_record/{spray_record_id}")
+@require_operator()
+@fastapi_chameleon.template("vineyard/vineyard_spray_record_detail.pt")
+async def spray_record_detail(
+    spray_record_id: int, request: Request, session: Session = Depends(get_session)
+):
+    vm = VineyardSprayRecordDetail(spray_record_id, request, session)
+
+    if not vm:
+        raise HTTPException(status_code=404, detail="No view model.")
+    if vm.error:
+        print(vm.error)
+        return vm.to_dict()
 
     return vm.to_dict()
 

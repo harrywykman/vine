@@ -1,3 +1,4 @@
+from decimal import Decimal
 from typing import List
 
 from icecream import ic
@@ -44,3 +45,13 @@ class VineyardSprayRecordsFormViewModel(ViewModelBase):
             )
         )
         self.wind_directions = list(WindDirection)
+
+        self.operator_id: int | None = None
+        self.growth_stage_id: int | None = None
+        self.hours_taken: Decimal | None = None
+        self.temperature: int | None = None
+        self.relative_humidity: int | None = None
+        self.wind_speed: str | None = None
+        self.wind_direction: int | None = None
+        self.management_unit_ids: List[int] | None = None
+        self.form = None

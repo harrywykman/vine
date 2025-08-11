@@ -286,6 +286,13 @@ class Spray(SQLModel, table=True):
             if record.complete is not None
         )
 
+    @property
+    def spray_chemicals_sorted(self) -> List["SprayChemical"]:
+        """
+        Returns spray chemicals sorted by their ID.
+        """
+        return sorted(self.spray_chemicals, key=lambda x: x.id)
+
 
 class WindDirection(str, enum.Enum):
     N = "North"

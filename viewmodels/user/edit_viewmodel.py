@@ -21,7 +21,6 @@ class EditUserViewModel(ViewModelBase):
         self.existing_user = user_service.get_user_by_id(session, user_id)
         if not self.existing_user:
             self.error = "User not found"
-            return
 
         # Available roles for the dropdown
         self.available_roles = [role.value for role in UserRole]
@@ -37,12 +36,10 @@ class EditUserViewModel(ViewModelBase):
         # Prevent editing superadmin users unless current user is superadmin
         if self.existing_user.role == UserRole.SUPERADMIN and not self.is_superadmin:
             self.error = "You don't have permission to edit superadmin users"
-            return
 
         # Prevent users from editing themselves (optional - remove if you want to allow this)
         if self.existing_user.id == self.user.id:
             self.error = "You cannot edit your own account"
-            return
 
         # Form data initialized with existing user data
         self.name: str = self.existing_user.name

@@ -43,7 +43,7 @@
                         <h3 class="title is-5">Chemicals</h3>
                         <div id="chemical-list">
                             <!-- Existing chemical rows -->
-                            <div tal:repeat="spray_chemical spray.spray_chemicals">
+                            <div tal:repeat="spray_chemical spray.spray_chemicals_sorted">
                                 <div class="field is-grouped mb-2">
                                     <div class="control is-expanded">
                                         <label class="label">Chemical</label>

@@ -4,7 +4,7 @@
         <div class="help is-success" tal:condition="info">${ info }</div>
         <div id="message-area"></div>
 
-        <form method="post" action="/vineyards/${vineyard_id}/spray_records/${spray_record.spray_id}/submit">
+        <form method="post" action="/vineyards/${vineyard_id}/spray_records/${spray_record.id}/edit">
 
             <div class="field">
                 <label class="label">Operator</label>
