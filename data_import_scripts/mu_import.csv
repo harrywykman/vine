@@ -194,3 +194,15 @@ Wrights,Chardonnay,white,2.1199850018747655,2a,27,"1 to 27",2.5,1.5,2667,5654,No
 Wrights,"Sauvignon blanc",white,2.31,1,33,"1 to 33",2.5,2,2000,4620,None,None,None,Active,None
 Wrights,Semillon,white,1.92,4,43,"1 to 43",2.5,2,2000,3840,None,None,None,Active,None
 Wrights,None,,0.7379077615298087,5a,7,"1 to 7 ",2.5,1.5,2667,1968,None,None,None,Fallow,Heritage
+Brambles,"Cabernet Sauvignon",red,0.16699999999999998,EB1a,None,None,1.4,0.75,9524,1596," Houghton Woodlands",Wagtail,2024,Active,None
+Brambles,"Cabernet Sauvignon",red,0.598,EB2a,None,None,1.4,0.75,9524,5686,M337,ARM,2025,Active,None
+Brambles,"Cabernet Sauvignon",red,0.6900000000000001,EB3a,None,None,1.4,0.75,9524,6578,Houghtons,ARM,2024,Active,None
+Brambles,Merlot,red,0.30043813523729523,EB4a,None,None,1.4,0.75,9524,2861.333333333333,181,ARM,2025,Active,None
+Brambles,"Pinot Noir",red,0.10359792804143916,EB4b,None,None,1.4,0.75,9524,986.6666666666666,MV6,ARM,2025,Active,None
+Brambles,"Cabernet Sauvignon ",red,0.6979617401651967,RB1a,None,None,1.4,0.75,9524,6647.333333333334,"Houghtons Willespie",Wagtail,2025,Active,None
+Brambles,"Petit Verdot",red,0.08259999999999999,RB1b,None,None,1.4,0.75,9524,786.6666666666666,"Petrus CH8",ARM,2025,Active,None
+Brambles,"Cabernet Franc",red,0.053689999999999995,RB1c,None,None,1.4,0.75,9524,511.3333333333333,M214,ARM,2024,Active,None
+Brambles,"Cabernet Sauvignon ",red,0.04564,RB2a,None,None,1.4,0.75,9524,434.6666666666667,M337,ARM,2025,Active,None
+Brambles,"Cabernet Sauvignon ",red,0.19396999999999998,RB2a,None,None,1.4,0.75,9524,1847.3333333333333,M412,ARM,2025,Active,None
+Brambles,Malbec,red,0.342,RB3b,None,None,1.4,0.75,9524,3260,Cl1056,ARM,2025,Active,None
+Brambles,Chardonnay,white,0.567,WB1,None,None,1.4,0.75,9524,5400,Gingin,ARM,2024,Active,None
