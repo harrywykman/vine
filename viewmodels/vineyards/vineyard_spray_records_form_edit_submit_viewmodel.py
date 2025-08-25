@@ -1,7 +1,9 @@
+import datetime
 from decimal import Decimal
 from typing import List
 
 from fastapi import Request
+from icecream import ic
 from sqlmodel import Session, select
 
 from data.user import User, UserRole
@@ -20,6 +22,7 @@ class VineyardSprayRecordsEditSubmitViewModel(ViewModelBase):
         vineyard_id: int,
         spray_record_id,
         operator_id: str,
+        date_completed: datetime.datetime,
         growth_stage_id: int | None,
         hours_taken: Decimal | None,
         temperature: int | None,
@@ -39,6 +42,7 @@ class VineyardSprayRecordsEditSubmitViewModel(ViewModelBase):
         self.vineyard_id = vineyard_id
         self.spray_id = self.spray_record.spray_id
         self.operator_id = operator_id
+        self.date_completed = date_completed
         self.growth_stage_id = growth_stage_id
         self.hours_taken = hours_taken
         self.temperature = temperature
@@ -106,12 +110,17 @@ class VineyardSprayRecordsEditSubmitViewModel(ViewModelBase):
             for pc in program_chems
         }
 
+        ic("##############################################################")
+        ic(self.date_completed)
+        ic("##############################################################")
+
         try:
             spray_record_service.update_multiple_spray_records(
                 session=self.session,
                 spray_id=self.spray_id,
                 management_unit_ids=self.management_unit_ids,
                 operator_id=self.operator_id,
+                date_completed=self.date_completed,
                 growth_stage_id=self.growth_stage_id,
                 hours_taken=self.hours_taken,
                 temperature=self.temperature,

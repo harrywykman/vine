@@ -22,6 +22,7 @@ class VineyardSprayRecordsSubmitViewModel(ViewModelBase):
         vineyard_id: int,
         spray_id: int,
         operator_id: str,
+        date_completed: datetime.date,
         growth_stage_id: int | None,
         hours_taken: Decimal | None,
         temperature: int | None,
@@ -37,6 +38,7 @@ class VineyardSprayRecordsSubmitViewModel(ViewModelBase):
         self.vineyard_id = vineyard_id
         self.spray_id = spray_id
         self.operator_id = operator_id
+        self.date_completed = date_completed
         self.growth_stage_id = growth_stage_id
         self.hours_taken = hours_taken
         self.temperature = temperature
@@ -121,7 +123,7 @@ class VineyardSprayRecordsSubmitViewModel(ViewModelBase):
             spray_record.wind_speed = self.wind_speed
             spray_record.wind_direction = self.wd_enum
             spray_record.complete = True
-            spray_record.date_completed = datetime.datetime.now()
+            spray_record.date_completed = self.date_completed
 
             for chem_id, batch_number in chem_batch_map.items():
                 # Ensure no duplicates added

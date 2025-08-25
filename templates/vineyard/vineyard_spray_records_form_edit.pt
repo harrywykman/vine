@@ -19,6 +19,15 @@
             </div>
 
             <div class="field">
+                <label class="label">Date Completed</label>
+                <div class="control">
+                    <div class="select is-fullwidth">
+                        <input class="input" type="date" name="date_completed" value="${date_completed}" required />
+                    </div>
+                </div>
+            </div>
+
+            <div class="field">
                 <label class="label">Growth Stage</label>
                 <div class="control">
                     <div class="select is-fullwidth">

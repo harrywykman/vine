@@ -1,3 +1,4 @@
+import datetime
 from decimal import Decimal
 from typing import Annotated, Optional
 
@@ -15,6 +16,7 @@ from services import vineyard_service
 from viewmodels.vineyards.details_viewmodel import DetailsViewModel
 from viewmodels.vineyards.edit_mu_viewmodel import EditMUViewModel
 from viewmodels.vineyards.list_viewmodel import ListViewModel
+from viewmodels.vineyards.mu_spray_history_viewmodel import MUSprayHistoryViewModel
 from viewmodels.vineyards.vineyard_spray_record_details import VineyardSprayRecordDetail
 from viewmodels.vineyards.vineyard_spray_records_form_edit_submit_viewmodel import (
     VineyardSprayRecordsEditSubmitViewModel,
@@ -83,6 +85,7 @@ async def submit_spray_records(
     vineyard_id: int,
     spray_id: int,
     operator_id: Annotated[int, Form()],
+    date_completed: Annotated[Optional[datetime.date], Form()] = None,
     management_unit_ids: Annotated[Optional[list[int]], Form()] = None,
     growth_stage_id: Annotated[Optional[int], Form()] = None,
     hours_taken: Annotated[Optional[Decimal], Form()] = None,
@@ -96,6 +99,7 @@ async def submit_spray_records(
         vineyard_id=vineyard_id,
         spray_id=spray_id,
         operator_id=operator_id,
+        date_completed=date_completed,
         growth_stage_id=growth_stage_id,
         hours_taken=hours_taken,
         temperature=temperature,
@@ -161,6 +165,7 @@ async def submit_spray_records(
     vineyard_id: int,
     spray_record_id: int,
     operator_id: Annotated[int, Form()],
+    date_completed: Annotated[Optional[datetime.date], Form()],
     management_unit_ids: Annotated[Optional[list[int]], Form()] = None,
     growth_stage_id: Annotated[Optional[int], Form()] = None,
     hours_taken: Annotated[Optional[Decimal], Form()] = None,
@@ -174,6 +179,7 @@ async def submit_spray_records(
         vineyard_id=vineyard_id,
         spray_record_id=spray_record_id,
         operator_id=operator_id,
+        date_completed=date_completed,
         growth_stage_id=growth_stage_id,
         hours_taken=hours_taken,
         temperature=temperature,
@@ -211,6 +217,20 @@ async def submit_spray_records(
 
     vm.set_success("Spray record edited successfully")
 
+    return vm.to_dict()
+
+
+@router.get(
+    "/management_unit/{management_unit_id}/spray_history", response_class=HTMLResponse
+)
+@fastapi_chameleon.template("management_unit/spray_history.pt")
+def management_unit_spray_history(
+    request: Request,
+    management_unit_id: int,
+    spray_program_id: Optional[int] = None,  # Query parameter
+    session: Session = Depends(get_session),
+):
+    vm = MUSprayHistoryViewModel(management_unit_id, request, session, spray_program_id)
     return vm.to_dict()
 
 

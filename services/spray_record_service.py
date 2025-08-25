@@ -1,5 +1,3 @@
-import datetime
-
 import fastapi_chameleon
 from fastapi import HTTPException
 from sqlalchemy.orm import selectinload
@@ -85,6 +83,7 @@ def update_multiple_spray_records(
     spray_id,
     management_unit_ids,
     operator_id,
+    date_completed,
     growth_stage_id,
     hours_taken,
     temperature,
@@ -104,6 +103,7 @@ def update_multiple_spray_records(
             continue
 
         spray_record.operator_id = operator_id
+        spray_record.date_completed = date_completed
         spray_record.growth_stage_id = growth_stage_id
         spray_record.hours_taken = hours_taken
         spray_record.temperature = temperature
@@ -111,7 +111,6 @@ def update_multiple_spray_records(
         spray_record.wind_speed = wind_speed
         spray_record.wind_direction = wind_direction
         spray_record.complete = True
-        spray_record.date_completed = datetime.datetime.now()
 
         for chem_id, batch_number in chem_batch_map.items():
             existing = session.exec(

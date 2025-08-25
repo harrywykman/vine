@@ -14,7 +14,6 @@ from sqlmodel import Session, select
 from auth.permissions_decorators import (
     require_admin,
     require_superadmin,
-    require_superadmin_user,
 )
 from data.user import User, UserRole
 from dependencies import get_current_user, get_session
@@ -61,9 +60,6 @@ async def spray_progress_report(
 ):
     vm = SprayProgressReportViewModel(request, session, spray_program_id)
     return vm.to_dict()
-
-
-## Example routes from Claude
 
 
 @router.get("/users", response_class=HTMLResponse, include_in_schema=False)
@@ -326,14 +322,14 @@ async def system_admin(
     )
 
 
-@router.delete("/users/{user_id}", include_in_schema=False)
+""" @router.delete("/users/{user_id}", include_in_schema=False)
 @require_admin()
 async def delete_user(
     user_id: int,
     current_user: User = Depends(require_superadmin_user()),
     session: Session = Depends(get_session),
 ):
-    """Delete user - superadmin only"""
+    # Delete user - superadmin only
     user = session.get(User, user_id)
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
@@ -343,7 +339,7 @@ async def delete_user(
 
     session.delete(user)
     session.commit()
-    return {"message": "User deleted successfully"}
+    return {"message": "User deleted successfully"} """
 
 
 ################## CHEMICAL MANAGEMENT ROUTES ###############################

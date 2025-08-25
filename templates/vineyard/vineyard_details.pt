@@ -201,13 +201,13 @@
                                     </thead>
                                     <tbody>
                                         <tr tal:repeat="mu management_units" id="management_unit_row_${mu.id}">
-                                            <th class="name">${mu.name} 
+                                            <th class="name"><a href="/management_unit/${mu.id}/spray_history">${mu.name}</a> 
                                                 <div tal:condition="mu.variety_name_modifier and not 'null' in mu.variety_name_modifier.lower().strip()">
                                                     (${mu.variety_name_modifier})
                                                 </div>
                                             </th>
                                             <td>
-                                                <div tal:condition="mu.variety">${mu.variety.name}</div>
+                                                <div tal:condition="mu.variety"><a href="/management_unit/${mu.id}/spray_history">${mu.variety.name}</a></div>
                                                 <div tal:condition="not mu.variety">${mu.status}</div>
                                             </td>
                                             <td>${mu.area} ha</td>
@@ -225,7 +225,7 @@
                         <div class="mobile-only">
                             <div tal:repeat="mu management_units" class="management-unit-card">
                                 <h3 class="is-size-5">
-                                    ${mu.name}
+                                    <a href="/management_unit/${mu.id}/spray_history">${mu.name}</a>
                                     <span tal:condition="mu.variety_name_modifier and not 'null' in mu.variety_name_modifier.lower().strip()" class="is-size-6 has-text-grey">
                                         (${mu.variety_name_modifier})
                                     </span>
@@ -233,7 +233,7 @@
                                 <div class="management-unit-info">
                                     <div>
                                         <span class="label">Variety</span>
-                                        <span tal:condition="mu.variety">${mu.variety.name}</span>
+                                        <span tal:condition="mu.variety"><a href="/management_unit/${mu.id}/spray_history">${mu.variety.name}</a></span>
                                         <span tal:condition="not mu.variety">${mu.status}</span>
                                     </div>
                                     <div>
@@ -385,7 +385,7 @@
                                         <span class="icon loading-spinner">
                                             <i class="fas fa-spinner"></i>
                                         </span>
-                                        <span class="normal-text">Create Spray Record</span>
+                                        <span class="normal-text">Complete Spray Record</span>
                                         <span class="loading-text">Loading...</span>
                                     </a>
                                 </div>

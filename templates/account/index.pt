@@ -3,10 +3,21 @@
         <div class="page-core">
             <h1 class="title">Your Account</h1>
 
-            <div>
+            <div class="box">
                 <p><strong>Name:</strong> ${user.name}</p>
                 <p><strong>Email:</strong> ${user.email}</p>
                 <p><strong>Role:</strong> ${user.role.value}</p>
+                <div class="content">
+                    <div class="buttons mt-2">
+                        <button class="button is-info" hx-get="/account/edit" hx-target="body" hx-push-url="true"
+                            hx-swap="innerHTML" title="Edit User">
+                            <span class="icon is-small">
+                                <i class="fas fa-edit"></i>
+                            </span>
+                            <div>Edit</div>
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

@@ -1,3 +1,4 @@
+import datetime
 from decimal import Decimal
 from typing import List
 
@@ -31,6 +32,8 @@ class VineyardSprayRecordsFormViewModel(ViewModelBase):
             session=session, role=UserRole.OPERATOR
         )
 
+        self.date_completed: datetime.date = datetime.date.today()
+
         self.edit = False
 
         self.spray = spray_service.eagerly_get_spray_by_id(spray_id, session)
@@ -38,6 +41,8 @@ class VineyardSprayRecordsFormViewModel(ViewModelBase):
         self.chemicals = vineyard_service.get_spray_chemicals(spray_id, session)
         self.growth_stages = vineyard_service.all_growth_stages(session)
         ic(self.growth_stages)
+        ic("################################################")
+        ic(self.date_completed)
 
         self.spray_records: list[SprayRecord] = (
             vineyard_service.eagerly_get_vineyard_spray_spray_records(

@@ -35,9 +35,12 @@ class VineyardSprayRecordsFormEditViewModel(ViewModelBase):
         self.spray_record = spray_record_service.eagerly_get_spray_record_by_id(
             session=session, id=spray_record_id
         )
+        self.date_completed = self.spray_record.date_completed.date()
 
         self.growth_stages = vineyard_service.all_growth_stages(session)
         ic(self.growth_stages)
+        ic("################################################")
+        ic(self.date_completed)
 
         self.spray_records: list[SprayRecord] = (
             vineyard_service.eagerly_get_vineyard_spray_spray_records(
