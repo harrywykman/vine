@@ -122,7 +122,7 @@ def create_first_superadmin(session: Session, name: str, email: str, password: s
     if user_count(session) > 0:
         print("Cannot create superadmin when users already exist")
     else:
-        create_account(session, name, email, password, UserRole.SUPERADMIN)
+        create_user(session, name, email, password, UserRole.SUPERADMIN)
 
 
 def get_user_by_id(session, user_id: int) -> Optional[User]:
