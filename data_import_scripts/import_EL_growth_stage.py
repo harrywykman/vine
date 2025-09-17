@@ -7,55 +7,53 @@ from database import engine
 growth_stages_data = [
     # Dormancy and Budbreak (EL 1-9)
     (1, "Winter bud"),
-    (2, "Bud swell"),
+    (2, "Bud scales opening"),
     (3, "Woolly bud"),
-    (4, "Green shoot visible"),
-    (5, "First leaf unfolded"),
-    (6, "Two to three leaves unfolded"),
-    (7, "Four to five leaves unfolded"),
-    (8, "Six to seven leaves unfolded"),
-    (9, "Eight or more leaves unfolded"),
-    # Shoot Development (EL 10-19)
-    (10, "Shoot elongating rapidly"),
-    (11, "Four to six leaves separated"),
-    (12, "Inflorescence clearly visible"),
-    (13, "Inflorescence well separated"),
-    (14, "Flowers separating"),
-    (15, "First flower caps loosened"),
-    (16, "10% caps off"),
-    (17, "30% caps off"),
-    (18, "50% caps off"),
-    (19, "80% caps off"),
-    # Flowering (EL 20-29)
-    (20, "First flower caps loosened"),
-    (21, "10% caps off"),
-    (22, "30% caps off"),
-    (23, "50% caps off (full bloom)"),
-    (24, "80% caps off"),
-    (25, "Cap fall complete"),
-    (26, "Young berries enlarging"),
-    (27, "Young berries still hard and green"),
-    (28, "Young berries softening"),
-    (29, "Young berries still hard and green"),
-    # Berry Development (EL 30-39)
-    (30, "Berry set"),
-    (31, "Berries pea-sized"),
-    (32, "Berries begin to touch"),
+    (4, "Budburst: leaf tips visible"),
+    (7, "First leaf separated from shoot tip"),
+    (9, "2 to 3 leaves separated; shoots 2-4 cm long"),
+    (11, "4 leaves separated"),
+    (
+        12,
+        "Shoots 10 cm. 5 leaves separated; shoots about 10cm long; inflorescence clear",
+    ),
+    (13, "6 leaves separated"),
+    (14, "7 leaves separated"),
+    (
+        15,
+        "8 leaves separated, shoot elongating rapidly; single flowers in compact groups",
+    ),
+    (16, "10 leaves separated"),
+    (17, "12 leaves separated; inforescence well developed, single flower separated"),
+    (
+        18,
+        "14 leaves separated; flower caps still in place, but cap colour fading from green",
+    ),
+    (
+        19,
+        "Flowering Begins. About 16 leaves separated; beginning of flowering (first flower caps loosened)",
+    ),
+    (20, "10 % caps off"),
+    (21, "30% caps off"),
+    (23, "Flowering. 17 to 20 leaves separated; 50% caps off"),
+    (25, "80% caps off"),
+    (26, "Cap fall complete"),
+    (
+        27,
+        "Setting. Young berries enlarging (> 2 mm diameter), bunch at right angles to stem",
+    ),
+    (29, "Berries pepper-corn size (4 mm diameter); bunches tending downwards"),
+    (31, "Berries pea size (7 mm diameter)"),
+    (32, "Beginning of bunch closure, berries touching (if bunches are tight)"),
     (33, "Berries still hard and green"),
-    (34, "Berries still hard and green"),
-    (35, "Berries begin to color and enlarge (veraison)"),
+    (34, "Berries begin to soften; Sugar starts increasing"),
+    (35, "Veraison. Berries begin to color and enlarge"),
     (36, "Berries with intermediate sugar values"),
     (37, "Berries not quite ripe"),
-    (38, "Berries ripe for harvest"),
+    (38, "Harvest. Berries harvest ripe"),
     (39, "Berries over-ripe"),
-    # Maturity and Senescence (EL 40-47)
-    (40, "Berries over-ripe"),
-    (41, "After harvest, canes mature"),
-    (42, "Beginning of leaf fall"),
-    (43, "End of leaf fall"),
-    (44, "End of wood maturation"),
-    (45, "End of leaf fall"),
-    (46, "50% leaf fall"),
+    (41, "After harvest, canes maturation complete"),
+    (43, "Beginning of leaf fall"),
     (47, "End of leaf fall"),
 ]
 
@@ -65,20 +63,14 @@ def seed_growth_stages():
     with Session(engine) as session:
         # Major phenological stages - key stages for viticulture
         major_stages = [
-            1,  # Winter bud
-            4,  # Green shoot visible
-            5,  # First leaf unfolded
-            10,  # Shoot elongating rapidly
-            12,  # Inflorescence clearly visible
-            15,  # First flower caps loosened
-            23,  # 50% caps off (full bloom)
-            31,  # Berries pea-sized
-            32,  # Berries begin to touch
-            35,  # Berries begin to color and enlarge (veraison)
-            38,  # Berries ripe for harvest
-            41,  # After harvest, canes mature
-            43,  # End of leaf fall
-            47,  # End of leaf fall
+            4,
+            12,
+            19,
+            23,
+            27,
+            31,
+            35,
+            38,
         ]
 
         for el, desc in growth_stages_data:

@@ -27,6 +27,5 @@ class SprayEditFormViewModel(ViewModelBase):
             )
         )
         self.spray = spray_service.eagerly_get_spray_by_id(session=session, id=spray_id)
-        statement = select(Chemical)
-        self.chemicals = session.exec(statement).all()
+        self.chemicals = session.exec(select(Chemical)).all()
         self.targets = [target.value for target in Target]

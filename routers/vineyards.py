@@ -10,13 +10,16 @@ from sqlalchemy.orm import Session
 from sqlmodel import Session
 from starlette import status
 
-from auth.permissions_decorators import require_operator, require_user
+from auth.permissions_decorators import require_admin, require_operator, require_user
 from dependencies import get_session
 from services import vineyard_service
 from viewmodels.vineyards.details_viewmodel import DetailsViewModel
 from viewmodels.vineyards.edit_mu_viewmodel import EditMUViewModel
 from viewmodels.vineyards.list_viewmodel import ListViewModel
 from viewmodels.vineyards.mu_spray_history_viewmodel import MUSprayHistoryViewModel
+from viewmodels.vineyards.vineyard_spray_record_delete_viewmodel import (
+    VineyardSprayRecordDelete,
+)
 from viewmodels.vineyards.vineyard_spray_record_details import VineyardSprayRecordDetail
 from viewmodels.vineyards.vineyard_spray_records_form_edit_submit_viewmodel import (
     VineyardSprayRecordsEditSubmitViewModel,
@@ -153,6 +156,23 @@ def vineyard_spray_records_form_edit(
     vm = VineyardSprayRecordsFormEditViewModel(
         vineyard_id, spray_record_id, request, session
     )
+
+    return vm.to_dict()
+
+
+@router.delete(
+    "/vineyards/{vineyard_id}/spray_records/{spray_record_id}/delete",
+    response_class=HTMLResponse,
+)
+@require_admin()
+@fastapi_chameleon.template("vineyard/vineyard_details.pt")
+def vineyard_spray_record_delete(
+    request: Request,
+    vineyard_id: int,
+    spray_record_id: int,
+    session: Session = Depends(get_session),
+):
+    vm = VineyardSprayRecordDelete(vineyard_id, spray_record_id, request, session)
 
     return vm.to_dict()
 

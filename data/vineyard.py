@@ -570,6 +570,80 @@ class ChemicalGroup(SQLModel, table=True):
         return f"{self.code} – {self.name}"
 
 
+class ChemicalActiveIngredientLink(SQLModel, table=True):
+    __tablename__ = "chemical_active_ingredient_link"
+
+    chemical_id: Optional[int] = Field(
+        default=None,
+        foreign_key="chemicals.id",
+        primary_key=True,
+        ondelete="CASCADE",
+        index=True,
+    )
+    active_ingredient_id: Optional[int] = Field(
+        default=None,
+        foreign_key="active_ingredients.id",
+        primary_key=True,
+        ondelete="CASCADE",
+        index=True,
+    )
+
+
+class ActiveIngredientUnit(str, enum.Enum):
+    GL = "g/L"
+    GKG = "g/kg"
+
+
+class ActiveIngredient(SQLModel, table=True):
+    __tablename__ = "active_ingredients"
+
+    id: int = Field(default=None, primary_key=True)
+    name: str = Field(index=True)
+    max_el_id: int | None = Field(
+        foreign_key="growth_stages.id", nullable=True, ondelete="CASCADE", index=True
+    )
+
+    min_days_before_harvest: int | None
+
+    chemicals: List["Chemical"] | None = Relationship(
+        back_populates="active_ingredients", link_model=ChemicalActiveIngredientLink
+    )
+
+
+class ChemicalReentryLink(SQLModel, table=True):
+    __tablename__ = "chemical_reentry_link"
+
+    chemical_id: Optional[int] = Field(
+        default=None,
+        foreign_key="chemicals.id",
+        primary_key=True,
+        ondelete="CASCADE",
+        index=True,
+    )
+    reentry_id: Optional[int] = Field(
+        default=None,
+        foreign_key="reentry_period.id",
+        primary_key=True,
+        ondelete="CASCADE",
+        index=True,
+    )
+
+
+class ReentryPeriod(SQLModel, table=True):
+    __tablename__ = "reentry_period"
+
+    id: int = Field(default=None, primary_key=True)
+    letter_code: str = Field(
+        index=True,
+        description="letter code for re-entry period",
+    )
+    description: str
+
+    chemicals: List["Chemical"] | None = Relationship(
+        back_populates="reentry_periods", link_model=ChemicalReentryLink
+    )
+
+
 class MixRateUnit(str, enum.Enum):
     MILLILITRES = "mL"
     GRAMS = "g"
@@ -585,6 +659,18 @@ class Chemical(SQLModel, table=True):
     rate_per_100l: Optional[int] = None
     rate_unit: Optional[MixRateUnit] = Field(
         default=None, sa_column=sa.Column(sa.Enum(MixRateUnit))
+    )
+
+    reentry_periods: List[ReentryPeriod] | None = Relationship(
+        back_populates="chemicals", link_model=ChemicalReentryLink
+    )
+
+    active_ingredients: List[ActiveIngredient] | None = Relationship(
+        back_populates="chemicals", link_model=ChemicalActiveIngredientLink
+    )
+
+    active_ingredient_unit: Optional[ActiveIngredientUnit] = Field(
+        default=None, sa_column=sa.Column(sa.Enum(ActiveIngredientUnit))
     )
 
     chemical_groups: List[ChemicalGroup] | None = Relationship(

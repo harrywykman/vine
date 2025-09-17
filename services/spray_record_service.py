@@ -1,5 +1,5 @@
 import fastapi_chameleon
-from fastapi import HTTPException
+from fastapi import HTTPException, status
 from sqlalchemy.orm import selectinload
 from sqlmodel import Session, select
 
@@ -12,6 +12,27 @@ from data.vineyard import (
     SprayRecordChemical,
     Variety,
 )
+
+
+def delete_spray_record_by_id(session: Session, id: int):
+    spray_record = eagerly_get_spray_record_by_id(id, session)
+
+    print(spray_record)
+
+    if not spray_record:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Spray not found"
+        )
+
+    try:
+        session.delete(spray_record)
+        session.commit()
+    except Exception:
+        session.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to delete spray",
+        )
 
 
 def get_spray_record_by_id(session: Session, id: int) -> SprayRecord:

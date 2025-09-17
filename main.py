@@ -81,6 +81,7 @@ with Session(engine) as session:
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
+
 templates = Jinja2Templates(directory="templates")
 
 if SETTINGS.deploy != "True":

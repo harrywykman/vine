@@ -1,0 +1,21 @@
+<label class="label">Maximum EL for Application</label>
+<div class="field select is-fullwidth">
+
+    <select name="growth_stage_id">
+        <option value="">Select max growth stage</option>
+        <option tal:repeat="growth_stage growth_stages" tal:attributes="value growth_stage.id">
+            ${growth_stage.el_number} &mdash; ${growth_stage.description}
+        </option>
+    </select>
+</div>
+<div class="field">
+    <label class="label">Minumum Days Before Harvest</label>
+    <div class="control has-icons-left">
+        <input class="input" type="number" name="min_days_before_harvest" placeholder="Enter min days before harvest"
+            min="1">
+        <span class="icon is-left">
+            <i class="fas fa-arrow-left"></i>
+        </span>
+    </div>
+    <p class="help">Optional - leave blank if not applicable</p>
+</div>

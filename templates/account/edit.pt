@@ -11,7 +11,7 @@
                     </div>
                     <div class="level-right">
                         <div class="level-item">
-                            <a hx-get="/administration/users" hx-target="body" hx-swap="outerHTML" hx-push-url="true"
+                            <a hx-get="/account" hx-target="body" hx-swap="outerHTML" hx-push-url="true"
                                 class="button loading-button">
                                 <span class="icon loading-spinner">
                                     <i class="fas fa-spinner"></i>
@@ -91,8 +91,8 @@
                                 <!-- Form Actions -->
                                 <div class="field is-grouped is-grouped-right">
                                     <div class="control">
-                                        <button type="button" hx-get="/administration/users" hx-target="body"
-                                            hx-swap="outerHTML" hx-push-url="true" class="button loading-button">
+                                        <button type="button" hx-get="/account" hx-target="body" hx-swap="outerHTML"
+                                            hx-push-url="true" class="button loading-button">
                                             <span class="icon loading-spinner">
                                                 <i class="fas fa-spinner"></i>
                                             </span>

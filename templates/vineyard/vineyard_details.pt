@@ -378,7 +378,7 @@
                                 </div>
 
                                 <!-- Create Spray Record Button -->
-                                <div class="section has-text-centered">
+                                <div tal:condition="not spray_completion_status[sp.id]" class="section has-text-centered">
                                     <a hx-get="/vineyards/${vineyard.id}/spray_records/${sp.id}/new" hx-target="body"
                                         hx-swap="outerHTML" hx-push-url="true"
                                         class="button is-primary is-outlined loading-button">
@@ -439,6 +439,17 @@
                                                                             <i class="fas fa-spinner"></i>
                                                                         </span>
                                                                         <span class="normal-text">Edit</span>
+                                                                        <span class="loading-text">Loading...</span>
+                                                                    </a>
+                                                                </div>
+                                                                <div tal:condition="not sr.complete and is_admin" class="buttons">
+                                                                    <a hx-delete="/vineyards/${vineyard.id}/spray_records/${sr.id}/delete" hx-target="body" hx-confirm="Are you sure you want to delete the incomplete spray record for ${mu.name} &mdash; ${mu.variety}?"
+                                                                        hx-swap="outerHTML" hx-push-url="false"
+                                                                        class="button is-small is-danger is-outlined loading-button">
+                                                                        <span class="icon loading-spinner">
+                                                                            <i class="fas fa-spinner"></i>
+                                                                        </span>
+                                                                        <span class="normal-text">Delete</span>
                                                                         <span class="loading-text">Loading...</span>
                                                                     </a>
                                                                 </div>
