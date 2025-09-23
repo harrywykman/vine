@@ -483,6 +483,7 @@ class Target(str, enum.Enum):
     POWDERY_BOT = "Powdery / Botrytis"
     POWDERY = "Powdery mildew"
     WETTER = "Wetter"
+    GROWTH = "Growth Regulator"
 
 
 class SprayChemical(SQLModel, table=True):
