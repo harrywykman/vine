@@ -42,7 +42,7 @@ def spray_index(request: Request, session: Session = Depends(get_session)):
 @router.get("/spray/chemical_row", response_class=HTMLResponse)
 @fastapi_chameleon.template("spray/_chemical_row.pt")
 def get_chemical_row(session: Session = Depends(get_session)):
-    statement = select(Chemical)
+    statement = select(Chemical).order_by(Chemical.name)
     chemicals = session.exec(statement).all()
     targets = [target.value for target in Target]
     if not chemicals:
