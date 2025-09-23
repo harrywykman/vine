@@ -538,6 +538,7 @@ class ChemicalGroupType(str, enum.Enum):
     HERBICIDE = "Herbicide"
     INSECTICIDE = "Insecticide"
     OTHER = "Other"
+    NON = "Non"
 
 
 class ChemicalGroup(SQLModel, table=True):
