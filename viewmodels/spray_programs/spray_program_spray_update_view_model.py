@@ -41,7 +41,8 @@ class SprayUpdateViewModel(ViewModelBase):
             return
 
         self.growth_stages: list = vineyard_service.all_growth_stages(session)
-        self.chemicals = session.exec(select(Chemical)).all()
+        statement = select(Chemical).order_by(Chemical.name)
+        self.chemicals = session.exec(statement).all()
         self.targets = [target.value for target in Target]
 
     def update_spray(
