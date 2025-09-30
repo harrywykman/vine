@@ -1,4 +1,8 @@
 "Vineyard Name","Variety Name",WineColour,"Management Unit Area","Management Unit Name","Management Unit Rows Total","Rows Numbers","Management Unit Row Width","Management Unit Vine Spacing",VinesHa,"Total Vines",Clone,"Source Vineyard","Plant Date",Status,"Management Unit Variety Name Modifier"
+Twinwoods,"Cabernet Sauvignon",red,1.06,1a,32,,3,2,1667,1776,None,None,None,Active,Cane
+Twinwoods,"Cabernet Sauvignon",red,1.06,1b,30,,3,2,1667,1776,None,None,None,Active,Spur
+Twinwoods,Shiraz,red,2.13,2,64,,3,2,1667,3551,None,None,None,Active,None
+Twinwoods,"Cabernet Sauvignon",red,2.48,3,75,,2.8,2,1785,4427,None,None,None,Active,None
 Amarok,"Cabernet Sauvignon",red,1.3596920923722884,8,16,"1 to 16",3.5,2,1429,1943,None,None,None,Active,None
 Amarok,"Cabernet Sauvignon",red,5.211336599020294,9,43,"1 to 43",3.5,2,1429,7447,None,None,None,Active,None
 Amarok,"Chenin Blanc",white,1.13296011196641,3,19,"1 to 19",3.5,2,1429,1619,None,None,None,Active,None
@@ -203,6 +207,6 @@ Brambles,"Cabernet Sauvignon ",red,0.6979617401651967,RB1a,None,None,1.4,0.75,95
 Brambles,"Petit Verdot",red,0.08259999999999999,RB1b,None,None,1.4,0.75,9524,786.6666666666666,"Petrus CH8",ARM,2025,Active,None
 Brambles,"Cabernet Franc",red,0.053689999999999995,RB1c,None,None,1.4,0.75,9524,511.3333333333333,M214,ARM,2024,Active,None
 Brambles,"Cabernet Sauvignon ",red,0.04564,RB2a,None,None,1.4,0.75,9524,434.6666666666667,M337,ARM,2025,Active,None
-Brambles,"Cabernet Sauvignon ",red,0.19396999999999998,RB2a,None,None,1.4,0.75,9524,1847.3333333333333,M412,ARM,2025,Active,None
+Brambles,"Cabernet Sauvignon ",red,0.19396999999999998,RB2b,None,None,1.4,0.75,9524,1847.3333333333333,M412,ARM,2025,Active,None
 Brambles,Malbec,red,0.342,RB3b,None,None,1.4,0.75,9524,3260,Cl1056,ARM,2025,Active,None
 Brambles,Chardonnay,white,0.567,WB1,None,None,1.4,0.75,9524,5400,Gingin,ARM,2024,Active,None
