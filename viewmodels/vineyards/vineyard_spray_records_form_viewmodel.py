@@ -53,6 +53,10 @@ class VineyardSprayRecordsFormViewModel(ViewModelBase):
 
         self.operator_id: int | None = None
         self.growth_stage_id: int | None = None
+        self.spray_start_time: datetime.time = datetime.datetime.now().strftime("%H:%M")
+        self.spray_finish_time: datetime.time = datetime.datetime.now().strftime(
+            "%H:%M"
+        )
         self.hours_taken: Decimal | None = None
         self.temperature: int | None = None
         self.relative_humidity: int | None = None
@@ -60,3 +64,6 @@ class VineyardSprayRecordsFormViewModel(ViewModelBase):
         self.wind_direction: int | None = None
         self.management_unit_ids: List[int] | None = None
         self.form = None
+
+        ic(self.spray_start_time)
+        ic(self.spray_finish_time)

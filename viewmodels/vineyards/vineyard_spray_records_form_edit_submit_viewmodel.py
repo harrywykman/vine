@@ -1,5 +1,4 @@
 import datetime
-from decimal import Decimal
 from typing import List
 
 from fastapi import Request
@@ -24,7 +23,9 @@ class VineyardSprayRecordsEditSubmitViewModel(ViewModelBase):
         operator_id: str,
         date_completed: datetime.datetime,
         growth_stage_id: int | None,
-        hours_taken: Decimal | None,
+        # hours_taken: Decimal | None,
+        spray_start_time: datetime.time | None,
+        spray_finish_time: datetime.time | None,
         temperature: int | None,
         relative_humidity: int | None,
         wind_speed: int | None,
@@ -44,7 +45,9 @@ class VineyardSprayRecordsEditSubmitViewModel(ViewModelBase):
         self.operator_id = operator_id
         self.date_completed = date_completed
         self.growth_stage_id = growth_stage_id
-        self.hours_taken = hours_taken
+        # self.hours_taken = hours_taken
+        self.spray_start_time = spray_start_time
+        self.spray_finish_time = spray_finish_time
         self.temperature = temperature
         self.relative_humidity = relative_humidity
         self.wind_speed = wind_speed
@@ -95,9 +98,11 @@ class VineyardSprayRecordsEditSubmitViewModel(ViewModelBase):
                 self.error = f"Missing batch number for {pc.chemical.name}"
                 return
 
+        ic(self)
+
     def process_submission(self):
         if self.error:
-            return  # Do not proceed if there's an error
+            return
 
         # Fetch SprayChemicals
         program_chems = self.session.exec(
@@ -122,7 +127,9 @@ class VineyardSprayRecordsEditSubmitViewModel(ViewModelBase):
                 operator_id=self.operator_id,
                 date_completed=self.date_completed,
                 growth_stage_id=self.growth_stage_id,
-                hours_taken=self.hours_taken,
+                # hours_taken=self.hours_taken,
+                spray_start_time=self.spray_start_time,
+                spray_finish_time=self.spray_finish_time,
                 temperature=self.temperature,
                 relative_humidity=self.relative_humidity,
                 wind_speed=self.wind_speed,

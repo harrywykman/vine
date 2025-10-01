@@ -54,12 +54,33 @@
             </div>
 
             <div class="field">
+                <label class="label">Spray Start Time</label>
+                <div class="control">
+                    <div class="is-fullwidth">
+                        <input class="input" type="time" name="spray_start_time"
+                            value="${spray_record.spray_start_time.strftime('%H:%M')}" required />
+                    </div>
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="label">Spray Finish Time</label>
+                <div class="control">
+                    <div class="is-fullwidth">
+                        <input class="input" type="time" name="spray_finish_time"
+                            value="${spray_record.spray_finish_time.strftime('%H:%M')}" required />
+                    </div>
+                </div>
+            </div>
+
+
+            <!--             <div class="field">
                 <label class="label">Hours Taken</label>
                 <div class="control">
                     <input class="input" type="number" name="hours_taken" step="0.1" min="0"
-                        value="${spray_record.hours_taken}" />
+                        tal:attributes="value hours_taken" />
                 </div>
-            </div>
+            </div> -->
 
             <div class="field">
                 <label class="label">Temperature (°C)</label>

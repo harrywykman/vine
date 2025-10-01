@@ -1,11 +1,11 @@
 import datetime
-from decimal import Decimal
 from typing import Annotated, Optional
 
 import fastapi
 import fastapi_chameleon
 from fastapi import APIRouter, Depends, Form, HTTPException, Request
 from fastapi.responses import HTMLResponse
+from icecream import ic
 from sqlalchemy.orm import Session
 from sqlmodel import Session
 from starlette import status
@@ -91,7 +91,9 @@ async def submit_spray_records(
     date_completed: Annotated[Optional[datetime.date], Form()] = None,
     management_unit_ids: Annotated[Optional[list[int]], Form()] = None,
     growth_stage_id: Annotated[Optional[int], Form()] = None,
-    hours_taken: Annotated[Optional[Decimal], Form()] = None,
+    # hours_taken: Annotated[Optional[Decimal], Form()] = None,
+    spray_start_time: Annotated[Optional[datetime.time], Form()] = None,
+    spray_finish_time: Annotated[Optional[datetime.time], Form()] = None,
     temperature: Annotated[Optional[int], Form()] = None,
     relative_humidity: Annotated[Optional[int], Form()] = None,
     wind_speed: Annotated[Optional[int], Form()] = None,
@@ -104,7 +106,9 @@ async def submit_spray_records(
         operator_id=operator_id,
         date_completed=date_completed,
         growth_stage_id=growth_stage_id,
-        hours_taken=hours_taken,
+        # hours_taken=hours_taken,
+        spray_start_time=spray_start_time,
+        spray_finish_time=spray_finish_time,
         temperature=temperature,
         relative_humidity=relative_humidity,
         wind_speed=wind_speed,
@@ -185,10 +189,12 @@ async def submit_spray_records(
     vineyard_id: int,
     spray_record_id: int,
     operator_id: Annotated[int, Form()],
-    date_completed: Annotated[Optional[datetime.date], Form()],
+    date_completed: Annotated[Optional[datetime.datetime], Form()],
+    spray_start_time: Annotated[Optional[datetime.time], Form()],
+    spray_finish_time: Annotated[Optional[datetime.time], Form()],
     management_unit_ids: Annotated[Optional[list[int]], Form()] = None,
     growth_stage_id: Annotated[Optional[int], Form()] = None,
-    hours_taken: Annotated[Optional[Decimal], Form()] = None,
+    # hours_taken: Annotated[Optional[Decimal], Form()] = None,
     temperature: Annotated[Optional[int], Form()] = None,
     relative_humidity: Annotated[Optional[int], Form()] = None,
     wind_speed: Annotated[Optional[int], Form()] = None,
@@ -201,7 +207,9 @@ async def submit_spray_records(
         operator_id=operator_id,
         date_completed=date_completed,
         growth_stage_id=growth_stage_id,
-        hours_taken=hours_taken,
+        # hours_taken=hours_taken,
+        spray_start_time=spray_start_time,
+        spray_finish_time=spray_finish_time,
         temperature=temperature,
         relative_humidity=relative_humidity,
         wind_speed=wind_speed,
@@ -220,7 +228,11 @@ async def submit_spray_records(
         print(f"[Form Error] {vm.error}")
         return vm.to_dict()  # Render back in template using Chameleon
 
+    ic("###### Pre-Submission #####")
+
     vm.process_submission()
+
+    ic("###### Post-Submission #####")
 
     if vineyard_service.spray_complete_for_vineyard(
         session=session, spray_id=vm.spray_id, vineyard_id=vineyard_id

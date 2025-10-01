@@ -1,5 +1,8 @@
+import datetime
+
 import fastapi_chameleon
 from fastapi import HTTPException, status
+from icecream import ic
 from sqlalchemy.orm import selectinload
 from sqlmodel import Session, select
 
@@ -106,7 +109,9 @@ def update_multiple_spray_records(
     operator_id,
     date_completed,
     growth_stage_id,
-    hours_taken,
+    # hours_taken,
+    spray_start_time,
+    spray_finish_time,
     temperature,
     relative_humidity,
     wind_speed,
@@ -123,10 +128,33 @@ def update_multiple_spray_records(
         if not spray_record:
             continue
 
+        ic("###### Record Exists #####")
+        ic(spray_record)
+
+        if spray_start_time:
+            spray_record.spray_start_time = datetime.datetime.combine(
+                date_completed, spray_start_time
+            )
+        else:
+            spray_record.spray_start_time = spray_start_time
+
+        ic("###### UPDATE #######")
+        ic(spray_record.spray_start_time)
+
+        if spray_finish_time:
+            spray_record.spray_finish_time = datetime.datetime.combine(
+                date_completed, spray_finish_time
+            )
+        else:
+            spray_record.spray_finish_time = spray_finish_time
+
+        ic("###### UPDATE #######")
+        ic(spray_record.spray_start_time)
+
         spray_record.operator_id = operator_id
         spray_record.date_completed = date_completed
         spray_record.growth_stage_id = growth_stage_id
-        spray_record.hours_taken = hours_taken
+        # spray_record.hours_taken = hours_taken
         spray_record.temperature = temperature
         spray_record.relative_humidity = relative_humidity
         spray_record.wind_speed = wind_speed

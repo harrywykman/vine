@@ -1,5 +1,4 @@
 import datetime
-from decimal import Decimal
 from typing import List
 
 from fastapi import Request
@@ -24,7 +23,9 @@ class VineyardSprayRecordsSubmitViewModel(ViewModelBase):
         operator_id: str,
         date_completed: datetime.date,
         growth_stage_id: int | None,
-        hours_taken: Decimal | None,
+        # hours_taken: Decimal | None,
+        spray_start_time: datetime.time | None,
+        spray_finish_time: datetime.time | None,
         temperature: int | None,
         relative_humidity: int | None,
         wind_speed: int | None,
@@ -40,7 +41,9 @@ class VineyardSprayRecordsSubmitViewModel(ViewModelBase):
         self.operator_id = operator_id
         self.date_completed = date_completed
         self.growth_stage_id = growth_stage_id
-        self.hours_taken = hours_taken
+        # self.hours_taken = hours_taken
+        self.spray_start_time = spray_start_time
+        self.spray_finish_time = spray_finish_time
         self.temperature = temperature
         self.relative_humidity = relative_humidity
         self.wind_speed = wind_speed
@@ -117,7 +120,21 @@ class VineyardSprayRecordsSubmitViewModel(ViewModelBase):
 
             spray_record.operator_id = self.operator_id
             spray_record.growth_stage_id = self.growth_stage_id
-            spray_record.hours_taken = self.hours_taken
+            # spray_record.hours_taken = self.hours_taken
+            if self.spray_start_time:
+                spray_record.spray_start_time = datetime.datetime.combine(
+                    self.date_completed, self.spray_start_time
+                )
+            else:
+                spray_record.spray_start_time = self.spray_start_time
+
+            if self.spray_finish_time:
+                spray_record.spray_finish_time = datetime.datetime.combine(
+                    self.date_completed, self.spray_finish_time
+                )
+            else:
+                spray_record.spray_finish_time = self.spray_finish_time
+
             spray_record.temperature = self.temperature
             spray_record.relative_humidity = self.relative_humidity
             spray_record.wind_speed = self.wind_speed
