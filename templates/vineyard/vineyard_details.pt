@@ -179,97 +179,6 @@
             <div class="vineyard container">
                 <h1 class="title is-size-3-mobile">${vineyard.name}</h1>
 
-                <!-- Management Units Section -->
-                <div class="section content">
-                    <div class="container managements_unit_list">
-                        <h2 class="title is-size-4-mobile">Management Units</h2>
-                        
-                        <!-- Desktop Table -->
-                        <div class="desktop-only">
-                            <div class="table-container">
-                                <table class="table is-fullwidth is-striped is-hoverable">
-                                    <thead>
-                                        <tr>
-                                            <th>Name</th>
-                                            <th>Variety</th>
-                                            <th>Area</th>
-                                            <th>Row Width</th>
-                                            <th># Rows</th>
-                                            <th>Row Numbering</th>
-                                            <th>Vine Spacing</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr tal:repeat="mu management_units" id="management_unit_row_${mu.id}">
-                                            <th class="name"><a href="/management_unit/${mu.id}/spray_history">${mu.name}</a> 
-                                                <div tal:condition="mu.variety_name_modifier and not 'null' in mu.variety_name_modifier.lower().strip()">
-                                                    (${mu.variety_name_modifier})
-                                                </div>
-                                            </th>
-                                            <td>
-                                                <div tal:condition="mu.variety"><a href="/management_unit/${mu.id}/spray_history">${mu.variety.name}</a></div>
-                                                <div tal:condition="not mu.variety">${mu.status}</div>
-                                            </td>
-                                            <td>${mu.area} ha</td>
-                                            <td>${mu.row_width} m</td>
-                                            <td>${mu.rows_total}</td>
-                                            <td>${mu.rows_start_number} - ${mu.rows_end_number}</td>
-                                            <td>${mu.vine_spacing} m</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-
-                        <!-- Mobile Cards -->
-                        <div class="mobile-only">
-                            <div tal:repeat="mu management_units" class="management-unit-card">
-                                <h3 class="is-size-5">
-                                    <a href="/management_unit/${mu.id}/spray_history">${mu.name}</a>
-                                    <span tal:condition="mu.variety_name_modifier and not 'null' in mu.variety_name_modifier.lower().strip()" class="is-size-6 has-text-grey">
-                                        (${mu.variety_name_modifier})
-                                    </span>
-                                </h3>
-                                <div class="management-unit-info">
-                                    <div>
-                                        <span class="label">Variety</span>
-                                        <span tal:condition="mu.variety"><a href="/management_unit/${mu.id}/spray_history">${mu.variety.name}</a></span>
-                                        <span tal:condition="not mu.variety">${mu.status}</span>
-                                    </div>
-                                    <div>
-                                        <span class="label">Area</span>
-                                        <span>${mu.area} ha</span>
-                                    </div>
-                                    <div>
-                                        <span class="label">Row Width</span>
-                                        <span>${mu.row_width} m</span>
-                                    </div>
-                                    <div>
-                                        <span class="label">Rows</span>
-                                        <span>${mu.rows_total} (${mu.rows_start_number}-${mu.rows_end_number})</span>
-                                    </div>
-                                    <div>
-                                        <span class="label">Vine Spacing</span>
-                                        <span>${mu.vine_spacing} m</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Map Section -->
-                <div tal:condition="vineyard.boundary_coordinates" class="section content">
-                    <div class="container vineyard">
-                        <div class="content">
-                            <div class="${vineyard.name}-map">
-                                <h2 class="title is-size-4-mobile">${vineyard.name} Map</h2>
-                                <div id="map"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
                 <!-- Spray Records Section -->
                 <div class="section content">
                     <div class="container spray_record_list">
@@ -479,6 +388,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
+                                                <div class="is-flex is-flex-direction-column is-align-items-center">
                                                 <div class="mu-status">
                                                     <div>
                                                         <span class="tag is-success is-small" tal:condition="sr.complete">
@@ -488,7 +398,9 @@
                                                             Incomplete
                                                         </span>
                                                     </div>
-                                                    <div tal:condition="sr.complete or mu.variety">
+                                                </div>
+                                                <div class="mt-5">
+                                                <div tal:condition="sr.complete or mu.variety">
                                                         <a tal:condition="sr.complete" 
                                                            hx-get="/vineyards/${vineyard.id}/spray_records/${sr.id}/edit" 
                                                            hx-target="body" hx-swap="outerHTML" hx-push-url="true"
@@ -503,12 +415,104 @@
                                                         </a>
                                                     </div>
                                                 </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </details>
                             <br>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Management Units Section -->
+                <div class="section content">
+                    <div class="container managements_unit_list">
+                        <h2 class="title is-size-4-mobile">Management Units</h2>
+                        
+                        <!-- Desktop Table -->
+                        <div class="desktop-only">
+                            <div class="table-container">
+                                <table class="table is-fullwidth is-striped is-hoverable">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Variety</th>
+                                            <th>Area</th>
+                                            <th>Row Width</th>
+                                            <th># Rows</th>
+                                            <th>Row Numbering</th>
+                                            <th>Vine Spacing</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr tal:repeat="mu management_units" id="management_unit_row_${mu.id}">
+                                            <th class="name"><a href="/management_unit/${mu.id}/spray_history">${mu.name}</a> 
+                                                <div tal:condition="mu.variety_name_modifier and not 'null' in mu.variety_name_modifier.lower().strip()">
+                                                    (${mu.variety_name_modifier})
+                                                </div>
+                                            </th>
+                                            <td>
+                                                <div tal:condition="mu.variety"><a href="/management_unit/${mu.id}/spray_history">${mu.variety.name}</a></div>
+                                                <div tal:condition="not mu.variety">${mu.status}</div>
+                                            </td>
+                                            <td>${mu.area} ha</td>
+                                            <td>${mu.row_width} m</td>
+                                            <td>${mu.rows_total}</td>
+                                            <td>${mu.rows_start_number} - ${mu.rows_end_number}</td>
+                                            <td>${mu.vine_spacing} m</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Mobile Cards -->
+                        <div class="mobile-only">
+                            <div tal:repeat="mu management_units" class="management-unit-card">
+                                <h3 class="is-size-5">
+                                    <a href="/management_unit/${mu.id}/spray_history">${mu.name}</a>
+                                    <span tal:condition="mu.variety_name_modifier and not 'null' in mu.variety_name_modifier.lower().strip()" class="is-size-6 has-text-grey">
+                                        (${mu.variety_name_modifier})
+                                    </span>
+                                </h3>
+                                <div class="management-unit-info">
+                                    <div>
+                                        <span class="label">Variety</span>
+                                        <span tal:condition="mu.variety"><a href="/management_unit/${mu.id}/spray_history">${mu.variety.name}</a></span>
+                                        <span tal:condition="not mu.variety">${mu.status}</span>
+                                    </div>
+                                    <div>
+                                        <span class="label">Area</span>
+                                        <span>${mu.area} ha</span>
+                                    </div>
+                                    <div>
+                                        <span class="label">Row Width</span>
+                                        <span>${mu.row_width} m</span>
+                                    </div>
+                                    <div>
+                                        <span class="label">Rows</span>
+                                        <span>${mu.rows_total} (${mu.rows_start_number}-${mu.rows_end_number})</span>
+                                    </div>
+                                    <div>
+                                        <span class="label">Vine Spacing</span>
+                                        <span>${mu.vine_spacing} m</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Map Section -->
+                <div tal:condition="vineyard.boundary_coordinates" class="section content">
+                    <div class="container vineyard">
+                        <div class="content">
+                            <div class="${vineyard.name}-map">
+                                <h2 class="title is-size-4-mobile">${vineyard.name} Map</h2>
+                                <div id="map"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
