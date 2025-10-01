@@ -1,3 +1,4 @@
+import datetime
 from typing import List
 
 from icecream import ic
@@ -35,6 +36,18 @@ class VineyardSprayRecordsFormEditViewModel(ViewModelBase):
         self.spray_record = spray_record_service.eagerly_get_spray_record_by_id(
             session=session, id=spray_record_id
         )
+
+        if not self.spray_record.spray_start_time:
+            self.spray_record.spray_start_time = datetime.datetime.combine(
+                self.spray_record.date_completed,
+                datetime.datetime.now().time(),
+            )
+
+        if not self.spray_record.spray_finish_time:
+            self.spray_record.spray_finish_time = datetime.datetime.combine(
+                self.spray_record.date_completed,
+                datetime.datetime.now().time(),
+            )
 
         self.date_completed = self.spray_record.date_completed.date()
 
