@@ -418,6 +418,13 @@ class SprayRecord(SQLModel, table=True):
     growth_stage: GrowthStage = Relationship(back_populates="spray_records")
     hours_taken: Decimal | None = Field(sa_column=sa.Column(sa.Numeric(2, 1)))
 
+    spray_start_time: datetime.datetime | None = Field(
+        sa_column=sa.Column(sa.DateTime, default=None, index=True)
+    )
+    spray_finish_time: datetime.datetime | None = Field(
+        sa_column=sa.Column(sa.DateTime, default=None, index=True)
+    )
+
     temperature: int | None
     relative_humidity: int | None
 
