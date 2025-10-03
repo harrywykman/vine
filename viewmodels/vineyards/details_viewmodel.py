@@ -9,7 +9,13 @@ from viewmodels.shared.viewmodel import ViewModelBase
 
 
 class DetailsViewModel(ViewModelBase):
-    def __init__(self, vineyard_id: int, request: Request, session: Session):
+    def __init__(
+        self,
+        vineyard_id: int,
+        request: Request,
+        session: Session,
+        success: str = "",
+    ):
         super().__init__(request, session)
 
         self.id: int = vineyard_id
@@ -65,3 +71,6 @@ class DetailsViewModel(ViewModelBase):
                 )
             else:
                 self.spray_completion_dates[spray.id] = None
+
+        if success:
+            self.set_success(message=success)

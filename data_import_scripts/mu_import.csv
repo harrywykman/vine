@@ -1,4 +1,8 @@
 "Vineyard Name","Variety Name",WineColour,"Management Unit Area","Management Unit Name","Management Unit Rows Total","Rows Numbers","Management Unit Row Width","Management Unit Vine Spacing",VinesHa,"Total Vines",Clone,"Source Vineyard","Plant Date",Status,"Management Unit Variety Name Modifier"
+Bullant,Chardonnay,white,3,GGCHR,39,"1 to 39",3,1.2,None,None,None,None,None,Active,None
+Bullant,"Sauvignon Blanc",white,3.5,SAB,33,"1 to 33",3,1.8,None,None,None,None,None,Active,None
+Bullant,Chardonnay,white,2,95CHR,50,"1 to 50",3,1.4,None,None,None,None,None,Active,None
+Bullant,Shiraz,red,2,SHZ,34,"1 to 34",3,1.4,None,None,None,None,None,Active,None
 Twinwoods,"Cabernet Sauvignon",red,1.06,1a,32,,3,2,1667,1776,None,None,None,Active,Cane
 Twinwoods,"Cabernet Sauvignon",red,1.06,1b,30,,3,2,1667,1776,None,None,None,Active,Spur
 Twinwoods,Shiraz,red,2.13,2,64,,3,2,1667,3551,None,None,None,Active,None

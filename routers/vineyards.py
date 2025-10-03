@@ -1,5 +1,6 @@
 import datetime
 from typing import Annotated, Optional
+from urllib.parse import urlencode
 
 import fastapi
 import fastapi_chameleon
@@ -56,9 +57,15 @@ def vineyard_index(request: Request, session: Session = Depends(get_session)):
 @require_user()
 @fastapi_chameleon.template("vineyard/vineyard_details.pt")
 def vineyard_details(
-    request: Request, vineyard_id: int, session: Session = Depends(get_session)
+    request: Request,
+    vineyard_id: int,
+    session: Session = Depends(get_session),
+    success: Optional[str] = None,
 ):
     vm = DetailsViewModel(vineyard_id, request, session)
+
+    if success:
+        vm.set_success(success)
 
     return vm.to_dict()
 
@@ -237,10 +244,13 @@ async def submit_spray_records(
     if vineyard_service.spray_complete_for_vineyard(
         session=session, spray_id=vm.spray_id, vineyard_id=vineyard_id
     ):
+        ic("#### REDIRECTED ####")
+        params = urlencode({"success": "Spray record edited successfully"})
         response = fastapi.responses.RedirectResponse(
-            f"/vineyards/{vineyard_id}",
+            url=f"/vineyards/{vineyard_id}?{params}",
             status_code=status.HTTP_302_FOUND,
         )
+        response.headers["HX-Push-Url"] = f"/vineyards/{vineyard_id}"
         return response
 
     vm = VineyardSprayRecordsFormEditViewModel(
