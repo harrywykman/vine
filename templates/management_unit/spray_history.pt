@@ -404,6 +404,14 @@
                                         </span>
                                     </div>
                                     <div class="column is-narrow-tablet is-half-mobile"
+                                        tal:condition="not record.hours_taken">
+                                        <span class="is-size-7">
+                                            <strong>Hours (calculated):</strong>
+                                            <span
+                                                tal:content="record.spray_finish_time - record.spray_start_time"></span>
+                                        </span>
+                                    </div>
+                                    <div class="column is-narrow-tablet is-half-mobile"
                                         tal:condition="record.spray_start_time">
                                         <span class="is-size-7">
                                             <strong>Start Time:</strong>
