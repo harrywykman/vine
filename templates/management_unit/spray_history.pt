@@ -400,7 +400,21 @@
                                         tal:condition="record.hours_taken">
                                         <span class="is-size-7">
                                             <strong>Hours:</strong>
-                                            <span tal:content="record.hours_taken">4</span>
+                                            <span tal:content="record.hours_taken"></span>
+                                        </span>
+                                    </div>
+                                    <div class="column is-narrow-tablet is-half-mobile"
+                                        tal:condition="record.spray_start_time">
+                                        <span class="is-size-7">
+                                            <strong>Start Time:</strong>
+                                            <span tal:content="record.spray_start_time.strftime('%H:%M')"></span>
+                                        </span>
+                                    </div>
+                                    <div class="column is-narrow-tablet is-half-mobile"
+                                        tal:condition="record.spray_finish_time">
+                                        <span class="is-size-7">
+                                            <strong>Finish Time:</strong>
+                                            <span tal:content="record.spray_finish_time.strftime('%H:%M')"></span>
                                         </span>
                                     </div>
                                     <div class="column is-narrow-tablet is-half-mobile"
