@@ -247,6 +247,12 @@ chemical_groups_data = [
         type=ChemicalGroupType.FUNGICIDE,
         moa="guanidines",
     ),
+    ChemicalGroup(
+        code="22a",
+        name="22a",
+        type=ChemicalGroupType.INSECTICIDE,
+        moa="Oxadiazines",
+    ),
 ]
 
 
