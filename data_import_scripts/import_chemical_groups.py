@@ -253,6 +253,18 @@ chemical_groups_data = [
         type=ChemicalGroupType.INSECTICIDE,
         moa="Oxadiazines",
     ),
+    ChemicalGroup(
+        code="4a",
+        name="4a",
+        type=ChemicalGroupType.INSECTICIDE,
+        moa="Neonicotinoids",
+    ),
+    ChemicalGroup(
+        code="7c",
+        name="7c",
+        type=ChemicalGroupType.INSECTICIDE,
+        moa="Pyriproxyfen",
+    ),
 ]
 
 
