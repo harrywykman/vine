@@ -1,4 +1,6 @@
 "Vineyard Name","Variety Name",WineColour,"Management Unit Area","Management Unit Name","Management Unit Rows Total","Rows Numbers","Management Unit Row Width","Management Unit Vine Spacing",VinesHa,"Total Vines",Clone,"Source Vineyard","Plant Date",Status,"Management Unit Variety Name Modifier"
+Vectis,"Cabernet Sauvignon",red,4.46,1,62,"1 to 62",3.4,1.8,None,None,None,None,None,Active,None
+Vectis,Nebbiolo,red,0.8,2,13,"63 to 75",3.4,1.8,None,None,None,None,None,Active,None
 Bullant,Chardonnay,white,3,GGCHR,39,"1 to 39",3,1.2,None,None,None,None,None,Active,None
 Bullant,"Sauvignon Blanc",white,3.5,SAB,33,"1 to 33",3,1.8,None,None,None,None,None,Active,None
 Bullant,Chardonnay,white,2,95CHR,50,"1 to 50",3,1.4,None,None,None,None,None,Active,None
