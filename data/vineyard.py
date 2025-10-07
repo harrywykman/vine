@@ -491,6 +491,8 @@ class Target(str, enum.Enum):
     POWDERY = "Powdery mildew"
     WETTER = "Wetter"
     GROWTH = "Growth Regulator"
+    MEALY_BUG = "Longtailed Mealy Bug"
+    GARDEN_WEEVIL = "Garden Weevil"
 
 
 class SprayChemical(SQLModel, table=True):
