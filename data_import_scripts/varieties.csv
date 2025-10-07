@@ -154,13 +154,13 @@ Roje,,,,0.327075,2c,6,"15 to 20",3,1.75,1904.7619047619048,623,,,,Fallow
 "Thompson -Wily","Cabernet Sauvignon",red,,0.9480000000000001,11,34,"1 to 34",2.5,1.5,2666.6666666666665,2528,Houghton,,2006,Active
 "Thompson -Wily","Cabernet Sauvignon",red,,1.0395,7,33,"1 to 33",2.5,1,4000,4158,Houghton,,1998,Active
 "Thompson -Wily","Cabernet Sauvignon",red,,2.6805,6,86,"1 to 86",2.5,2,2000,5361,Houghton,,1998,Active
-"Thompson -Wily",chardonnay,white,,1.164,2,36,"1 to 36",2.5,1,4000,4656,Gingin,,1997,Active
-"Thompson -Wily",chardonnay,white,,1.215,1,36,"1 to 36",2.5,1,4000,4860,Gingin,,1997,Active
-"Thompson -Wily",chardonnay,white,,1.413375,10,48,"1 to 48",2.5,1.5,2666.6666666666665,3769,Dijon,,2005,Active
-"Thompson -Wily",malbec,red,,1.215,4,18,"1 to 18",2.5,2,2000,2430,,,1997,Active
-"Thompson -Wily",merlot,red,,0.5595,9,19,"1 to 19",2.5,1,4000,2238,,,1998,Active
-"Thompson -Wily","pinot noir",red,,1.164,5,36,"1 to 36",2.5,1,4000,4656,Droopy,,1997,Active
-"Thompson -Wily",semillon,white,,1.215,3,18,"1 to 18",2.5,2,2000,2430,,,1997,Active
+"Thompson -Wily",Chardonnay,white,,1.164,2,36,"1 to 36",2.5,1,4000,4656,Gingin,,1997,Active
+"Thompson -Wily",Chardonnay,white,,1.215,1,36,"1 to 36",2.5,1,4000,4860,Gingin,,1997,Active
+"Thompson -Wily",Chardonnay,white,,1.413375,10,48,"1 to 48",2.5,1.5,2666.6666666666665,3769,Dijon,,2005,Active
+"Thompson -Wily",Malbec,red,,1.215,4,18,"1 to 18",2.5,2,2000,2430,,,1997,Active
+"Thompson -Wily",Merlot,red,,0.5595,9,19,"1 to 19",2.5,1,4000,2238,,,1998,Active
+"Thompson -Wily","Pinot Noir",red,,1.164,5,36,"1 to 36",2.5,1,4000,4656,Droopy,,1997,Active
+"Thompson -Wily",Semillon,white,,1.215,3,18,"1 to 18",2.5,2,2000,2430,,,1997,Active
 "Victory Point ","Cabernet Franc",red,,0.514,7,21,"1 to 21",2.5,2,2000,1028,Various,Various,2000,Active
 "Victory Point ","Cabernet Sauvignon",red,,0,4,10,70-79,2.5,2,2000,,337,337,2000,Active
 "Victory Point ","Cabernet Sauvignon",red,,1.702,3,39,113-151,2.5,2,2000,3404,"Houghton selection","MossW ",2000,Active
@@ -215,13 +215,17 @@ Woodman,Chardonnay,white,,2.94,9,,,3,1,3333,9799.02,,,1998,Active
 Woodman,"Sauvignon Blanc",white,,2.63,10,,,3,1.6,2083,5478.29,,,1998,Active
 Woodman,Semillon,white,,2.91,2,,,3,1.6,2083,6071,,,1998,Active
 Woodman,Shiraz,red,,3.01,8,,,3,1.6,2083,6269.83,,,1998,Active
-"Wood Sea ",chardonnay,white,,0.8617710583153347,3,16,"1 to 19",3,1.8,1852,1596,"174 & 470",,,Active
-"Wood Sea ",chardonnay,white,,1.6792656587473003,5,46,"1 to 46",3,1.8,1852,3110,,,,Active
+"Wood Sea ",Chardonnay,white,,0.8617710583153347,3,16,"1 to 19",3,1.8,1852,1596,"174 & 470",,,Active
+"Wood Sea ",Chardonnay,white,,1.6792656587473003,5,46,"1 to 46",3,1.8,1852,3110,,,,Active
 "Wood Sea ","Sauvignon Blanc",white,,4.42548596112311,2,121,"1 to 121",3,1.8,1852,8196,,,,Active
-"Wood Sea ",shiraz,red,,0,4,49,"1 to 49",3,1.8,1852,5026,,,,Active
-"Wood Sea ",shiraz,red,,2.4778617710583153,1,54,"20 to 53",3,1.8,1852,4589,,,,Active
+"Wood Sea ",Shiraz,red,,0,4,49,"1 to 49",3,1.8,1852,5026,,,,Active
+"Wood Sea ",Shiraz,red,,2.4778617710583153,1,54,"20 to 53",3,1.8,1852,4589,,,,Active
 Wrights,"Cabernet Sauvignon",red,,1.79,3,41,"1 to 41",2.5,2,2000,3580,,,,Active
 Wrights,Chardonnay,white,,2.1199850018747655,2a,27,"1 to 27",2.5,1.5,2667,5654,,,,Active
 Wrights,"Sauvignon Blanc",white,,2.31,1,33,"1 to 33",2.5,2,2000,4620,,,,Active
 Wrights,Semillon,white,,1.92,4,43,"1 to 43",2.5,2,2000,3840,,,,Active
-Wrights,,,Heritage,0.7379077615298087,5a,7,"1 to 7 ",2.5,1.5,2667,1968,,,,Fallow
+Wrights,Chardonnay,white,Heritage,0.308,5a,7,"1 to 7 ",2.5,1.5,2667,1968,None,None,None,Active
+Wrights,"Cabernet Sauvignon",red,Heritage,0.142,5b,3,"8 to 10",2.5,1.5,2667,None,None,None,None,Active
+Wrights,Shiraz,red,Heritage,0.095,5c,2,"11 to 12",2.5,1.5,2667,None,None,None,None,Active
+Wrights,Riesling,white,Heritage,0.096,5d,2,"13 to 14",2.5,1.5,2667,None,None,None,None,Active
+Wrights,Semillon,white,Heritage,0.097,5e,2,"15 to 16",2.5,1.5,2667,None,None,None,None,Active

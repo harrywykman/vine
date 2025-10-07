@@ -203,7 +203,11 @@ Wrights,"Cabernet Sauvignon",red,1.79,3,41,"1 to 41",2.5,2,2000,3580,None,None,N
 Wrights,Chardonnay,white,2.1199850018747655,2a,27,"1 to 27",2.5,1.5,2667,5654,None,None,None,Active,None
 Wrights,"Sauvignon blanc",white,2.31,1,33,"1 to 33",2.5,2,2000,4620,None,None,None,Active,None
 Wrights,Semillon,white,1.92,4,43,"1 to 43",2.5,2,2000,3840,None,None,None,Active,None
-Wrights,None,,0.7379077615298087,5a,7,"1 to 7 ",2.5,1.5,2667,1968,None,None,None,Fallow,Heritage
+Wrights,Chardonnay,white,0.308,5a,7,"1 to 7 ",2.5,1.5,2667,1968,None,None,None,Active,Heritage
+Wrights,"Cabernet Sauvignon",red,0.142,5b,3,"8 to 10",2.5,1.5,2667,None,None,None,None,Active,Heritage
+Wrights,Shiraz,red,0.095,5c,2,"11 to 12",2.5,1.5,2667,None,None,None,None,Active,Heritage
+Wrights,Riesling,white,0.096,5d,2,"13 to 14",2.5,1.5,2667,None,None,None,None,Active,Heritage
+Wrights,Semillon,white,0.097,5e,2,"15 to 16",2.5,1.5,2667,None,None,None,None,Active,Heritage
 Brambles,"Cabernet Sauvignon",red,0.16699999999999998,EB1a,None,None,1.4,0.75,9524,1596," Houghton Woodlands",Wagtail,2024,Active,None
 Brambles,"Cabernet Sauvignon",red,0.598,EB2a,None,None,1.4,0.75,9524,5686,M337,ARM,2025,Active,None
 Brambles,"Cabernet Sauvignon",red,0.6900000000000001,EB3a,None,None,1.4,0.75,9524,6578,Houghtons,ARM,2024,Active,None
