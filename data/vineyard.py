@@ -400,6 +400,7 @@ class SprayRecord(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     operator_id: int | None = Field(foreign_key="users.id", nullable=True, index=True)
     complete: bool | None
+    note: str | None
     date_created: datetime.datetime = Field(
         sa_column=sa.Column(sa.DateTime, default=datetime.datetime.now, index=True)
     )
