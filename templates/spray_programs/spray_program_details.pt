@@ -55,7 +55,7 @@
                                 </td>
                                 <td>
                                     <div class="buttons">
-                                        <button class="button is-danger is-small is-outlined"
+                                        <!-- <button class="button is-danger is-small is-outlined"
                                             hx-post="/sprays/${s.id}/add_to_all_reds" hx-target="#message-area"
                                             hx-swap="innerHTML">
                                             Apply to All Reds
@@ -70,7 +70,7 @@
                                             hx-post="/sprays/${s.id}/add_to_all_units" hx-target="#message-area"
                                             hx-swap="innerHTML">
                                             Apply to All MUs
-                                        </button>
+                                        </button> -->
                                         <a hx-get="/sprays/${s.id}/apply_to_select_units" hx-target="body"
                                             hx-swap="outerHTML" hx-push-url="true"
                                             class="button is-info is-small is-outlined loading-button">
@@ -82,7 +82,7 @@
                                         </a>
                                     </div>
                                 </td>
-                                <td class="buttons">
+                                <td>
                                     <div class="buttons">
                                         <!--<button class="button is-info is-small" hx-get="/spray/${s.id}/edit"
                                             hx-target="#spray_row_${s.id}" hx-swap="outerHTML">
