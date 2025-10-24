@@ -1,0 +1,13 @@
+<tr>
+    <form>
+        <div class="content">
+            <label class="label">Spray Record Note</label>
+            <div class="control">
+                <input type="hidden" name="note" value="" />
+                <input class="input" type="text" name="" />
+                <button class="btn" type="submit">Submit</button>
+                <button class="btn" hx-get="/contact/1">Cancel</button>
+            </div>
+        </div>
+    </form>
+</tr>

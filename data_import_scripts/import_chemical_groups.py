@@ -265,6 +265,12 @@ chemical_groups_data = [
         type=ChemicalGroupType.INSECTICIDE,
         moa="Pyriproxyfen",
     ),
+    ChemicalGroup(
+        code="23",
+        name="23 - Inhibitors of acetyl-CoA carboxylase",
+        type=ChemicalGroupType.INSECTICIDE,
+        moa="Inhibitors of acetyl-CoA carboxylase",
+    ),
 ]
 
 

@@ -34,12 +34,31 @@ def delete_spray_record_by_id(session: Session, id: int):
         session.rollback()
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to delete spray",
+            detail="Failed to delete spray record",
+        )
+
+
+def add_note_to_spray_record_by_id(session: Session, id: int, note_text: str):
+    spray_record = get_spray_record_by_id(session=session, id=id)
+
+    if not spray_record:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Spray not found"
+        )
+
+    try:
+        spray_record.note = note_text
+        session.add(spray_record)
+        session.commit()
+    except Exception:
+        session.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to add note to spray record",
         )
 
 
 def get_spray_record_by_id(session: Session, id: int) -> SprayRecord:
-    print("GETTING VINEYARD BY ID")
     spray_record = session.get(SprayRecord, id)
     if not spray_record:
         raise HTTPException(status_code=404, detail="Spray record not found")

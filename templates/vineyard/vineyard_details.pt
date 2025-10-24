@@ -178,6 +178,16 @@
         <div class="section content">
             <div class="vineyard container">
                 <h1 class="title is-size-3-mobile">${vineyard.name}</h1>
+                <div class="level-right">
+                    <div class="level-item">
+                        <a href="/vineyards/" class="button">
+                            <span class="icon">
+                                <i class="fas fa-arrow-left"></i>
+                            </span>
+                            <span>Back to Vineyards</span>
+                        </a>
+                    </div>
+                </div>
 
                 <!-- Spray Records Section -->
                 <div class="section content">
@@ -308,6 +318,7 @@
                                                     <th>Management Unit</th>
                                                     <th>Completed</th>
                                                     <th></th>
+                                                    <th tal:condition="is_admin"></th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -330,6 +341,7 @@
                                                                 <tal:block tal:condition="not mu.variety">
                                                                     <i class="fas fa-wine-bottle has-text-grey"></i>&nbsp;${mu.name} &mdash; ${mu.status}
                                                                 </tal:block>
+                                                                
                                                             </td>
                                                             <td>
                                                                 <span class="tag is-success" tal:condition="sr.complete">
@@ -363,9 +375,62 @@
                                                                     </a>
                                                                 </div>
                                                             </td>
+                                                            <!-- <td tal:condition="is_admin">
+                                                                <div tal:condition="is_admin">
+                                                                    <a hx-post="/vineyards/${vineyard.id}/spray_records/${sr.id}/add_note" hx-target="body" hx-prompt="Enter a note for ${sp.name} on ${mu.name} &mdash; ${mu.variety}"
+                                                                        hx-swap="outerHTML" hx-push-url="false"
+                                                                        class="button is-small is-primary is-outlined loading-button">
+                                                                        <span class="icon loading-spinner">
+                                                                            <i class="fas fa-spinner"></i>
+                                                                        </span>
+                                                                        <span class="normal-text">Add Note</span>
+                                                                        <span class="loading-text">Loading...</span>
+                                                                    </a>
+                                                                    <div id="note"></div>
+                                                                    <a hx-get="/vineyards/${vineyard.id}/spray_records/${sr.id}/note_form" hx-target="#note"
+                                                                        hx-swap="outerHTML"
+                                                                        class="button is-small is-primary is-outlined loading-button">
+                                                                        <span class="icon loading-spinner">
+                                                                            <i class="fas fa-spinner"></i>
+                                                                        </span>
+                                                                        <span class="normal-text">Add Note</span>
+                                                                        <span class="loading-text">Loading...</span>
+                                                                    </a>
+                                                                </div>
+                                                            </td> -->
                                                         </div>
                                                     </tr>
+                                                    <tr tal:repeat="sr mu.spray_records">
+                                                        <!-- <div tal:condition="sr.note and sr.spray.id == sp.id">
+                                                        <td></td>
+                                                        <td colspan="2" class="has-background-dark">
+                                                            <span class="icon-text">
+                                                                <span class="icon has-text-info">
+                                                                    <i class="fas fa-sticky-note"></i>
+                                                                </span>
+                                                                <span class="is-italic">${sr.note}</span>
+                                                            </span>
+                                                        </td>
+                                                        </div>
+                                                        <div tal:condition="not sr.note and sr.spray.id == sp.id">
+                                                             <td></td>
+                                                            <td colspan="2">
+                                                                <a hx-get="/vineyards/${vineyard.id}/spray_records/${sr.id}/note_form" hx-target="this"
+                                                                        hx-swap="outerHTML"
+                                                                        class="button is-small is-primary is-outlined loading-button">
+                                                                        <span class="icon loading-spinner">
+                                                                            <i class="fas fa-spinner"></i>
+                                                                        </span>
+                                                                        <span class="normal-text">Add Note</span>
+                                                                        <span class="loading-text">Loading...</span>
+                                                                    </a>
+                                                            </td>
+                                                        </div> -->
+                                                        
+                                                    </tr>
+                                                    
                                                 </tr>
+                                                
                                             </tbody>
                                         </table>
                                     </div>
@@ -514,6 +579,16 @@
                                 <div id="map"></div>
                             </div>
                         </div>
+                    </div>
+                </div>
+                <div class="level-right">
+                    <div class="level-item">
+                        <a href="/vineyards/" class="button">
+                            <span class="icon">
+                                <i class="fas fa-arrow-left"></i>
+                            </span>
+                            <span>Back to Vineyards</span>
+                        </a>
                     </div>
                 </div>
             </div>

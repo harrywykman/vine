@@ -18,6 +18,9 @@ from viewmodels.vineyards.details_viewmodel import DetailsViewModel
 from viewmodels.vineyards.edit_mu_viewmodel import EditMUViewModel
 from viewmodels.vineyards.list_viewmodel import ListViewModel
 from viewmodels.vineyards.mu_spray_history_viewmodel import MUSprayHistoryViewModel
+from viewmodels.vineyards.vineyard_spray_record_add_note import (
+    VineyardSprayRecordAddNote,
+)
 from viewmodels.vineyards.vineyard_spray_record_delete_viewmodel import (
     VineyardSprayRecordDelete,
 )
@@ -171,7 +174,35 @@ def vineyard_spray_records_form_edit(
     return vm.to_dict()
 
 
-@router.delete(
+# GET note form
+@router.get(
+    "/vineyards/{vineyard_id}/spray_records/{spray_record_id}/note_form",
+    response_class=HTMLResponse,
+)
+# @require_admin()
+@fastapi_chameleon.template("vineyard/_vineyard_details_note_form.pt")
+async def vineyard_spray_record_note_form():
+    return {}
+
+
+@router.post(
+    "/vineyards/{vineyard_id}/spray_records/{spray_record_id}/add_note",
+    response_class=HTMLResponse,
+)
+@require_admin()
+@fastapi_chameleon.template("vineyard/vineyard_details.pt")
+async def vineyard_spray_record_add_note(
+    request: Request,
+    vineyard_id: int,
+    spray_record_id: int,
+    session: Session = Depends(get_session),
+):
+    vm = VineyardSprayRecordAddNote(vineyard_id, spray_record_id, request, session)
+
+    return vm.to_dict()
+
+
+@router.post(
     "/vineyards/{vineyard_id}/spray_records/{spray_record_id}/delete",
     response_class=HTMLResponse,
 )
