@@ -375,59 +375,37 @@
                                                                     </a>
                                                                 </div>
                                                             </td>
-                                                            <!-- <td tal:condition="is_admin">
-                                                                <div tal:condition="is_admin">
-                                                                    <a hx-post="/vineyards/${vineyard.id}/spray_records/${sr.id}/add_note" hx-target="body" hx-prompt="Enter a note for ${sp.name} on ${mu.name} &mdash; ${mu.variety}"
-                                                                        hx-swap="outerHTML" hx-push-url="false"
-                                                                        class="button is-small is-primary is-outlined loading-button">
-                                                                        <span class="icon loading-spinner">
-                                                                            <i class="fas fa-spinner"></i>
-                                                                        </span>
-                                                                        <span class="normal-text">Add Note</span>
-                                                                        <span class="loading-text">Loading...</span>
-                                                                    </a>
-                                                                    <div id="note"></div>
-                                                                    <a hx-get="/vineyards/${vineyard.id}/spray_records/${sr.id}/note_form" hx-target="#note"
+                                                            <td tal:condition="is_admin">
+                                                                <button hx-get="/vineyards/${vineyard.id}/spray_records/${sr.id}/note_form" 
+                                                                        hx-target="#note-row-${sr.id}"
                                                                         hx-swap="outerHTML"
                                                                         class="button is-small is-primary is-outlined loading-button">
-                                                                        <span class="icon loading-spinner">
-                                                                            <i class="fas fa-spinner"></i>
-                                                                        </span>
-                                                                        <span class="normal-text">Add Note</span>
-                                                                        <span class="loading-text">Loading...</span>
-                                                                    </a>
-                                                                </div>
-                                                            </td> -->
-                                                        </div>
-                                                    </tr>
-                                                    <tr tal:repeat="sr mu.spray_records">
-                                                        <!-- <div tal:condition="sr.note and sr.spray.id == sp.id">
-                                                        <td></td>
-                                                        <td colspan="2" class="has-background-dark">
-                                                            <span class="icon-text">
-                                                                <span class="icon has-text-info">
-                                                                    <i class="fas fa-sticky-note"></i>
-                                                                </span>
-                                                                <span class="is-italic">${sr.note}</span>
-                                                            </span>
-                                                        </td>
-                                                        </div>
-                                                        <div tal:condition="not sr.note and sr.spray.id == sp.id">
-                                                             <td></td>
-                                                            <td colspan="2">
-                                                                <a hx-get="/vineyards/${vineyard.id}/spray_records/${sr.id}/note_form" hx-target="this"
-                                                                        hx-swap="outerHTML"
-                                                                        class="button is-small is-primary is-outlined loading-button">
-                                                                        <span class="icon loading-spinner">
-                                                                            <i class="fas fa-spinner"></i>
-                                                                        </span>
-                                                                        <span class="normal-text">Add Note</span>
-                                                                        <span class="loading-text">Loading...</span>
-                                                                    </a>
+                                                                    <span class="icon loading-spinner">
+                                                                        <i class="fas fa-spinner"></i>
+                                                                    </span>
+                                                                    <span class="normal-text">${'Edit Note' if sr.note else 'Add Note'}</span>
+                                                                    <span class="loading-text">Loading...</span>
+                                                                </button>
                                                             </td>
-                                                        </div> -->
-                                                        
+                                                        </div>
                                                     </tr>
+                                                    <tal:block tal:repeat="sr mu.spray_records">
+                                                        <tal:block tal:condition="sr.spray.id == sp.id">
+                                                            <tr id="note-row-${sr.id}">
+                                                                <tal:block tal:condition="sr.note">
+                                                                    <td></td>
+                                                                    <td colspan="3" class="has-background-dark">
+                                                                        <span class="icon-text">
+                                                                            <span class="icon has-text-info">
+                                                                                <i class="fas fa-sticky-note"></i>
+                                                                            </span>
+                                                                            <span class="is-italic">${sr.note}</span>
+                                                                        </span>
+                                                                    </td>
+                                                                </tal:block>
+                                                            </tr>
+                                                        </tal:block>
+                                                    </tal:block>
                                                     
                                                 </tr>
                                                 

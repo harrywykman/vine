@@ -6,6 +6,7 @@ import fastapi
 import fastapi_chameleon
 from fastapi import APIRouter, Depends, Form, HTTPException, Request
 from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse as BaseHTMLResponse
 from icecream import ic
 from sqlalchemy.orm import Session
 from sqlmodel import Session
@@ -37,9 +38,22 @@ from viewmodels.vineyards.vineyard_spray_records_form_select_viewmodel import (
 from viewmodels.vineyards.vineyard_spray_records_form_viewmodel import (
     VineyardSprayRecordsFormViewModel,
 )
+from viewmodels.vineyards.vineyard_spray_records_note_cancel_viewmodel import (
+    VineyardSprayRecordCancelNote,
+)
+from viewmodels.vineyards.vineyard_spray_records_note_form_viewmodel import (
+    VineyardSprayRecordsNoteForm,
+)
 from viewmodels.vineyards.vineyard_spray_records_submit_viewmodel import (
     VineyardSprayRecordsSubmitViewModel,
 )
+
+
+class HTMLResponseWithRefresh(BaseHTMLResponse):
+    def __init__(self, content: str, **kwargs):
+        super().__init__(content, **kwargs)
+        self.headers["HX-Refresh"] = "true"
+
 
 router = APIRouter()
 # templates = Jinja2Templates(directory="templates")
@@ -177,12 +191,19 @@ def vineyard_spray_records_form_edit(
 # GET note form
 @router.get(
     "/vineyards/{vineyard_id}/spray_records/{spray_record_id}/note_form",
-    response_class=HTMLResponse,
+    response_class=HTMLResponseWithRefresh,
 )
 # @require_admin()
 @fastapi_chameleon.template("vineyard/_vineyard_details_note_form.pt")
-async def vineyard_spray_record_note_form():
-    return {}
+async def vineyard_spray_record_note_form(
+    request: Request,
+    vineyard_id: int,
+    spray_record_id: int,
+    session: Session = Depends(get_session),
+):
+    vm = VineyardSprayRecordsNoteForm(vineyard_id, spray_record_id, request, session)
+
+    return vm.to_dict()
 
 
 @router.post(
@@ -190,19 +211,59 @@ async def vineyard_spray_record_note_form():
     response_class=HTMLResponse,
 )
 @require_admin()
-@fastapi_chameleon.template("vineyard/vineyard_details.pt")
+@fastapi_chameleon.template("vineyard/_vineyard_details_note_display.pt")
 async def vineyard_spray_record_add_note(
+    request: Request,
+    vineyard_id: int,
+    spray_record_id: int,
+    note: str = Form(...),
+    session: Session = Depends(get_session),
+):
+    vm = VineyardSprayRecordAddNote(
+        vineyard_id, spray_record_id, note, request, session
+    )
+
+    return vm.to_dict()
+
+
+@router.get(
+    "/vineyards/{vineyard_id}/spray_records/{spray_record_id}/note_cancel",
+    response_class=HTMLResponse,
+)
+@require_admin()
+@fastapi_chameleon.template("vineyard/_vineyard_details_note_display.pt")
+async def vineyard_spray_record_cancel_note(
     request: Request,
     vineyard_id: int,
     spray_record_id: int,
     session: Session = Depends(get_session),
 ):
-    vm = VineyardSprayRecordAddNote(vineyard_id, spray_record_id, request, session)
+    vm = VineyardSprayRecordCancelNote(vineyard_id, spray_record_id, request, session)
 
     return vm.to_dict()
 
 
 @router.post(
+    "/vineyards/{vineyard_id}/spray_records/{spray_record_id}/delete_note",
+    response_class=HTMLResponseWithRefresh,
+)
+@fastapi_chameleon.template("vineyard/_empty_note_row.pt")
+async def delete_spray_record_note(
+    request: Request,
+    vineyard_id: int,
+    spray_record_id: int,
+    session: Session = Depends(get_session),
+):
+    note = None
+
+    vm = VineyardSprayRecordAddNote(
+        vineyard_id, spray_record_id, note, request, session
+    )
+
+    return vm.to_dict()
+
+
+@router.delete(
     "/vineyards/{vineyard_id}/spray_records/{spray_record_id}/delete",
     response_class=HTMLResponse,
 )

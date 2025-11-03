@@ -1,4 +1,4 @@
-<tr>
+<!-- <tr>
     <form>
         <div class="content">
             <label class="label">Spray Record Note</label>
@@ -10,4 +10,48 @@
             </div>
         </div>
     </form>
+</tr> -->
+
+<tr id="note-row-${spray_record.id}">
+    <td></td>
+    <td colspan="3" class="has-background-dark">
+        <form hx-post="/vineyards/${vineyard_id}/spray_records/${spray_record.id}/add_note"
+            hx-target="#note-row-${spray_record.id}" hx-swap="outerHTML" hx-refresh="true">
+            <div class="field">
+                <label class="label">Note</label>
+                <div class="control">
+                    <textarea class="textarea" name="note" rows="3" placeholder="Enter note..."
+                        required>${spray_record.note if spray_record.note else ''}</textarea>
+                </div>
+            </div>
+            <div class="field is-grouped">
+                <div class="control">
+                    <button type="submit" class="button is-small is-primary">
+                        <span class="icon">
+                            <i class="fas fa-save"></i>
+                        </span>
+                        <span>Save</span>
+                    </button>
+                </div>
+                <div class="control">
+                    <button type="button"
+                        hx-get="/vineyards/${vineyard_id}/spray_records/${spray_record.id}/note_cancel"
+                        hx-target="#note-row-${spray_record.id}" hx-swap="outerHTML" class="button is-small is-light">
+                        <span>Cancel</span>
+                    </button>
+                </div>
+                <div class="control" tal:condition="spray_record.note">
+                    <button type="button"
+                        hx-post="/vineyards/${vineyard_id}/spray_records/${spray_record.id}/delete_note"
+                        hx-target="#note-row-${spray_record.id}" hx-swap="outerHTML" hx-confirm="Delete this note?"
+                        hx-refresh="true" class="button is-small is-danger is-outlined">
+                        <span class="icon">
+                            <i class="fas fa-trash"></i>
+                        </span>
+                        <span>Delete</span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </td>
 </tr>

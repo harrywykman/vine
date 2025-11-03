@@ -1,0 +1,11 @@
+<tr id="note-row-${spray_record.id}">
+    <td></td>
+    <td colspan="3" class="has-background-dark">
+        <span class="icon-text">
+            <span class="icon has-text-info">
+                <i class="fas fa-sticky-note"></i>
+            </span>
+            <span class="is-italic">${spray_record.note}</span>
+        </span>
+    </td>
+</tr>

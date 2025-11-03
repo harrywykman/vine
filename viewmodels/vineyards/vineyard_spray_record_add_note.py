@@ -1,10 +1,11 @@
 from typing import Optional
 
+from fastapi import HTTPException
 from icecream import ic
 from sqlmodel import Session
 from starlette.requests import Request
 
-from data.vineyard import ManagementUnit, Spray, SprayRecord, Vineyard
+from data.vineyard import SprayRecord, Vineyard
 from services import spray_record_service, vineyard_service
 from viewmodels.shared.viewmodel import ViewModelBase
 
@@ -14,6 +15,7 @@ class VineyardSprayRecordAddNote(ViewModelBase):
         self,
         vineyard_id: int,
         spray_record_id: int,
+        note: str,
         request: Request,
         session: Session,
     ):
@@ -26,7 +28,8 @@ class VineyardSprayRecordAddNote(ViewModelBase):
         self.vineyard: Vineyard = vineyard_service.get_vineyard_by_id(
             self.session, vineyard_id
         )
-        self.note_text = request.headers.get("HX-Prompt")
+        # self.note_text = request.headers.get("HX-Prompt")
+        self.note_text = note
 
         ic("############")
         ic(self.note_text)
@@ -46,7 +49,11 @@ class VineyardSprayRecordAddNote(ViewModelBase):
             self.set_error("No spray record id given")
             return
 
-        self.management_units: Optional(List[ManagementUnit]) = (
+        self.spray_record = session.get(SprayRecord, spray_record_id)
+        if not self.spray_record:
+            raise HTTPException(status_code=404, detail="Spray record not found")
+
+        """ self.management_units: Optional(List[ManagementUnit]) = (
             vineyard_service.eagerly_get_vineyard_managment_units_by_id(
                 self.session, self.id
             )
@@ -92,3 +99,4 @@ class VineyardSprayRecordAddNote(ViewModelBase):
                 )
             else:
                 self.spray_completion_dates[spray.id] = None
+ """
