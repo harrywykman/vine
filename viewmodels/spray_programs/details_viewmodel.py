@@ -15,7 +15,6 @@ class DetailsViewModel(ViewModelBase):
         spray_program_id: int,
     ):
         super().__init__(request, session)
-
         self.spray_program: SprayProgram = (
             spray_program_service.get_spray_program_by_id(
                 session=session, spray_program_id=spray_program_id
@@ -26,9 +25,7 @@ class DetailsViewModel(ViewModelBase):
                 session=session, spray_program_id=self.spray_program.id
             )
         )
-
         ic(self.sprays)
-
         self.active_sprays = self._get_active_sprays()
         self.completed_sprays = self._get_completed_sprays()
 
@@ -39,8 +36,8 @@ class DetailsViewModel(ViewModelBase):
             for spray in self.sprays
             if not spray.spray_records  # No spray records yet
             or not all(
-                sr.complete for sr in spray.spray_records if sr.complete is not None
-            )
+                sr.complete for sr in spray.spray_records
+            )  # Any incomplete record
         ]
 
     def _get_completed_sprays(self) -> list[Spray]:
@@ -50,9 +47,6 @@ class DetailsViewModel(ViewModelBase):
             for spray in self.sprays
             if spray.spray_records  # Has spray records
             and all(
-                sr.complete for sr in spray.spray_records if sr.complete is not None
-            )
-            and any(
-                sr.complete is not None for sr in spray.spray_records
-            )  # At least one record has a completion status
+                sr.complete for sr in spray.spray_records
+            )  # ALL records are complete (True)
         ]
