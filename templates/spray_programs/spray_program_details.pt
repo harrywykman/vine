@@ -27,85 +27,78 @@
                     </div>
                     <div id="message-area"></div>
 
-                    <!-- Completed Sprays (Collapsible) -->
+                    <!-- Completed Sprays (Individually Collapsible) -->
                     <tal:block tal:condition="completed_sprays">
-                        <div class="mt-5">
+                        <h3 class="subtitle mt-5">
+                            <span class="icon has-text-success">
+                                <i class="fas fa-check-circle"></i>
+                            </span>
+                            Completed Sprays
+                        </h3>
+                        <div tal:repeat="s completed_sprays" class="mb-3">
                             <details class="box has-background-dark">
                                 <summary style="cursor: pointer; list-style: none;">
                                     <div class="is-flex is-justify-content-space-between is-align-items-center">
-                                        <h3 class="subtitle mb-0 has-text-light">
-                                            <span class="icon has-text-success">
-                                                <i class="fas fa-check-circle"></i>
+                                        <div>
+                                            <strong class="has-text-light is-size-5">${s.name}</strong>
+                                            <span class="tag is-success is-small ml-2">Completed</span>
+                                            <span class="ml-3 has-text-grey-light">
+                                                ${s.water_spray_rate_per_hectare} L/ha • EL ${s.growth_stage.el_number}
                                             </span>
-                                            Completed Sprays (${len(completed_sprays)})
-                                        </h3>
+                                        </div>
                                         <span class="icon has-text-light">
                                             <i class="fas fa-chevron-down"></i>
                                         </span>
                                     </div>
                                 </summary>
-                                <table class="table is-striped is-hoverable is-fullwidth mt-3">
-                                    <thead>
-                                        <tr>
-                                            <th>Name</th>
-                                            <th>Water Spray Rate / ha</th>
-                                            <th>EL</th>
-                                            <th>Chemicals</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr tal:repeat="s completed_sprays" id="spray_row_${s.id}">
-                                            <td>
-                                                <strong>${s.name}</strong>
-                                                <span class="tag is-success is-small ml-2">Completed</span>
-                                            </td>
-                                            <td>${s.water_spray_rate_per_hectare} L</td>
-                                            <td>${s.growth_stage.el_number}</td>
-                                            <td>
-                                                <table class="table is-narrow is-fullwidth is-bordered is-striped">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Chemical</th>
-                                                            <th class="has-text-right">Target</th>
-                                                            <th class="has-text-right">Concentration Factor</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr tal:repeat="spc s.spray_chemicals">
-                                                            <td>${spc.chemical.name}</td>
-                                                            <td class="has-text-right">${spc.target.value}</td>
-                                                            <td class="has-text-right">${spc.concentration_factor}</td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </td>
-                                            <td>
-                                                <div class="buttons">
-                                                    <a hx-get="/spray_program/${spray_program.id}/spray/${s.id}/edit"
-                                                        hx-target="body" hx-swap="outerHTML" hx-push-url="true"
-                                                        class="button is-info is-small loading-button">
-                                                        <span class="icon loading-spinner">
-                                                            <i class="fas fa-spinner"></i>
-                                                        </span>
-                                                        <span class="normal-text">Edit</span>
-                                                        <span class="loading-text">Loading...</span>
-                                                    </a>
-                                                    <a hx-post="/spray_programs/${spray_program.id}/spray/${s.id}/delete"
-                                                        hx-target="body" hx-swap="outerHTML" hx-push-url="false"
-                                                        hx-confirm="Delete ${s.name} from ${spray_program.name}?"
-                                                        class="button is-danger is-small loading-button">
-                                                        <span class="icon loading-spinner">
-                                                            <i class="fas fa-spinner"></i>
-                                                        </span>
-                                                        <span class="normal-text">Delete</span>
-                                                        <span class="loading-text">Loading...</span>
-                                                    </a>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                                <div class="mt-3">
+                                    <div class="buttons mb-3">
+                                        <a hx-get="/sprays/${s.id}/apply_to_select_units" hx-target="body"
+                                            hx-swap="outerHTML" hx-push-url="true"
+                                            class="button is-info is-small is-outlined loading-button">
+                                            <span class="icon loading-spinner">
+                                                <i class="fas fa-spinner"></i>
+                                            </span>
+                                            <span class="normal-text">Select MUs for Application</span>
+                                            <span class="loading-text">Loading...</span>
+                                        </a>
+                                        <a hx-get="/spray_program/${spray_program.id}/spray/${s.id}/edit"
+                                            hx-target="body" hx-swap="outerHTML" hx-push-url="true"
+                                            class="button is-info is-small loading-button">
+                                            <span class="icon loading-spinner">
+                                                <i class="fas fa-spinner"></i>
+                                            </span>
+                                            <span class="normal-text">Edit</span>
+                                            <span class="loading-text">Loading...</span>
+                                        </a>
+                                        <a hx-post="/spray_programs/${spray_program.id}/spray/${s.id}/delete"
+                                            hx-target="body" hx-swap="outerHTML" hx-push-url="false"
+                                            hx-confirm="Delete ${s.name} from ${spray_program.name}?"
+                                            class="button is-danger is-small loading-button">
+                                            <span class="icon loading-spinner">
+                                                <i class="fas fa-spinner"></i>
+                                            </span>
+                                            <span class="normal-text">Delete</span>
+                                            <span class="loading-text">Loading...</span>
+                                        </a>
+                                    </div>
+                                    <table class="table is-narrow is-fullwidth is-bordered is-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Chemical</th>
+                                                <th class="has-text-right">Target</th>
+                                                <th class="has-text-right">Concentration Factor</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr tal:repeat="spc s.spray_chemicals">
+                                                <td>${spc.chemical.name}</td>
+                                                <td class="has-text-right">${spc.target.value}</td>
+                                                <td class="has-text-right">${spc.concentration_factor}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </details>
                         </div>
                     </tal:block>
@@ -113,81 +106,72 @@
                     <!-- Active Sprays -->
                     <tal:block tal:condition="active_sprays">
                         <h3 class="subtitle mt-5">Active Sprays</h3>
-                        <table class="table is-striped is-hoverable is-fullwidth">
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Water Spray Rate / ha</th>
-                                    <th>EL</th>
-                                    <th>Chemicals</th>
-                                    <th>Apply</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr tal:repeat="s active_sprays" id="spray_row_${s.id}">
-                                    <td>
-                                        <strong>${s.name}</strong>
-                                    </td>
-                                    <td>${s.water_spray_rate_per_hectare} L</td>
-                                    <td>${s.growth_stage.el_number}</td>
-                                    <td>
-                                        <table class="table is-narrow is-fullwidth is-bordered is-striped">
-                                            <thead>
-                                                <tr>
-                                                    <th>Chemical</th>
-                                                    <th class="has-text-right">Target</th>
-                                                    <th class="has-text-right">Concentration Factor</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr tal:repeat="spc s.spray_chemicals">
-                                                    <td>${spc.chemical.name}</td>
-                                                    <td class="has-text-right">${spc.target.value}</td>
-                                                    <td class="has-text-right">${spc.concentration_factor}</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </td>
-                                    <td>
-                                        <div class="buttons">
-                                            <a hx-get="/sprays/${s.id}/apply_to_select_units" hx-target="body"
-                                                hx-swap="outerHTML" hx-push-url="true"
-                                                class="button is-info is-small is-outlined loading-button">
-                                                <span class="icon loading-spinner">
-                                                    <i class="fas fa-spinner"></i>
-                                                </span>
-                                                <span class="normal-text">Select MUs for Application</span>
-                                                <span class="loading-text">Loading...</span>
-                                            </a>
+                        <div tal:repeat="s active_sprays" class="mb-4">
+                            <details open="true" class="box has-background-dark">
+                                <summary style="cursor: pointer; list-style: none;">
+                                    <div class="is-flex is-justify-content-space-between is-align-items-center">
+                                        <div>
+                                            <strong class="has-text-light is-size-5">${s.name}</strong>
+                                            <span class="tag is-success is-small ml-2">Completed</span>
+                                            <span class="ml-3 has-text-grey-light">
+                                                ${s.water_spray_rate_per_hectare} L/ha • EL ${s.growth_stage.el_number}
+                                            </span>
                                         </div>
-                                    </td>
-                                    <td>
-                                        <div class="buttons">
-                                            <a hx-get="/spray_program/${spray_program.id}/spray/${s.id}/edit"
-                                                hx-target="body" hx-swap="outerHTML" hx-push-url="true"
-                                                class="button is-info is-small loading-button">
-                                                <span class="icon loading-spinner">
-                                                    <i class="fas fa-spinner"></i>
-                                                </span>
-                                                <span class="normal-text">Edit</span>
-                                                <span class="loading-text">Loading...</span>
-                                            </a>
-                                            <a hx-post="/spray_programs/${spray_program.id}/spray/${s.id}/delete"
-                                                hx-target="body" hx-swap="outerHTML" hx-push-url="false"
-                                                hx-confirm="Delete ${s.name} from ${spray_program.name}?"
-                                                class="button is-danger is-small loading-button">
-                                                <span class="icon loading-spinner">
-                                                    <i class="fas fa-spinner"></i>
-                                                </span>
-                                                <span class="normal-text">Delete</span>
-                                                <span class="loading-text">Loading...</span>
-                                            </a>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                                        <span class="icon has-text-light">
+                                            <i class="fas fa-chevron-down"></i>
+                                        </span>
+                                    </div>
+                                </summary>
+                                <div class="mt-3">
+                                    <div class="buttons mb-3">
+                                        <a hx-get="/sprays/${s.id}/apply_to_select_units" hx-target="body"
+                                            hx-swap="outerHTML" hx-push-url="true"
+                                            class="button is-info is-small is-outlined loading-button">
+                                            <span class="icon loading-spinner">
+                                                <i class="fas fa-spinner"></i>
+                                            </span>
+                                            <span class="normal-text">Select MUs for Application</span>
+                                            <span class="loading-text">Loading...</span>
+                                        </a>
+                                        <a hx-get="/spray_program/${spray_program.id}/spray/${s.id}/edit"
+                                            hx-target="body" hx-swap="outerHTML" hx-push-url="true"
+                                            class="button is-info is-small loading-button">
+                                            <span class="icon loading-spinner">
+                                                <i class="fas fa-spinner"></i>
+                                            </span>
+                                            <span class="normal-text">Edit</span>
+                                            <span class="loading-text">Loading...</span>
+                                        </a>
+                                        <a hx-post="/spray_programs/${spray_program.id}/spray/${s.id}/delete"
+                                            hx-target="body" hx-swap="outerHTML" hx-push-url="false"
+                                            hx-confirm="Delete ${s.name} from ${spray_program.name}?"
+                                            class="button is-danger is-small loading-button">
+                                            <span class="icon loading-spinner">
+                                                <i class="fas fa-spinner"></i>
+                                            </span>
+                                            <span class="normal-text">Delete</span>
+                                            <span class="loading-text">Loading...</span>
+                                        </a>
+                                    </div>
+                                    <table class="table is-narrow is-fullwidth is-bordered is-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Chemical</th>
+                                                <th class="has-text-right">Target</th>
+                                                <th class="has-text-right">Concentration Factor</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr tal:repeat="spc s.spray_chemicals">
+                                                <td>${spc.chemical.name}</td>
+                                                <td class="has-text-right">${spc.target.value}</td>
+                                                <td class="has-text-right">${spc.concentration_factor}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </details>
+                        </div>
                     </tal:block>
 
 
@@ -209,8 +193,9 @@
 
     <div metal:fill-slot="additional-css" tal:omit-tag="True">
         <style>
-            /* Completed sprays box hover effect */
-            details.box.has-background-dark:hover {
+            /* Spray card hover effect */
+            details.box.has-background-dark:hover,
+            .box.has-background-dark:hover {
                 background-color: #2b2b2b !important;
             }
 
