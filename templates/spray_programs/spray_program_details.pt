@@ -112,7 +112,6 @@
                                     <div class="is-flex is-justify-content-space-between is-align-items-center">
                                         <div>
                                             <strong class="has-text-light is-size-5">${s.name}</strong>
-                                            <span class="tag is-success is-small ml-2">Completed</span>
                                             <span class="ml-3 has-text-grey-light">
                                                 ${s.water_spray_rate_per_hectare} L/ha • EL ${s.growth_stage.el_number}
                                             </span>
