@@ -4,8 +4,19 @@
             <div class="container">
                 <h1 class="title">Add Spray <span tal:condition="spray_program">to ${spray_program.name}
                         ${spray_program.year_start} / ${spray_program.year_end}</span></h1>
+                <div class="level-right">
+                    <div class="level-item">
+                        <a href="/spray_programs/${spray_program.id}" class="button">
+                            <span class="icon">
+                                <i class="fas fa-arrow-left"></i>
+                            </span>
+                            <span>Back to to ${spray_program.name}
+                                ${spray_program.year_start} / ${spray_program.year_end}</span>
+                        </a>
+                    </div>
+                </div>
 
-                <form method="post" action="/spray_program/{spray_program_id}/spray/new">
+                <form method="post" action="/spray_program/${spray_program.id}/spray/new">
                     <div class="field">
                         <label class="label">Name</label>
                         <div class="control">
