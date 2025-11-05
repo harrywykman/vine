@@ -284,6 +284,13 @@
                                                     <div class="has-text-weight-semibold has-text-light">${sp.growth_stage.el_number}</div>
                                                 </div>
                                             </div>
+
+                                            <tal:block tal:condition="python:any(sr.note for mu in management_units for sr in mu.spray_records if sr.spray.id == sp.id)">
+                                                <span class="icon has-text-info ml-2" title="Notes exist for one or more management units">
+                                                    <i class="fas fa-sticky-note"></i> 
+                                                </span>
+                                                <span class="is-italic">There is a note on one or more management units for this spray.</span>
+                                            </tal:block>
                                             
                                             <div class="spray-chemicals-mobile">
                                                 <div class="is-size-7 has-text-grey-light mb-2">CHEMICALS</div>
@@ -430,6 +437,16 @@
                                                             <span tal:condition="not mu.variety">${mu.status}</span>
                                                         </div>
                                                     </div>
+                                                </div>
+                                                <div>
+                                                <tal:block tal:condition="sr.note">
+                                                                        <span class="icon-text">
+                                                                            <span class="icon has-text-info">
+                                                                                <i class="fas fa-sticky-note"></i>
+                                                                            </span>
+                                                                            <span class="is-italic">${sr.note}</span>
+                                                                        </span>
+                                                                </tal:block>
                                                 </div>
                                                 <div class="is-flex is-flex-direction-column is-align-items-center">
                                                 <div class="mu-status">
