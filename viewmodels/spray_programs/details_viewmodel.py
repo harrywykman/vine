@@ -28,3 +28,31 @@ class DetailsViewModel(ViewModelBase):
         )
 
         ic(self.sprays)
+
+        self.active_sprays = self._get_active_sprays()
+        self.completed_sprays = self._get_completed_sprays()
+
+    def _get_active_sprays(self) -> list[Spray]:
+        """Returns sprays that have incomplete spray records or no spray records."""
+        return [
+            spray
+            for spray in self.sprays
+            if not spray.spray_records  # No spray records yet
+            or not all(
+                sr.complete for sr in spray.spray_records if sr.complete is not None
+            )
+        ]
+
+    def _get_completed_sprays(self) -> list[Spray]:
+        """Returns sprays where all spray records are marked as complete."""
+        return [
+            spray
+            for spray in self.sprays
+            if spray.spray_records  # Has spray records
+            and all(
+                sr.complete for sr in spray.spray_records if sr.complete is not None
+            )
+            and any(
+                sr.complete is not None for sr in spray.spray_records
+            )  # At least one record has a completion status
+        ]
