@@ -25,6 +25,7 @@
 
   <link rel="stylesheet" href="/static/css/site.css" />
   <link rel="stylesheet" href="/static/css/nav.css" />
+  <link rel="stylesheet" href="/static/css/print.css" media="print" />
   <link rel="stylesheet" href="/static/external/css/bulma/css/bulma.min.css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
   <script src="/static/external/js/htmx/htmx.min.js"></script>

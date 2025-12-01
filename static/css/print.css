@@ -1,0 +1,128 @@
+/* Print-specific styles */
+@media print {
+  /* Hide navigation and non-content elements */
+  .navbar,
+  .navbar-spacer,
+  .footer,
+  .navbar-burger,
+  #message-area,
+  .notification,
+  .button,
+  .buttons {
+    display: none !important;
+  }
+
+  /* Remove side spacing columns */
+  .columns > .column.is-hidden-touch {
+    display: none !important;
+  }
+
+  /* Make main content full width */
+  .columns > .column.is-12-mobile {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* Remove container padding for more space */
+  .container.main_content {
+    padding: 0 !important;
+    max-width: 100% !important;
+  }
+
+  /* Force desktop view - hide mobile elements */
+  .is-hidden-desktop {
+    display: none !important;
+  }
+
+  /* Force desktop view - show desktop elements */
+  .is-hidden-mobile,
+  .is-hidden-touch {
+    display: block !important;
+  }
+
+  /* For tables specifically */
+  .table-container.is-hidden-mobile {
+    display: block !important;
+  }
+
+  /* Ensure level items display properly */
+  .level.is-mobile .is-hidden-mobile {
+    display: flex !important;
+  }
+
+  /* Reset body and html for printing */
+  body,
+  html {
+    margin: 0;
+    padding: 0;
+    background: white;
+  }
+
+  /* Optimize boxes and cards for printing */
+  .box,
+  .notification {
+    page-break-inside: avoid;
+    box-shadow: none;
+    border: 1px solid #ddd;
+  }
+
+  /* Ensure tables print properly */
+  .table {
+    page-break-inside: auto;
+  }
+
+  .table tr {
+    page-break-inside: avoid;
+    page-break-after: auto;
+  }
+
+  .table thead {
+    display: table-header-group;
+  }
+
+  /* Optimize text for printing */
+  body {
+    font-size: 10pt;
+    line-height: 1.3;
+  }
+
+  .title {
+    font-size: 14pt;
+  }
+
+  .subtitle {
+    font-size: 11pt;
+  }
+
+  /* Ensure colors are readable in print */
+  .has-background-dark {
+    background-color: #f5f5f5 !important;
+    border: 1px solid #ddd;
+  }
+
+  .has-text-white,
+  .has-text-grey-light {
+    color: #363636 !important;
+  }
+
+  /* Tags and badges */
+  .tag {
+    border: 1px solid #ddd;
+  }
+
+  /* Remove unnecessary margins */
+  .section {
+    padding: 0.5rem 0;
+  }
+
+  /* Keep breadcrumbs and headers compact */
+  .breadcrumb {
+    margin-bottom: 0.5rem;
+  }
+}
+
+/* Additional print optimization */
+@page {
+  margin: 1cm;
+  size: A4;
+}
