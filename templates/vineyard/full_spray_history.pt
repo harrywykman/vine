@@ -1,0 +1,554 @@
+<div metal:use-macro="load: ../shared/_layout.pt">
+    <div metal:fill-slot="content" tal:omit-tag="True">
+
+        <section class="section">
+            <div class="container">
+                <!-- Header with breadcrumb-style navigation -->
+                <div class="level">
+                    <div class="level-left">
+                        <div class="level-item">
+                            <div class="content">
+                                <h1 class="title is-4 mb-2">Full Spray History</h1>
+                                <nav class="breadcrumb has-bullet-separator" aria-label="breadcrumbs">
+                                    <ul>
+                                        <li class="is-active">
+                                            <a aria-current="page">
+                                                <span class="icon-text">
+                                                    <span class="icon">
+                                                        <i class="fas fa-map-marked-alt"></i>
+                                                    </span>
+                                                    <span tal:content="vineyard.name">Vineyard</span>
+                                                </span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="level-right">
+                        <div class="level-item">
+                            <a href="/vineyards/${vineyard.id}" class="button">
+                                <span class="icon">
+                                    <i class="fas fa-arrow-left"></i>
+                                </span>
+                                <span>Back to Vineyard</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vineyard Info Card -->
+                <div class="box mb-5">
+                    <div class="columns is-vcentered is-multiline is-mobile">
+                        <!-- Icon -->
+                        <div class="column is-narrow is-flex is-justify-content-center is-align-items-center">
+                            <div style="height: 64px; width: 64px; background-color: #f5f5f5; border-radius: 6px;"
+                                class="is-flex is-align-items-center is-justify-content-center">
+                                <span class="icon is-large has-text-primary">
+                                    <i class="fas fa-map-marked-alt fa-2x"></i>
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Name -->
+                        <div class="column is-narrow">
+                            <h2 class="title is-5 is-size-6-mobile mb-0" tal:content="vineyard.name">Vineyard Name</h2>
+                        </div>
+
+                        <!-- Management Units Count -->
+                        <div class="column is-narrow">
+                            <span class="tag is-info">
+                                <span
+                                    tal:content="string:${len(vineyard.management_units)} Management Units">Units</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Statistics Summary -->
+                <div class="box mb-5" tal:condition="total_records">
+                    <div class="columns is-mobile is-multiline">
+                        <div class="column is-narrow">
+                            <div class="has-text-centered">
+                                <p class="heading">Total Records</p>
+                                <p class="title is-5" tal:content="total_records">0</p>
+                            </div>
+                        </div>
+                        <div class="column is-narrow">
+                            <div class="has-text-centered">
+                                <p class="heading">Completed</p>
+                                <p class="title is-5 has-text-success" tal:content="completed_records">0</p>
+                            </div>
+                        </div>
+                        <div class="column is-narrow">
+                            <div class="has-text-centered">
+                                <p class="heading">Pending</p>
+                                <p class="title is-5 has-text-warning" tal:content="pending_records">0</p>
+                            </div>
+                        </div>
+                        <div class="column">
+                            <div class="has-text-centered">
+                                <p class="heading">Completion Rate</p>
+                                <p class="title is-5" tal:content="string:${completion_percentage}%">0%</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Spray Records -->
+                <div tal:condition="spray_records">
+                    <div class="content mb-4">
+                        <h3 class="subtitle is-5">
+                            <span class="icon-text">
+                                <span class="icon">
+                                    <i class="fas fa-history"></i>
+                                </span>
+                                <span>Spray History (Most Recent First)</span>
+                            </span>
+                        </h3>
+                    </div>
+
+                    <!-- Spray Record Cards Grouped by Program, then Management Unit -->
+                    <div tal:repeat="program_id records_by_program_and_mu.keys()">
+                        <tal:block tal:define="program program_lookup.get(program_id);
+                                               mu_records_dict records_by_program_and_mu.get(program_id);
+                                               sorted_mu_ids sorted_mu_ids_by_program.get(program_id)">
+
+                            <!-- Program Header -->
+                            <div class="box has-background-dark mb-3">
+                                <h4 class="title is-6 mb-0 has-text-white">
+                                    <span class="icon-text">
+                                        <span class="icon">
+                                            <i class="fas fa-calendar-alt"></i>
+                                        </span>
+                                        <span tal:content="program if program else 'Unknown Program'">Program
+                                            Name</span>
+                                    </span>
+                                </h4>
+                            </div>
+
+                            <!-- Loop through Management Units within this Program -->
+                            <div tal:repeat="mu_id sorted_mu_ids">
+                                <tal:block tal:define="management_unit management_unit_lookup.get(mu_id);
+                                                       mu_records mu_records_dict.get(mu_id)">
+
+                                    <!-- Management Unit Subheader -->
+                                    <div class="box has-background-grey-dark mb-3 ml-4">
+                                        <div class="level is-mobile">
+                                            <div class="level-left">
+                                                <div class="level-item">
+                                                    <h5 class="subtitle is-6 mb-0 has-text-white">
+                                                        <span class="icon-text">
+                                                            <span class="icon">
+                                                                <i class="fas fa-wine-bottle"></i>
+                                                            </span>
+                                                            <span
+                                                                tal:content="management_unit.name_with_variety if management_unit else 'Unknown Management Unit'">
+                                                                Management Unit
+                                                            </span>
+                                                        </span>
+                                                    </h5>
+                                                </div>
+                                            </div>
+                                            <div class="level-right" tal:condition="management_unit">
+                                                <div class="level-item">
+                                                    <span class="tag is-light">
+                                                        <span
+                                                            tal:content="string:${management_unit.area} ha">Area</span>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Records for this Management Unit -->
+                                    <div class="ml-5" tal:repeat="record mu_records">
+                                        <tal:block tal:define="spray spray_lookup.get(record.spray_id)">
+
+                                            <!-- Completed Spray Record - Full Details -->
+                                            <div tal:condition="record.complete" class="box mb-4">
+                                                <div class="level is-mobile">
+                                                    <div class="level-left">
+                                                        <div class="level-item">
+                                                            <div class="content">
+                                                                <p class="has-text-weight-semibold is-size-6 mb-1"
+                                                                    tal:content="spray.name if spray else 'Unknown Spray'">
+                                                                    Spray Name</p>
+                                                                <p class="is-size-7 has-text-grey-light">
+                                                                    <span
+                                                                        tal:content="record.formatted_date_completed">Date</span>
+                                                                    <span tal:condition="record.growth_stage"
+                                                                        tal:content="string: • EL ${record.growth_stage.el_number}">EL
+                                                                        Stage</span>
+                                                                    <span tal:condition="record.operator"
+                                                                        tal:content="string: • ${record.operator.name}">Operator</span>
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="level-right">
+                                                        <div class="level-item">
+                                                            <span class="tag is-success">
+                                                                <span class="icon is-small">
+                                                                    <i class="fas fa-check-circle"></i>
+                                                                </span>
+                                                                <span>Complete</span>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Chemical Details - Desktop Table -->
+                                                <div tal:condition="record.spray_record_chemicals"
+                                                    class="table-container is-hidden-mobile">
+                                                    <table class="table is-narrow is-fullwidth is-size-7">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Chemical</th>
+                                                                <th class="has-text-right">Rate/100L</th>
+                                                                <th>Active</th>
+                                                                <th>Chem Group</th>
+                                                                <th>Target</th>
+                                                                <th class="has-text-right">Conc. Factor</th>
+                                                                <th class="has-text-right">Mix Rate/100L</th>
+                                                                <th class="has-text-right">Rate/Ha</th>
+                                                                <th>Batch No</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr tal:repeat="spray_chem record.spray_record_chemicals">
+                                                                <td>
+                                                                    <span class="has-text-weight-semibold"
+                                                                        tal:content="spray_chem.chemical.name">Chemical
+                                                                        Name</span>
+                                                                </td>
+                                                                <td class="has-text-right">
+                                                                    <span
+                                                                        tal:content="spray_chem.chemical.rate_per_100l">Rate</span>
+                                                                    <span
+                                                                        tal:content="spray_chem.chemical.rate_unit.value if spray_chem.chemical.rate_unit else ''">Unit</span>
+                                                                </td>
+                                                                <td>
+                                                                    <span class="is-size-7"
+                                                                        tal:content="spray_chem.chemical.active_ingredient">Active
+                                                                        Ingredient</span>
+                                                                </td>
+                                                                <td>
+                                                                    <div
+                                                                        tal:repeat="group spray_chem.chemical.chemical_groups">
+                                                                        <span class="tag is-small is-dark"
+                                                                            tal:content="group.code">Group</span>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <span
+                                                                        tal:define="spray_chemical python: next((sc for sc in spray.spray_chemicals if sc.chemical_id == spray_chem.chemical_id), None) if spray else None">
+                                                                        <span
+                                                                            tal:condition="spray_chemical and spray_chemical.target"
+                                                                            class="is-size-7"
+                                                                            tal:content="spray_chemical.target.value">Target</span>
+                                                                        <span
+                                                                            tal:condition="not spray_chemical or not spray_chemical.target"
+                                                                            class="has-text-grey-light">-</span>
+                                                                    </span>
+                                                                </td>
+                                                                <td class="has-text-right">
+                                                                    <span
+                                                                        tal:define="spray_chemical python: next((sc for sc in spray.spray_chemicals if sc.chemical_id == spray_chem.chemical_id), None) if spray else None">
+                                                                        <span tal:condition="spray_chemical"
+                                                                            tal:content="spray_chemical.concentration_factor">1.00</span>
+                                                                        <span tal:condition="not spray_chemical"
+                                                                            class="has-text-grey-light">-</span>
+                                                                    </span>
+                                                                </td>
+                                                                <td class="has-text-right">
+                                                                    <span
+                                                                        tal:define="spray_chemical python: next((sc for sc in spray.spray_chemicals if sc.chemical_id == spray_chem.chemical_id), None) if spray else None">
+                                                                        <span tal:condition="spray_chemical"
+                                                                            tal:content="spray_chemical.calculated_mix_rate_per_100L()">Mix
+                                                                            Rate</span>
+                                                                        <span tal:condition="not spray_chemical"
+                                                                            class="has-text-grey-light">-</span>
+                                                                    </span>
+                                                                    <span
+                                                                        tal:content="spray_chem.chemical.rate_unit.value if spray_chem.chemical.rate_unit else ''">Unit</span>
+                                                                </td>
+                                                                <td class="has-text-right">
+                                                                    <span
+                                                                        tal:define="spray_chemical python: next((sc for sc in spray.spray_chemicals if sc.chemical_id == spray_chem.chemical_id), None) if spray else None">
+                                                                        <span
+                                                                            tal:condition="spray_chemical and spray and spray.water_spray_rate_per_hectare"
+                                                                            tal:content="python: int(float(spray_chemical.calculated_mix_rate_per_100L()) * spray.water_spray_rate_per_hectare / 100)">Rate/Ha</span>
+                                                                        <span
+                                                                            tal:condition="not spray_chemical or not spray or not spray.water_spray_rate_per_hectare"
+                                                                            class="has-text-grey-light">-</span>
+                                                                    </span>
+                                                                </td>
+                                                                <td>
+                                                                    <span
+                                                                        tal:content="spray_chem.batch_number or '-'">Batch</span>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+
+                                                <!-- Chemical Details - Mobile Cards -->
+                                                <div tal:condition="record.spray_record_chemicals"
+                                                    class="is-hidden-desktop">
+                                                    <div class="columns is-mobile is-multiline is-variable is-1 mt-3">
+                                                        <div tal:repeat="spray_chem record.spray_record_chemicals"
+                                                            class="column is-full-mobile is-half-tablet">
+                                                            <div class="box has-background-dark">
+                                                                <!-- Chemical Header -->
+                                                                <div class="level is-mobile mb-3">
+                                                                    <div class="level-left">
+                                                                        <div class="level-item">
+                                                                            <p class="has-text-weight-semibold has-text-white"
+                                                                                tal:content="spray_chem.chemical.name">
+                                                                                Chemical Name</p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="level-right">
+                                                                        <div class="level-item">
+                                                                            <span class="tag is-primary">
+                                                                                <span
+                                                                                    tal:content="spray_chem.chemical.rate_per_100l">Rate</span>
+                                                                                <span
+                                                                                    tal:content="spray_chem.chemical.rate_unit.value if spray_chem.chemical.rate_unit else ''">Unit</span>
+                                                                            </span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                <!-- Chemical Details Grid -->
+                                                                <div
+                                                                    class="columns is-mobile is-multiline is-variable is-1">
+                                                                    <div class="column is-half-mobile">
+                                                                        <p class="is-size-7 has-text-grey-light mb-1">
+                                                                            Active Ingredient
+                                                                        </p>
+                                                                        <p class="is-size-7 has-text-white"
+                                                                            tal:content="spray_chem.chemical.active_ingredient">
+                                                                            Active
+                                                                        </p>
+                                                                    </div>
+
+                                                                    <div class="column is-half-mobile">
+                                                                        <p class="is-size-7 has-text-grey-light mb-1">
+                                                                            Mix Rate/100L</p>
+                                                                        <p class="is-size-7 has-text-white">
+                                                                            <span
+                                                                                tal:define="spray_chemical python: next((sc for sc in spray.spray_chemicals if sc.chemical_id == spray_chem.chemical_id), None) if spray else None">
+                                                                                <span tal:condition="spray_chemical"
+                                                                                    tal:content="spray_chemical.calculated_mix_rate_per_100L()">Mix
+                                                                                    Rate</span>
+                                                                                <span tal:condition="not spray_chemical"
+                                                                                    class="has-text-grey-light">-</span>
+                                                                            </span>
+                                                                            <span
+                                                                                tal:content="spray_chem.chemical.rate_unit.value if spray_chem.chemical.rate_unit else ''">Unit</span>
+                                                                        </p>
+                                                                    </div>
+
+                                                                    <div class="column is-half-mobile">
+                                                                        <p class="is-size-7 has-text-grey-light mb-1">
+                                                                            Rate/Ha</p>
+                                                                        <p class="is-size-7 has-text-white">
+                                                                            <span
+                                                                                tal:define="spray_chemical python: next((sc for sc in spray.spray_chemicals if sc.chemical_id == spray_chem.chemical_id), None) if spray else None">
+                                                                                <span
+                                                                                    tal:condition="spray_chemical and spray and spray.water_spray_rate_per_hectare"
+                                                                                    tal:content="python: int(float(spray_chemical.calculated_mix_rate_per_100L()) * spray.water_spray_rate_per_hectare / 100)">Rate/Ha</span>
+                                                                                <span
+                                                                                    tal:condition="not spray_chemical or not spray or not spray.water_spray_rate_per_hectare"
+                                                                                    class="has-text-grey-light">-</span>
+                                                                            </span>
+                                                                        </p>
+                                                                    </div>
+
+                                                                    <div class="column is-half-mobile">
+                                                                        <p class="is-size-7 has-text-grey-light mb-1">
+                                                                            Batch No</p>
+                                                                        <p class="is-size-7 has-text-white"
+                                                                            tal:content="spray_chem.batch_number or '-'">
+                                                                            Batch</p>
+                                                                    </div>
+
+                                                                    <div class="column is-half-mobile">
+                                                                        <p class="is-size-7 has-text-grey-light mb-1">
+                                                                            Target</p>
+                                                                        <p class="is-size-7 has-text-white">
+                                                                            <span
+                                                                                tal:define="spray_chemical python: next((sc for sc in spray.spray_chemicals if sc.chemical_id == spray_chem.chemical_id), None) if spray else None">
+                                                                                <span
+                                                                                    tal:condition="spray_chemical and spray_chemical.target"
+                                                                                    tal:content="spray_chemical.target.value">Target</span>
+                                                                                <span
+                                                                                    tal:condition="not spray_chemical or not spray_chemical.target"
+                                                                                    class="has-text-grey-light">-</span>
+                                                                            </span>
+                                                                        </p>
+                                                                    </div>
+
+                                                                    <div class="column is-half-mobile">
+                                                                        <p class="is-size-7 has-text-grey-light mb-1">
+                                                                            Conc. Factor</p>
+                                                                        <p class="is-size-7 has-text-white">
+                                                                            <span
+                                                                                tal:define="spray_chemical python: next((sc for sc in spray.spray_chemicals if sc.chemical_id == spray_chem.chemical_id), None) if spray else None">
+                                                                                <span tal:condition="spray_chemical"
+                                                                                    tal:content="spray_chemical.concentration_factor">1.00</span>
+                                                                                <span tal:condition="not spray_chemical"
+                                                                                    class="has-text-grey-light">-</span>
+                                                                            </span>
+                                                                        </p>
+                                                                    </div>
+                                                                </div>
+
+                                                                <!-- Chemical Groups -->
+                                                                <div class="field is-grouped is-grouped-multiline mt-2">
+                                                                    <div tal:repeat="group spray_chem.chemical.chemical_groups"
+                                                                        class="control">
+                                                                        <span class="tag is-small is-dark"
+                                                                            tal:content="group.code">Group</span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Spray Details Row -->
+                                                <div class="columns is-mobile is-multiline is-variable is-1 mt-3">
+                                                    <div class="column is-narrow-tablet is-half-mobile"
+                                                        tal:condition="spray and spray.water_spray_rate_per_hectare">
+                                                        <span class="is-size-7">
+                                                            <strong>Water Rate:</strong>
+                                                            <span
+                                                                tal:content="string:${spray.water_spray_rate_per_hectare}L/Ha">200L/Ha</span>
+                                                        </span>
+                                                    </div>
+                                                    <div class="column is-narrow-tablet is-half-mobile"
+                                                        tal:condition="record.hours_taken">
+                                                        <span class="is-size-7">
+                                                            <strong>Hours:</strong>
+                                                            <span tal:content="record.hours_taken"></span>
+                                                        </span>
+                                                    </div>
+                                                    <div class="column is-narrow-tablet is-half-mobile"
+                                                        tal:condition="not record.hours_taken and record.spray_start_time and record.spray_finish_time">
+                                                        <span class="is-size-7">
+                                                            <strong>Hours (calculated):</strong>
+                                                            <span
+                                                                tal:content="record.spray_finish_time - record.spray_start_time"></span>
+                                                        </span>
+                                                    </div>
+                                                    <div class="column is-narrow-tablet is-half-mobile"
+                                                        tal:condition="record.spray_start_time">
+                                                        <span class="is-size-7">
+                                                            <strong>Start Time:</strong>
+                                                            <span
+                                                                tal:content="record.spray_start_time.strftime('%H:%M')"></span>
+                                                        </span>
+                                                    </div>
+                                                    <div class="column is-narrow-tablet is-half-mobile"
+                                                        tal:condition="record.spray_finish_time">
+                                                        <span class="is-size-7">
+                                                            <strong>Finish Time:</strong>
+                                                            <span
+                                                                tal:content="record.spray_finish_time.strftime('%H:%M')"></span>
+                                                        </span>
+                                                    </div>
+                                                    <div class="column is-narrow-tablet is-half-mobile"
+                                                        tal:condition="record.temperature">
+                                                        <span class="is-size-7">
+                                                            <strong>Temp:</strong>
+                                                            <span
+                                                                tal:content="string:${record.temperature}°C">14°C</span>
+                                                        </span>
+                                                    </div>
+                                                    <div class="column is-narrow-tablet is-half-mobile"
+                                                        tal:condition="record.relative_humidity">
+                                                        <span class="is-size-7">
+                                                            <strong>RH:</strong>
+                                                            <span
+                                                                tal:content="string:${record.relative_humidity}%">55%</span>
+                                                        </span>
+                                                    </div>
+                                                    <div class="column is-narrow-tablet is-half-mobile"
+                                                        tal:condition="record.wind_direction">
+                                                        <span class="is-size-7">
+                                                            <strong>Wind:</strong>
+                                                            <span
+                                                                tal:content="record.wind_direction.value">Direction</span>
+                                                            <span tal:condition="record.wind_speed"
+                                                                tal:content="string: ${record.wind_speed}km/h">Speed</span>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Pending Spray Record - Simple View -->
+                                            <div tal:condition="not record.complete"
+                                                class="notification is-warning is-light mb-4">
+                                                <div class="level is-mobile">
+                                                    <div class="level-left">
+                                                        <div class="level-item">
+                                                            <div class="content">
+                                                                <p class="has-text-weight-semibold is-size-6 mb-1">
+                                                                    <span class="icon">
+                                                                        <i class="fas fa-clock"></i>
+                                                                    </span>
+                                                                    <span
+                                                                        tal:content="spray.name if spray else 'Unknown Spray'">Spray
+                                                                        Name</span>
+                                                                </p>
+                                                                <p class="is-size-7">
+                                                                    <span tal:condition="spray and spray.growth_stage"
+                                                                        tal:content="string:EL: ${spray.growth_stage}">EL</span>
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="level-right">
+                                                        <div class="level-item">
+                                                            <span class="tag is-warning">
+                                                                <span class="icon is-small">
+                                                                    <i class="fas fa-clock"></i>
+                                                                </span>
+                                                                <span>Pending</span>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </tal:block>
+                                    </div>
+
+                                </tal:block>
+                            </div>
+
+                        </tal:block>
+                    </div>
+                </div>
+
+                <!-- Empty state when no spray records exist -->
+                <div tal:condition="not spray_records" class="box has-text-centered">
+                    <div class="content">
+                        <p class="has-text-grey">
+                            <span class="icon is-large">
+                                <i class="fas fa-spray-can fa-3x"></i>
+                            </span>
+                        </p>
+                        <p class="title is-5 has-text-grey">No Spray History</p>
+                        <p class="has-text-grey">No spray records have been created for this vineyard yet.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+</div>
