@@ -18,6 +18,9 @@ from services import vineyard_service
 from viewmodels.vineyards.details_viewmodel import DetailsViewModel
 from viewmodels.vineyards.edit_mu_viewmodel import EditMUViewModel
 from viewmodels.vineyards.list_viewmodel import ListViewModel
+from viewmodels.vineyards.mu_full_spray_history_viewmodel import (
+    MUFullSprayHistoryViewModel,
+)
 from viewmodels.vineyards.mu_spray_history_viewmodel import MUSprayHistoryViewModel
 from viewmodels.vineyards.vineyard_spray_record_add_note import (
     VineyardSprayRecordAddNote,
@@ -351,6 +354,20 @@ async def submit_spray_records(
 
     vm.set_success("Spray record edited successfully")
 
+    return vm.to_dict()
+
+
+@router.get(
+    "/management_unit/{management_unit_id}/full_spray_history",
+    response_class=HTMLResponse,
+)
+@fastapi_chameleon.template("management_unit/full_spray_history.pt")
+def management_unit_spray_history(
+    request: Request,
+    management_unit_id: int,
+    session: Session = Depends(get_session),
+):
+    vm = MUFullSprayHistoryViewModel(management_unit_id, request, session)
     return vm.to_dict()
 
 
