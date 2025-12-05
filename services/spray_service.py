@@ -1,4 +1,4 @@
-from decimal import Decimal
+from decimal import Decimal, InvalidOperation
 from typing import Optional
 
 import fastapi_chameleon
@@ -7,7 +7,14 @@ from sqlalchemy.orm import selectinload
 from sqlmodel import Session, select
 from starlette import status
 
-from data.vineyard import Chemical, GrowthStage, Spray, SprayChemical, SprayProgram
+from data.vineyard import (
+    Chemical,
+    GrowthStage,
+    Spray,
+    SprayChemical,
+    SprayProgram,
+    Target,
+)
 
 
 def eagerly_get_all_sprays(session: Session) -> list[Spray]:
@@ -80,27 +87,31 @@ def create_spray(
     session.flush()  # Get ID before adding chemicals
 
     # Add associated chemicals
-    for i, (chem_id, target) in enumerate(chemicals_targets):
+    for chem_id, target, concentration_factor in chemicals_targets:
         if not chem_id or not target:
             continue  # Skip empty rows
 
-        # Get concentration factor if provided
-        concentration_factor = 1.0  # default
-        if concentration_factors and i < len(concentration_factors):
-            try:
-                concentration_factor = float(concentration_factors[i])
-            except (ValueError, TypeError):
-                concentration_factor = 1.0
+        # Convert concentration_factor to Decimal
+        try:
+            concentration_factor = Decimal(str(concentration_factor))
+        except (ValueError, TypeError, InvalidOperation):
+            concentration_factor = Decimal("1.0")
 
         # Verify chemical exists
         chemical = session.get(Chemical, int(chem_id))
         if not chemical:
             raise ValueError(f"Chemical with ID {chem_id} not found")
 
+        # Convert target to enum
+        try:
+            target_enum = Target(target) if target else None
+        except ValueError:
+            raise ValueError(f"Invalid target value: {target}")
+
         spray_chemical = SprayChemical(
             spray_id=spray.id,
             chemical_id=int(chem_id),
-            target=str(target),
+            target=target_enum,
             concentration_factor=concentration_factor,
         )
         session.add(spray_chemical)

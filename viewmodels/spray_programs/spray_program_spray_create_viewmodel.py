@@ -19,6 +19,7 @@ class CreateSprayProgramSprayViewModel(ViewModelBase):
         self.chemical_ids: list = []
         self.targets: list = []
         self.spray_program_id: int = None
+        self.concentration_factors: list = []
 
     async def load(self):
         form = await self.request.form()
@@ -27,7 +28,10 @@ class CreateSprayProgramSprayViewModel(ViewModelBase):
         self.growth_stage_id = form.get("growth_stage_id")
         self.chemical_ids = form.getlist("chemical_ids")
         self.targets = form.getlist("targets")
-        self.chemicals_targets = zip(self.chemical_ids, self.targets)
+        self.concentration_factors = form.getlist("concentration_factors")
+        self.chemicals_targets = zip(
+            self.chemical_ids, self.targets, self.concentration_factors
+        )
         self.growth_stages: list = vineyard_service.all_growth_stages(self.session)
         self.spray_program_id: int = form.get("spray_program_id")
         self.spray_program: SprayProgram = (
