@@ -190,9 +190,21 @@
                 </div>
 
                 <!-- Spray Records Section -->
-                <div class="section content">
+                <div class="content">
                     <div class="container spray_record_list">
                         <h2 class="title is-size-4-mobile">Spray Records</h2>
+                        <div class="section content">
+                        <div class="level-right">
+                            <div class="level-item">
+                                <a href="/vineyards/${vineyard.id}/full_spray_history" class="button">
+                                    <span class="icon">
+                                        <i class="fas fa-history"></i>
+                                    </span>
+                                    <span>View Full Spray History</span>
+                                </a>
+                            </div>
+                        </div>
+                        </div>
                         <div class="" tal:repeat="sp sprays" id="spray_container_${sp.id}">
 
                             <!-- Collapsible details element -->
