@@ -208,6 +208,7 @@
                                                                 <th>Chemical</th>
                                                                 <th class="has-text-right">Rate/100L</th>
                                                                 <th>Active</th>
+                                                                <th>WHP</th>
                                                                 <th>Chem Group</th>
                                                                 <th>Target</th>
                                                                 <th class="has-text-right">Conc. Factor</th>
@@ -233,6 +234,10 @@
                                                                     <span class="is-size-7"
                                                                         tal:content="spray_chem.chemical.active_ingredient">Active
                                                                         Ingredient</span>
+                                                                </td>
+                                                                <td>
+                                                                    <span class="is-size-7"
+                                                                        tal:content="spray_chem.chemical.withholding_period">WHP</span>
                                                                 </td>
                                                                 <td>
                                                                     <div
@@ -332,6 +337,15 @@
                                                                         <p class="is-size-7 has-text-white"
                                                                             tal:content="spray_chem.chemical.active_ingredient">
                                                                             Active
+                                                                        </p>
+                                                                    </div>
+                                                                    <div class="column is-half-mobile">
+                                                                        <p class="is-size-7 has-text-grey-light mb-1">
+                                                                            WHP
+                                                                        </p>
+                                                                        <p class="is-size-7 has-text-white"
+                                                                            tal:content="spray_chem.chemical.withholding_period">
+                                                                            WHP
                                                                         </p>
                                                                     </div>
 

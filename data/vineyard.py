@@ -672,6 +672,8 @@ class Chemical(SQLModel, table=True):
     rate_unit: Optional[MixRateUnit] = Field(
         default=None, sa_column=sa.Column(sa.Enum(MixRateUnit))
     )
+    # This is a hack to quickly get WHP into reports --- should make into normalised form.
+    withholding_period: Optional[str]
 
     reentry_periods: List[ReentryPeriod] | None = Relationship(
         back_populates="chemicals", link_model=ChemicalReentryLink
