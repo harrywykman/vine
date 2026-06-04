@@ -160,7 +160,10 @@ async def submit_spray_records(
     vm.process_submission()
 
     if vineyard_service.spray_complete_for_vineyard(
-        session=session, spray_id=spray_id, vineyard_id=vineyard_id
+        session=session,
+        spray_id=spray_id,
+        vineyard_id=vineyard_id,
+        spray_program_ids=vm.current_spray_program_ids,
     ):
         response = fastapi.responses.RedirectResponse(
             f"/vineyards/{vineyard_id}",
@@ -340,7 +343,10 @@ async def submit_spray_records(
     ic("###### Post-Submission #####")
 
     if vineyard_service.spray_complete_for_vineyard(
-        session=session, spray_id=vm.spray_id, vineyard_id=vineyard_id
+        session=session,
+        spray_id=vm.spray_id,
+        vineyard_id=vineyard_id,
+        spray_program_ids=vm.current_spray_program_ids,
     ):
         ic("#### REDIRECTED ####")
         params = urlencode({"success": "Spray record edited successfully"})

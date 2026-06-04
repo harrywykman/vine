@@ -4,7 +4,6 @@
             <div class="container">
                 <h1 class="title">Edit ${spray.name}
                     in ${spray_program.name}
-                    ${spray_program.year_start} / ${spray_program.year_end}
                 </h1>
 
                 <form method="post" action="/spray_programs/${spray_program.id}/spray/${spray.id}/edit">

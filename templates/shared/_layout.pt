@@ -100,8 +100,52 @@
     </div>
   </nav>
 
+
+
   <!-- Add padding to account for fixed navbar -->
   <div class="navbar-spacer" style="height: 52px;"></div>
+  <!-- Additional spacer when archive banner is visible -->
+  <div tal:condition="is_viewing_archive" class="is-hidden-tablet" style="height: 80px;"></div>
+  <div tal:condition="is_viewing_archive" class="is-hidden-mobile" style="height: 48px;"></div>
+
+  <!-- Archive browsing banner -->
+  <div tal:condition="is_viewing_archive" class="notification is-warning mb-0"
+    style="border-radius: 0; position: fixed; top: 52px; left: 0; right: 0; z-index: 29; padding: 0.5rem 1rem;">
+    <div class="is-flex is-flex-direction-column is-hidden-tablet">
+      <div class="is-flex is-align-items-center mb-2">
+        <span class="icon mr-2">
+          <i class="fas fa-archive"></i>
+        </span>
+        <strong>Archived: ${current_season.name}</strong>
+      </div>
+      <form action="/administration/seasons/clear" method="post">
+        <button class="button is-warning is-light is-small is-fullwidth" type="submit">
+          Return to Current Season
+        </button>
+      </form>
+    </div>
+    <div class="container is-hidden-mobile">
+      <div class="level mb-0">
+        <div class="level-left">
+          <div class="level-item">
+            <span class="icon mr-2">
+              <i class="fas fa-archive"></i>
+            </span>
+            <strong>Viewing archived season: ${current_season.name}</strong>
+          </div>
+        </div>
+        <div class="level-right">
+          <div class="level-item">
+            <form action="/administration/seasons/clear" method="post">
+              <button class="button is-warning is-light is-small" type="submit">
+                Return to Current Season
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <div class="columns is-gapless is-multiline">
     <!-- Optional Left Spacer (hide on mobile/tablet) -->

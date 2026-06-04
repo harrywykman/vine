@@ -32,11 +32,13 @@ class DetailsViewModel(ViewModelBase):
         )
 
         self.sprays: list[Spray] = vineyard_service.eagerly_get_vineyard_sprays(
-            self.session, self.id
+            self.session, self.id, self.current_spray_program_ids
         )
 
         self.spray_records: list[SprayRecord] = (
-            vineyard_service.eagerly_get_vineyard_spray_records(self.session, self.id)
+            vineyard_service.eagerly_get_vineyard_spray_records(
+                self.session, self.id, self.current_spray_program_ids
+            )
         )
 
         # Add spray program completion status as a dictionary
@@ -50,7 +52,7 @@ class DetailsViewModel(ViewModelBase):
         for spray in self.sprays:
             self.spray_completion_status[spray.id] = (
                 vineyard_service.spray_complete_for_vineyard(
-                    self.session, spray.id, self.id
+                    self.session, spray.id, self.id, self.current_spray_program_ids
                 )
             )
 

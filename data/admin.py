@@ -121,23 +121,17 @@ class SprayProgramAdmin(ModelView, model=SprayProgram):
     column_list = [
         SprayProgram.id,
         SprayProgram.name,
-        SprayProgram.year_start,
-        SprayProgram.year_end,
         SprayProgram.date_created,
     ]
 
     column_searchable_list = [SprayProgram.name]
 
     column_filters = [
-        SprayProgram.year_start,
-        SprayProgram.year_end,
         SprayProgram.date_created,
     ]
 
     form_columns = [
         SprayProgram.name,
-        SprayProgram.year_start,
-        SprayProgram.year_end,
     ]
 
 

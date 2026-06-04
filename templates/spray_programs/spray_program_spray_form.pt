@@ -3,7 +3,7 @@
         <section class="section">
             <div class="container">
                 <h1 class="title">Add Spray <span tal:condition="spray_program">to ${spray_program.name}
-                        ${spray_program.year_start} / ${spray_program.year_end}</span></h1>
+                    </span></h1>
                 <div class="level-right">
                     <div class="level-item">
                         <a href="/spray_programs/${spray_program.id}" class="button">
@@ -11,7 +11,7 @@
                                 <i class="fas fa-arrow-left"></i>
                             </span>
                             <span>Back to to ${spray_program.name}
-                                ${spray_program.year_start} / ${spray_program.year_end}</span>
+                            </span>
                         </a>
                     </div>
                 </div>

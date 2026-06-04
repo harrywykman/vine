@@ -6,7 +6,7 @@ from sqlmodel import select
 from starlette.requests import Request
 
 from data.user import UserRole
-from data.vineyard import ManagementUnit, Spray, SprayProgram, SprayRecord
+from data.vineyard import ManagementUnit, Spray, SprayProgram, SprayRecord, SpraySeason
 from viewmodels.shared.viewmodel import ViewModelBase
 
 
@@ -29,10 +29,21 @@ class MUFullSprayHistoryViewModel(ViewModelBase):
         if not self.management_unit:
             raise ValueError(f"Management Unit with ID {management_unit_id} not found")
 
-        # Get all spray records for this management unit, ordered by most recent first
-        self.spray_records: List[SprayRecord] = session.exec(
+        """ self.spray_records: List[SprayRecord] = session.exec(
             select(SprayRecord)
             .where(SprayRecord.management_unit_id == management_unit_id)
+            .order_by(
+                SprayRecord.date_completed.desc().nulls_last(),
+                SprayRecord.date_created.desc(),
+            )
+        ).all()"""
+
+        # Get all spray records for this management unit for the current season, ordered by most recent first
+        self.spray_records: List[SprayRecord] = session.exec(
+            select(SprayRecord)
+            .join(Spray)
+            .where(SprayRecord.management_unit_id == management_unit_id)
+            .where(Spray.spray_program_id.in_(self.current_spray_program_ids))
             .order_by(
                 SprayRecord.date_completed.desc().nulls_last(),
                 SprayRecord.date_created.desc(),
@@ -49,9 +60,10 @@ class MUFullSprayHistoryViewModel(ViewModelBase):
             program_ids = list(set(spray.spray_program_id for spray in self.sprays))
             self.spray_programs: List[SprayProgram] = session.exec(
                 select(SprayProgram)
+                .join(SpraySeason)
                 .where(SprayProgram.id.in_(program_ids))
                 .order_by(
-                    SprayProgram.year_start.desc(), SprayProgram.date_created.desc()
+                    SpraySeason.season_start.desc(), SprayProgram.date_created.desc()
                 )
             ).all()
         else:

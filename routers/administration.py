@@ -20,6 +20,7 @@ from dependencies import get_current_user, get_session
 from services import chemical_service, user_service
 from services.user_service import get_users_by_role
 from viewmodels.admin.admin_viewmodels import (
+    AdminArchivedSeasonsViewModel,
     AdminDashboardViewModel,
     ChemicalManagementViewModel,
     SprayProgressReportViewModel,
@@ -46,6 +47,38 @@ async def admin_dashboard(request: Request, session: Session = Depends(get_sessi
             return RedirectResponse(url="/login", status_code=302)
         else:
             return RedirectResponse(url="/unauthorised", status_code=302)
+
+
+@router.get("/archive", response_class=HTMLResponse, include_in_schema=False)
+@require_admin()
+@fastapi_chameleon.template("admin/archived_seasons.pt")
+async def admin_arcived_seasons(
+    request: Request, session: Session = Depends(get_session)
+):
+    """Archived seasons - accessible to admins and superadmins"""
+    try:
+        vm = AdminArchivedSeasonsViewModel(request, session)
+        return vm.to_dict()
+    except PermissionError as e:
+        if "Login required" in str(e):
+            return RedirectResponse(url="/login", status_code=302)
+        else:
+            return RedirectResponse(url="/unauthorised", status_code=302)
+
+
+@router.post("/seasons/{season_id}/view")
+def view_season(season_id: int, request: Request):
+    response = RedirectResponse(url="/vineyards", status_code=302)
+    response.set_cookie("viewing_season_id", str(season_id))
+    return response
+
+
+# In your route - clear back to current
+@router.post("/seasons/clear")
+def clear_season(request: Request):
+    response = RedirectResponse(url="/vineyards", status_code=302)
+    response.delete_cookie("viewing_season_id")
+    return response
 
 
 @router.get(

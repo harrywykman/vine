@@ -1,0 +1,107 @@
+<div metal:use-macro="load: ../shared/_layout.pt">
+    <div metal:fill-slot="content" tal:omit-tag="True">
+
+        <section class="section">
+            <div class="container">
+                <div class="level">
+                    <div class="level-left">
+                        <div class="level-item">
+                            <h1 class="title">Spray Seasons</h1>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Success Message -->
+                <div tal:condition="success" class="notification is-success">
+                    <button class="delete"></button>
+                    <p tal:content="success">Success message</p>
+                </div>
+
+                <!-- Error Message -->
+                <div tal:condition="error" class="notification is-danger">
+                    <button class="delete"></button>
+                    <p tal:content="error">Error message</p>
+                </div>
+
+                <!-- Mobile card view -->
+                <div class="is-hidden-tablet">
+                    <div tal:repeat="season seasons" class="box mb-3">
+                        <div class="is-flex is-justify-content-space-between is-align-items-center mb-2">
+                            <strong tal:content="season.name">Season Name</strong>
+                            <span tal:condition="season.is_current" class="tag is-success">Current</span>
+                            <span tal:condition="season.is_archived" class="tag is-warning">Archived</span>
+                        </div>
+                        <div class="is-size-7 has-text-grey mb-3">
+                            <span tal:content="python: season.season_start.strftime('%d/%m/%Y')">Start</span>
+                            &ndash;
+                            <span tal:content="python: season.season_end.strftime('%d/%m/%Y')">End</span>
+                        </div>
+                        <form tal:condition="not season.is_current"
+                            tal:attributes="action string:/administration/seasons/${season.id}/view" method="post">
+                            <button class="button is-small is-info is-fullwidth" type="submit">
+                                <span class="icon is-small">
+                                    <i class="fas fa-eye"></i>
+                                </span>
+                                <span>View Archived Season</span>
+                            </button>
+                        </form>
+                    </div>
+
+                    <div tal:condition="not seasons" class="box has-text-centered">
+                        <p class="has-text-grey">No seasons found</p>
+                    </div>
+                </div>
+
+                <!-- Desktop table view -->
+                <div class="box is-hidden-mobile">
+                    <table class="table is-fullwidth is-striped is-hoverable">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Start</th>
+                                <th>End</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr tal:repeat="season seasons">
+                                <td>
+                                    <strong tal:content="season.name">Season Name</strong>
+                                </td>
+                                <td tal:content="python: season.season_start.strftime('%d/%m/%Y')">Start</td>
+                                <td tal:content="python: season.season_end.strftime('%d/%m/%Y')">End</td>
+                                <td>
+                                    <span tal:condition="season.is_current" class="tag is-success">Current</span>
+                                    <span tal:condition="season.is_archived" class="tag is-warning">Archived</span>
+                                </td>
+                                <td>
+                                    <div class="buttons has-addons">
+                                        <form tal:condition="not season.is_current"
+                                            tal:attributes="action string:/administration/seasons/${season.id}/view"
+                                            method="post">
+                                            <button class="button is-small is-info" type="submit"
+                                                title="Browse this season">
+                                                <span class="icon is-small">
+                                                    <i class="fas fa-eye"></i>
+                                                </span>
+                                                <span>View</span>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr tal:condition="not seasons">
+                                <td colspan="5" class="has-text-centered">
+                                    <p class="has-text-grey">No seasons found</p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </section>
+    </div>
+</div>

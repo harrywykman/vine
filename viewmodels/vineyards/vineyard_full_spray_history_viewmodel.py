@@ -6,7 +6,14 @@ from sqlmodel import select
 from starlette.requests import Request
 
 from data.user import UserRole
-from data.vineyard import ManagementUnit, Spray, SprayProgram, SprayRecord, Vineyard
+from data.vineyard import (
+    ManagementUnit,
+    Spray,
+    SprayProgram,
+    SprayRecord,
+    SpraySeason,
+    Vineyard,
+)
 from viewmodels.shared.viewmodel import ViewModelBase
 
 
@@ -31,10 +38,22 @@ class VineyardFullSprayHistoryViewModel(ViewModelBase):
         management_unit_ids = [mu.id for mu in self.vineyard.management_units]
 
         if management_unit_ids:
-            # Get all spray records for all management units in this vineyard
+            """# Get all spray records for all management units in this vineyard
             self.spray_records: List[SprayRecord] = session.exec(
                 select(SprayRecord)
                 .where(SprayRecord.management_unit_id.in_(management_unit_ids))
+                .order_by(
+                    SprayRecord.date_completed.desc().nulls_last(),
+                    SprayRecord.date_created.desc(),
+                )
+            ).all()"""
+
+            # Get all spray records for this management unit for the current season, ordered by most recent first
+            self.spray_records: List[SprayRecord] = session.exec(
+                select(SprayRecord)
+                .join(Spray)
+                .where(SprayRecord.management_unit_id.in_(management_unit_ids))
+                .where(Spray.spray_program_id.in_(self.current_spray_program_ids))
                 .order_by(
                     SprayRecord.date_completed.desc().nulls_last(),
                     SprayRecord.date_created.desc(),
@@ -51,9 +70,11 @@ class VineyardFullSprayHistoryViewModel(ViewModelBase):
                 program_ids = list(set(spray.spray_program_id for spray in self.sprays))
                 self.spray_programs: List[SprayProgram] = session.exec(
                     select(SprayProgram)
+                    .join(SpraySeason)
                     .where(SprayProgram.id.in_(program_ids))
                     .order_by(
-                        SprayProgram.year_start.desc(), SprayProgram.date_created.desc()
+                        SpraySeason.season_start.desc(),
+                        SprayProgram.date_created.desc(),
                     )
                 ).all()
             else:

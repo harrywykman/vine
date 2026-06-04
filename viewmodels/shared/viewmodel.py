@@ -5,6 +5,7 @@ from starlette.requests import Request
 
 from data.user import User, UserRole
 from infrastructure import cookie_auth
+from services import spray_program_service
 from services.user_service import get_user_by_id
 
 
@@ -31,6 +32,22 @@ class ViewModelBase:
             if not self.user:
                 self.is_logged_in = False
                 self.user_id = None
+
+        # --- Spray season context ---
+        viewing_season_id = request.cookies.get("viewing_season_id")
+
+        if viewing_season_id:
+            self.current_season = spray_program_service.get_season_by_id(
+                self.session, int(viewing_season_id)
+            )
+        else:
+            self.current_season = spray_program_service.get_current_season(self.session)
+
+        self.current_spray_programs = (
+            self.current_season.spray_programs if self.current_season else []
+        )
+        self.current_spray_program_ids = {p.id for p in self.current_spray_programs}
+        self.is_viewing_archive = bool(viewing_season_id)
 
     # Message helper methods
 

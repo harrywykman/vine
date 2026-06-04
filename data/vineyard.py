@@ -302,22 +302,42 @@ class GrowthStage(SQLModel, table=True):
         return f"{self.el_number} - {self.description}"
 
 
+class SpraySeason(SQLModel, table=True):
+    __tablename__ = "spray_seasons"
+
+    id: Optional[int] = Field(default=None, primary_key=True)
+    name: str = Field(nullable=False)  # e.g. "2026/2027"
+    season_start: datetime.date = Field(nullable=False)  # e.g. 2026-07-01
+    season_end: datetime.date = Field(nullable=False)  # e.g. 2027-06-30
+    is_current: bool = Field(default=False, index=True)
+    is_archived: bool = Field(default=False, index=True)
+    date_created: datetime.datetime = Field(
+        sa_column=sa.Column(sa.DateTime, default=datetime.datetime.now, index=True)
+    )
+
+    spray_programs: List["SprayProgram"] = Relationship(back_populates="spray_season")
+
+    def __str__(self):
+        return f"{self.name}"
+
+
 class SprayProgram(SQLModel, table=True):
     __tablename__ = "spray_programs"
 
     id: Optional[int] = Field(default=None, primary_key=True)
     name: str = Field(nullable=False)
-    year_start: int = Field(default=datetime.datetime.now().year, index=True)
-    year_end: int = Field(default=datetime.datetime.now().year, index=True)
     date_created: datetime.datetime = Field(
         sa_column=sa.Column(sa.DateTime, default=datetime.datetime.now, index=True)
     )
+    spray_season_id: int = Field(
+        foreign_key="spray_seasons.id", nullable=True, index=True
+    )
 
-    # Many-to-many relationship with Spray
+    spray_season: SpraySeason = Relationship(back_populates="spray_programs")
     sprays: List["Spray"] = Relationship(back_populates="spray_program")
 
     def __str__(self):
-        return f"{self.name} ({self.year_start} / {self.year_end})"
+        return f"{self.name} ({self.spray_season.name})"
 
 
 class Spray(SQLModel, table=True):

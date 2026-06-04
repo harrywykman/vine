@@ -1,5 +1,3 @@
-from datetime import datetime
-
 from sqlmodel import Session
 from starlette.requests import Request
 
@@ -16,5 +14,3 @@ class FormViewModel(ViewModelBase):
 
         self.id: int = None
         self.name: str = None
-        self.year_start: int = datetime.now().year
-        self.year_end: int = datetime.now().year + 1

@@ -1,5 +1,3 @@
-from datetime import datetime
-
 from sqlmodel import Session, select
 from starlette.requests import Request
 
@@ -13,33 +11,26 @@ class CreateViewModel(ViewModelBase):
 
         self.id: int = None
         self.name: str = None
-        self.year_start: int = datetime.now().year
-        self.year_end: int = datetime.now().year + 1
 
     async def load(self):
         form = await self.request.form()
         self.name = form.get("name")
-        self.year_start = form.get("year_start")
-        self.year_end = form.get("year_end")
 
-        print("################## FORM ################")
-        print(form)
-        print("################## FORM ################")
+        if not self.current_season:
+            self.error = (
+                "No current spray season is set. Please contact an administrator."
+            )
+            return
 
         if not self.name or not self.name.strip():
             self.error = "A program name is required."
-        elif not self.year_start:
-            self.error = "A year the spray program starts is required"
-        elif not self.year_end:
-            self.error = "A year the spray program ends is required. Can be the same as the Year Start."
+            return
 
-        # Check for duplicate SprayProgram
         existing = self.session.exec(
             select(SprayProgram)
             .where(SprayProgram.name == self.name.strip())
-            .where(SprayProgram.year_start == self.year_start)
-            .where(SprayProgram.year_end == self.year_end)
+            .where(SprayProgram.spray_season_id == self.current_season.id)
         ).first()
 
         if existing:
-            self.error = f"A spray program with the name '{self.name}' for years {self.year_start}-{self.year_end} already exists."
+            self.error = f"A spray program named '{self.name}' already exists for {self.current_season.name}."

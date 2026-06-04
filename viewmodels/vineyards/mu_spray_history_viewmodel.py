@@ -29,12 +29,14 @@ class MUSprayHistoryViewModel(ViewModelBase):
         if not self.management_unit:
             raise ValueError(f"Management Unit with ID {management_unit_id} not found")
 
-        # Get all spray programs for dropdown (ordered by most recent first)
+        """# Get all spray programs for dropdown (ordered by most recent first)
         self.all_spray_programs: List[SprayProgram] = session.exec(
-            select(SprayProgram).order_by(
-                SprayProgram.year_start.desc(), SprayProgram.date_created.desc()
-            )
-        ).all()
+            select(SprayProgram)
+            .join(SpraySeason)
+            .order_by(SpraySeason.season_start.desc(), SprayProgram.date_created.desc())
+        ).all()"""
+
+        self.all_spray_programs: List[SprayProgram] = self.current_spray_programs
 
         # Determine which spray program to use
         if spray_program_id:

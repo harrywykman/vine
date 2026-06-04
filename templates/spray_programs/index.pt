@@ -3,11 +3,13 @@
         <div class="section content">
             <div class="container spray_program-list">
                 <div class="spray-program-list container">
-                    <h2 class="title">Spray Programs</h2>
+                    <h2 class="title">Spray Programs for ${current_season}</h2>
                     <div class="content">
-                        <a href="/spray_program/new" class="button is-link is-small" type="button">
-                            + Add Spray Program
-                        </a>
+                        <div tal:condition="not is_viewing_archive">
+                            <a href="/spray_program/new" class="button is-link is-small" type="button">
+                                + Add Spray Program
+                            </a>
+                        </div>
                     </div>
                     <div id="message-area"></div>
 
@@ -26,8 +28,7 @@
                                             <span class="icon loading-spinner">
                                                 <i class="fas fa-spinner"></i>
                                             </span>
-                                            <span class="normal-text">${sp.name} ${sp.year_start} /
-                                                ${sp.year_end}</span>
+                                            <span class="normal-text">${sp.name}</span>
                                             <span class="loading-text">Loading...</span>
                                         </a>
                                     </strong>
@@ -35,6 +36,16 @@
                             </tr>
                         </tbody>
                     </table>
+
+                    <div tal:condition="not is_viewing_archive">
+                        <div class="is-flex is-justify-content-flex-end mt-4">
+                            <button class="button is-warning is-small" hx-get="/spray_seasons/archive" hx-target="body"
+                                hx-swap="beforeend">
+                                Archive Season &amp; Start New
+                            </button>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>

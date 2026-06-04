@@ -3,7 +3,7 @@
         <div class="section content">
             <div class="container spray-list">
                 <div class="spray-list container">
-                    <h1 class="title">${spray_program.name} ${spray_program.year_start} / ${spray_program.year_end}</h1>
+                    <h1 class="title">${spray_program.name}</h1>
                     <div class="level-right">
                         <div class="level-item">
                             <a href="/spray_programs/" class="button">

@@ -10,6 +10,7 @@ from starlette import status
 from auth import permissions_decorators
 from dependencies import get_session
 from services import spray_program_service, spray_service
+from viewmodels.spray_programs.archive_season_viewmodel import ArchiveSeasonViewModel
 from viewmodels.spray_programs.create_viewmodel import CreateViewModel
 from viewmodels.spray_programs.details_viewmodel import DetailsViewModel
 from viewmodels.spray_programs.form_viewmodel import FormViewModel
@@ -32,6 +33,39 @@ router = APIRouter()
 
 
 # HTML routes
+
+
+## GET Archive Season Form (modal partial)
+@router.get("/spray_seasons/archive", response_class=HTMLResponse)
+@permissions_decorators.require_admin()
+@fastapi_chameleon.template("spray_programs/archive_season_modal.pt")
+def archive_season_form(request: Request, session: Session = Depends(get_session)):
+    vm = ArchiveSeasonViewModel(request, session)
+    return vm.to_dict()
+
+
+## POST Archive Season and Create New
+@router.post("/spray_seasons/archive")
+@permissions_decorators.require_admin()
+@fastapi_chameleon.template("spray_programs/archive_season_modal.pt")
+async def archive_season(request: Request, session: Session = Depends(get_session)):
+    vm = ArchiveSeasonViewModel(request, session)
+    await vm.load()
+
+    if vm.error:
+        return vm.to_dict()
+
+    spray_program_service.archive_current_season_and_create_new(
+        session=session,
+        new_season_name=vm.new_season_name,
+        new_season_start=vm.new_season_start,
+        new_season_end=vm.new_season_end,
+    )
+
+    response = responses.RedirectResponse(
+        url="/spray_programs", status_code=status.HTTP_302_FOUND
+    )
+    return response
 
 
 ## GET List Spray Programs
@@ -112,8 +146,6 @@ async def create_spray(request: Request, session: Session = Depends(get_session)
     vm = CreateViewModel(request, session)
     await vm.load()
 
-    if not vm:
-        raise HTTPException(status_code=404, detail="No view model.")
     if vm.error:
         print(vm.error)
         return vm.to_dict()
@@ -121,10 +153,9 @@ async def create_spray(request: Request, session: Session = Depends(get_session)
     # Create the spray
 
     spray_program = spray_program_service.create_spray_program(
-        session,
+        session=session,
         name=vm.name,
-        year_start=vm.year_start,
-        year_end=vm.year_end,
+        spray_season_id=vm.current_season.id,
     )
 
     if not spray_program:
@@ -155,7 +186,6 @@ def spray_spray_program_form(
     return vm.to_dict()
 
 
-# TODO refactor to use viewmodel
 ## POST Create Spray
 @router.post("/spray_program/{spray_program_id}/spray/new")
 @permissions_decorators.require_admin()

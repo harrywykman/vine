@@ -1,0 +1,58 @@
+<div class="modal is-active">
+    <div class="modal-background" hx-get="/empty" hx-target="closest .modal" hx-swap="outerHTML">
+    </div>
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title">Archive Current Season &amp; Start New</p>
+            <button class="delete" aria-label="close" hx-get="/empty" hx-target="closest .modal" hx-swap="outerHTML">
+            </button>
+        </header>
+
+        <section class="modal-card-body">
+            <div tal:condition="current_season">
+                <div class="notification is-warning is-light">
+                    This will archive <strong>${current_season.name}</strong> and start a new season.
+                    All current spray programs will be locked to the archived season.
+                </div>
+            </div>
+
+            <div tal:condition="error" class="notification is-danger is-light">
+                ${error}
+            </div>
+
+            <form id="archive-season-form" hx-post="/spray_seasons/archive" hx-target="closest .modal"
+                hx-swap="outerHTML">
+
+                <div class="field">
+                    <label class="label">New Season Name</label>
+                    <div class="control">
+                        <input class="input" type="text" name="new_season_name" placeholder="e.g. 2026/2027" required>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label">Season Start Date</label>
+                    <div class="control">
+                        <input class="input" type="date" name="new_season_start" required>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label">Season End Date</label>
+                    <div class="control">
+                        <input class="input" type="date" name="new_season_end" required>
+                    </div>
+                </div>
+            </form>
+        </section>
+
+        <footer class="modal-card-foot">
+            <button type="submit" form="archive-season-form" class="button is-warning">
+                Archive &amp; Start New Season
+            </button>
+            <button class="button" hx-get="/empty" hx-target="closest .modal" hx-swap="outerHTML">
+                Cancel
+            </button>
+        </footer>
+    </div>
+</div>

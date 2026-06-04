@@ -12,9 +12,10 @@ from data.vineyard import (
     Spray,
     SprayProgram,
     SprayRecord,
+    SpraySeason,
     Vineyard,
 )
-from services import vineyard_service
+from services import spray_program_service, vineyard_service
 from services.user_service import get_users_by_role
 from viewmodels.shared.viewmodel import ViewModelBase
 
@@ -54,9 +55,9 @@ class SprayProgressReportViewModel(ViewModelBase):
 
         # Get all spray programs for dropdown (ordered by most recent first)
         self.all_spray_programs = session.exec(
-            select(SprayProgram).order_by(
-                SprayProgram.year_start.desc(), SprayProgram.date_created.desc()
-            )
+            select(SprayProgram)
+            .join(SpraySeason)
+            .order_by(SpraySeason.season_start.desc(), SprayProgram.date_created.desc())
         ).all()
 
         # Determine which spray program to use
@@ -180,6 +181,18 @@ class UserManagementViewModel(ViewModelBase):
 
         if success:
             self.set_success(message=success)
+
+
+class AdminArchivedSeasonsViewModel(ViewModelBase):
+    def __init__(
+        self,
+        request: Request,
+        session: Session,
+    ):
+        super().__init__(request, session)
+        self.require_permission(UserRole.ADMIN)
+
+        self.seasons: List[SpraySeason] = spray_program_service.get_all_seasons(session)
 
 
 class ChemicalManagementViewModel(ViewModelBase):

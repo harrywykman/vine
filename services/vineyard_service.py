@@ -183,7 +183,9 @@ def get_all_spray_records(session: Session):
 
 # TODO Reduce eagerness!
 def eagerly_get_vineyard_spray_records(
-    session: Session, vineyard_id: int
+    session: Session,
+    vineyard_id: int,
+    spray_program_ids: set[int],
 ) -> list[SprayRecord]:
     statement = (
         select(SprayRecord)
@@ -191,6 +193,7 @@ def eagerly_get_vineyard_spray_records(
         .join(SprayRecord.spray)
         .join(Spray.growth_stage)  # for ordering
         .where(ManagementUnit.vineyard_id == vineyard_id)
+        .where(Spray.spray_program_id.in_(spray_program_ids))
         .options(
             selectinload(SprayRecord.management_unit)
             .selectinload(ManagementUnit.variety)
@@ -261,7 +264,12 @@ def eagerly_get_vineyard_spray_spray_records(
 
 
 # TODO Reduce eagerness!
-def eagerly_get_vineyard_sprays(session: Session, vineyard_id: int) -> list[Spray]:
+# Gets vineyard sprays for a given set of spray program ids
+def eagerly_get_vineyard_sprays(
+    session: Session,
+    vineyard_id: int,
+    spray_program_ids: set[int],
+) -> list[Spray]:
     statement = (
         select(Spray)
         .distinct(Spray.id)
@@ -269,6 +277,7 @@ def eagerly_get_vineyard_sprays(session: Session, vineyard_id: int) -> list[Spra
         .join(SprayRecord.management_unit)
         .join(Spray.growth_stage)
         .where(ManagementUnit.vineyard_id == vineyard_id)
+        .where(Spray.spray_program_id.in_(spray_program_ids))
         .options(
             selectinload(Spray.growth_stage),
             selectinload(Spray.spray_chemicals)
@@ -308,7 +317,10 @@ def get_spray_record_chemicals(
 
 
 def spray_complete_for_vineyard(
-    session: Session, spray_id: int, vineyard_id: int
+    session: Session,
+    spray_id: int,
+    vineyard_id: int,
+    spray_program_ids: set[int],
 ) -> bool:
     """
     Check if a spray program is complete for all management units that have spray records for this program.
@@ -324,6 +336,7 @@ def spray_complete_for_vineyard(
         .where(
             SprayRecord.spray_id == spray_id,
             ManagementUnit.vineyard_id == vineyard_id,
+            Spray.spray_program_id.in_(spray_program_ids),
         )
     )
     spray_records = session.exec(statement).all()
