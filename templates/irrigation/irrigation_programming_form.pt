@@ -1,0 +1,216 @@
+<div metal:use-macro="load: ../shared/_layout.pt">
+  <div metal:fill-slot="content" tal:omit-tag="True">
+
+    <style>
+      @media screen and (max-width: 768px) {
+        .programming-row {
+          background: hsl(0, 0%, 21%);
+          border: 1px solid hsl(0, 0%, 29%);
+          border-left: 4px solid hsl(204, 86%, 53%);
+          border-radius: 6px;
+          padding: 1rem;
+          margin-bottom: 1rem;
+        }
+
+        .programming-row.no-schedule {
+          border-left-color: hsl(0, 0%, 48%);
+          opacity: 0.6;
+        }
+
+        .prog-label {
+          font-size: 0.75rem;
+          font-weight: 600;
+          color: hsl(0, 0%, 71%);
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          margin-bottom: 0.25rem;
+        }
+      }
+    </style>
+
+    <div class="section content">
+
+      <!-- Header -->
+      <div
+        class="is-flex is-flex-direction-column is-flex-direction-row-tablet is-justify-content-space-between is-align-items-flex-start mb-4">
+        <div class="mb-3">
+          <h1 class="title is-size-3-mobile">Program Controllers</h1>
+          <p tal:condition="vineyard" class="subtitle is-6 has-text-grey">
+            ${vineyard.name}
+            <span tal:condition="current_irrigation_season">
+              &mdash; ${current_irrigation_season.name}
+            </span>
+          </p>
+        </div>
+        <div class="buttons">
+          <a href="/irrigation/program/" class="button is-light">
+            <span class="icon"><i class="fas fa-arrow-left"></i></span>
+            <span>Back</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- No rows -->
+      <div tal:condition="not rows" class="notification is-light">
+        No active management units for this vineyard.
+      </div>
+
+      <!-- Programming form -->
+      <div tal:condition="rows">
+
+        <div class="notification is-info is-light mb-4">
+          <span class="icon"><i class="fas fa-info-circle"></i></span>
+          Record what was programmed into each controller during this visit.
+          Blocks with no schedule set are shown greyed out and do not need to be programmed.
+        </div>
+
+        <form action="/irrigation/program/${vineyard_id}" method="post">
+
+          <!-- Desktop table layout -->
+          <div class="desktop-only">
+            <div class="box">
+              <table class="table is-fullwidth">
+                <thead>
+                  <tr>
+                    <th>Block</th>
+                    <th>Variety</th>
+                    <th>Schedule</th>
+                    <th>Last programmed</th>
+                    <th>Controller note</th>
+                    <th>Visit notes</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr tal:repeat="row rows"
+                    tal:attributes="class python:'has-text-grey' if not row.active_schedule else ''">
+
+                    <td class="has-text-weight-semibold">${row.management_unit.name}</td>
+
+                    <td>
+                      <span tal:condition="row.management_unit.variety">
+                        ${row.management_unit.variety.name}
+                      </span>
+                      <span tal:condition="not row.management_unit.variety" class="has-text-grey">—</span>
+                    </td>
+
+                    <td>
+                      <span tal:condition="row.active_schedule" class="tag is-success is-light is-small">
+                        ${row.schedule_summary}
+                      </span>
+                      <span tal:condition="not row.active_schedule" class="tag is-light is-small">
+                        No schedule
+                      </span>
+                    </td>
+
+                    <td class="is-size-7 has-text-grey is-italic">
+                      <span tal:condition="row.latest_programming_record">
+                        ${row.last_programmed_details}
+                        <br />
+                        <span class="has-text-grey-light">
+                          ${row.latest_programming_record.formatted_date_programmed}
+                        </span>
+                      </span>
+                      <span tal:condition="not row.latest_programming_record">—</span>
+                    </td>
+
+                    <td tal:condition="row.active_schedule">
+                      <input type="hidden" name="schedule_ids" value="${row.active_schedule.id}" />
+                      <div class="control">
+                        <input class="input is-small" type="text" name="controller_notes"
+                          placeholder="e.g. A - start 5:30pm, Tue/Fri"
+                          value="${row.latest_programming_record.controller_note if row.latest_programming_record else ''}" />
+                      </div>
+                    </td>
+                    <td tal:condition="not row.active_schedule">—</td>
+
+                    <td tal:condition="row.active_schedule">
+                      <div class="control">
+                        <input class="input is-small" type="text" name="notes" placeholder="Optional" />
+                      </div>
+                    </td>
+                    <td tal:condition="not row.active_schedule">—</td>
+
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Mobile card layout -->
+          <div class="mobile-only">
+            <div tal:repeat="row rows"
+              tal:attributes="class python:'programming-row' + (' no-schedule' if not row.active_schedule else '')">
+
+              <div class="is-flex is-justify-content-space-between is-align-items-flex-start mb-3">
+                <div>
+                  <div class="has-text-weight-semibold">${row.management_unit.name}</div>
+                  <div class="is-size-7 has-text-grey">
+                    <span tal:condition="row.management_unit.variety">
+                      ${row.management_unit.variety.name}
+                    </span>
+                  </div>
+                </div>
+                <span tal:condition="row.active_schedule" class="tag is-success is-light is-small">
+                  ${row.schedule_summary}
+                </span>
+                <span tal:condition="not row.active_schedule" class="tag is-light is-small">
+                  No schedule
+                </span>
+              </div>
+
+              <div tal:condition="row.latest_programming_record" class="mb-3">
+                <div class="prog-label">Last programmed</div>
+                <div class="is-size-7 is-italic has-text-grey">
+                  ${row.last_programmed_details}
+                  &mdash; ${row.latest_programming_record.formatted_date_programmed}
+                </div>
+              </div>
+
+              <div tal:condition="row.active_schedule">
+                <input type="hidden" name="schedule_ids" value="${row.active_schedule.id}" />
+
+                <div class="columns is-mobile is-multiline">
+                  <div class="column is-12">
+                    <div class="field">
+                      <div class="prog-label">Controller note</div>
+                      <div class="control">
+                        <input class="input is-small" type="text" name="controller_notes"
+                          placeholder="e.g. A - start 5:30pm, Tue/Fri"
+                          value="${row.latest_programming_record.controller_note if row.latest_programming_record else ''}" />
+                      </div>
+                    </div>
+                  </div>
+                  <div class="column is-12">
+                    <div class="field">
+                      <div class="prog-label">Visit notes (optional)</div>
+                      <div class="control">
+                        <input class="input is-small" type="text" name="notes"
+                          placeholder="Any issues or observations" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Submit -->
+          <div class="field mt-4">
+            <div class="control">
+              <button type="submit" class="button is-primary is-fullwidth-mobile">
+                <span class="icon"><i class="fas fa-check"></i></span>
+                <span>Save Programming Records</span>
+              </button>
+              <a href="/irrigation/program/" class="button is-light ml-2">
+                Cancel
+              </a>
+            </div>
+          </div>
+
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>

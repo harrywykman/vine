@@ -1,0 +1,218 @@
+<div metal:use-macro="load: ../shared/_layout.pt">
+  <div metal:fill-slot="content" tal:omit-tag="True">
+
+    <div class="section content">
+
+      <!-- Header -->
+      <div
+        class="is-flex is-flex-direction-column is-flex-direction-row-tablet is-justify-content-space-between is-align-items-flex-start mb-4">
+        <div class="mb-3">
+          <h1 class="title is-size-3-mobile">
+            <span tal:condition="is_edit">Edit Schedule</span>
+            <span tal:condition="not is_edit">Set Schedule</span>
+          </h1>
+          <p tal:condition="management_unit" class="subtitle is-6 has-text-grey">
+            ${management_unit.name}
+            <span tal:condition="management_unit.variety"> &mdash; ${management_unit.variety.name}</span>
+            <span tal:condition="current_irrigation_season"> &mdash; ${current_irrigation_season.name}</span>
+          </p>
+        </div>
+        <div class="buttons">
+          <a href="/irrigation/season/" class="button is-light">
+            <span class="icon"><i class="fas fa-arrow-left"></i></span>
+            <span>Back</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Emitter config reference — shown for planner's context -->
+      <div tal:condition="emitter_config" class="notification is-info is-light mb-4">
+        <span class="icon"><i class="fas fa-tint"></i></span>
+        <strong>Emitter config:</strong>
+        ${emitter_config.emitter_spacing_m}m spacing &mdash;
+        ${emitter_config.flow_rate_lph} L/h per emitter
+        <span class="is-size-7 has-text-grey ml-2">
+          (from ${emitter_config.effective_from.strftime('%d/%m/%Y')})
+        </span>
+      </div>
+      <div tal:condition="not emitter_config" class="notification is-warning is-light mb-4">
+        <span class="icon"><i class="fas fa-exclamation-triangle"></i></span>
+        No emitter configuration recorded for this block. Volume calculations will not be possible until one is added.
+      </div>
+
+      <!-- Schedule form -->
+      <div class="box">
+        <form tal:condition="not is_edit" action="/irrigation/schedule/new" method="post">
+          <input type="hidden" name="management_unit_id" value="${management_unit.id}" />
+
+          <div class="columns is-multiline">
+
+            <div class="column is-12-mobile is-4-tablet">
+              <div class="field">
+                <label class="label">Effective From</label>
+                <div class="control">
+                  <input class="input" type="date" name="effective_from"
+                    value="${effective_from.isoformat() if effective_from else ''}" required />
+                </div>
+                <p class="help">The date this schedule takes effect.</p>
+              </div>
+            </div>
+
+            <div class="column is-12-mobile is-4-tablet">
+              <div class="field">
+                <label class="label">Applications per week</label>
+                <div class="control">
+                  <input class="input" type="number" name="applications_per_week" min="0" max="14" step="1"
+                    value="${applications_per_week if applications_per_week is not None else ''}" required />
+                </div>
+                <p class="help">Enter 0 to record an explicit no-irrigation schedule.</p>
+              </div>
+            </div>
+
+            <div class="column is-12-mobile is-4-tablet">
+              <div class="field">
+                <label class="label">Duration per application (hours)</label>
+                <div class="control">
+                  <input class="input" type="number" name="duration_hours" min="0" max="24" step="0.5"
+                    value="${duration_hours if duration_hours is not None else ''}" required />
+                </div>
+                <p class="help">e.g. 1.5, 2.0, 0.5</p>
+              </div>
+            </div>
+
+            <div class="column is-12">
+              <div class="field">
+                <label class="label">Notes <span class="has-text-grey is-size-7">(optional)</span></label>
+                <div class="control">
+                  <input class="input" type="text" name="notes" value="${notes if notes else ''}"
+                    placeholder="e.g. Reduced due to rain forecast" />
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="field">
+            <div class="control">
+              <button type="submit" class="button is-primary">
+                <span class="icon"><i class="fas fa-check"></i></span>
+                <span>Set Schedule</span>
+              </button>
+              <a href="/irrigation/season/" class="button is-light ml-2">Cancel</a>
+            </div>
+          </div>
+
+        </form>
+
+        <!-- Edit form — correction only, no effective_from change -->
+        <form tal:condition="is_edit" action="/irrigation/schedule/${schedule.id}/edit" method="post">
+
+          <div class="notification is-warning is-light mb-4">
+            <span class="icon"><i class="fas fa-exclamation-circle"></i></span>
+            This form corrects an existing schedule in place. To change the schedule going forward, use <strong>Set
+              Schedule</strong> from the planner grid instead.
+          </div>
+
+          <div class="columns is-multiline">
+
+            <div class="column is-12-mobile is-4-tablet">
+              <div class="field">
+                <label class="label">Effective From</label>
+                <div class="control">
+                  <input class="input" type="date" name="effective_from"
+                    value="${effective_from.isoformat() if effective_from else ''}" required />
+                </div>
+                <p class="help">The date this schedule takes effect.</p>
+              </div>
+            </div>
+
+            <div class="column is-12-mobile is-4-tablet">
+              <div class="field">
+                <label class="label">Applications per week</label>
+                <div class="control">
+                  <input class="input" type="number" name="applications_per_week" min="0" max="14" step="1"
+                    value="${applications_per_week if applications_per_week is not None else ''}" required />
+                </div>
+              </div>
+            </div>
+
+            <div class="column is-12-mobile is-4-tablet">
+              <div class="field">
+                <label class="label">Duration per application (hours)</label>
+                <div class="control">
+                  <input class="input" type="number" name="duration_hours" min="0" max="24" step="0.5"
+                    value="${duration_hours if duration_hours is not None else ''}" required />
+                </div>
+              </div>
+            </div>
+
+            <div tal:condition="effective_until" class="column is-12-mobile is-4-tablet">
+              <div class="field">
+                <label class="label">Effective Until</label>
+                <div class="control">
+                  <input class="input" type="date" name="effective_until"
+                    value="${effective_until.isoformat() if effective_until else ''}" />
+                </div>
+                <p class="help">The date this schedule ended.</p>
+              </div>
+            </div>
+
+            <div class="column is-12">
+              <div class="field">
+                <label class="label">Notes <span class="has-text-grey is-size-7">(optional)</span></label>
+                <div class="control">
+                  <input class="input" type="text" name="notes" value="${notes if notes else ''}" />
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="field">
+            <div class="control">
+              <button type="submit" class="button is-info">
+                <span class="icon"><i class="fas fa-pencil-alt"></i></span>
+                <span>Save</span>
+              </button>
+              <a href="/irrigation/season/" class="button is-light ml-2">Cancel</a>
+            </div>
+          </div>
+
+        </form>
+      </div>
+
+      <!-- Schedule history for this MU -->
+      <div tal:condition="schedule_history" class="box">
+        <h2 class="title is-6">Schedule History</h2>
+        <table class="table is-fullwidth is-striped is-size-7">
+          <thead>
+            <tr>
+              <th>From</th>
+              <th>Until</th>
+              <th>Schedule</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr tal:repeat="s schedule_history">
+              <td>${s.effective_from.strftime('%d/%m/%Y')}</td>
+              <td>
+                <span tal:condition="s.effective_until">
+                  ${s.effective_until.strftime('%d/%m/%Y')}
+                </span>
+                <span tal:condition="not s.effective_until" class="tag is-success is-light is-small">
+                  Active
+                </span>
+              </td>
+              <td>${s.schedule_summary}</td>
+              <td class="has-text-grey is-italic">
+                <span tal:condition="s.notes">${s.notes}</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+</div>

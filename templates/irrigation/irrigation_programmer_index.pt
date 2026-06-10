@@ -1,0 +1,134 @@
+<div metal:use-macro="load: ../shared/_layout.pt">
+  <div metal:fill-slot="content" tal:omit-tag="True">
+
+    <div class="section content">
+
+      <!-- Header -->
+      <div
+        class="is-flex is-flex-direction-column is-flex-direction-row-tablet is-justify-content-space-between is-align-items-flex-start mb-4">
+        <div class="mb-3">
+          <h1 class="title is-size-3-mobile">Controller Programming</h1>
+          <p tal:condition="current_irrigation_season" class="subtitle is-6 has-text-grey">
+            ${current_irrigation_season.name}
+          </p>
+        </div>
+        <div class="buttons">
+          <a href="/irrigation/season/" class="button is-primary is-small">
+            <span class="icon"><i class="fas fa-th-list"></i></span>
+            <span>Planner</span>
+          </a>
+          <a href="/irrigation/" class="button is-light is-small">
+            <span class="icon"><i class="fas fa-calendar-alt"></i></span>
+            <span>Seasons</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- No season -->
+      <div tal:condition="not current_irrigation_season" class="notification is-warning">
+        <span class="icon"><i class="fas fa-exclamation-triangle"></i></span>
+        No active irrigation season.
+      </div>
+
+      <!-- No vineyards -->
+      <div tal:condition="current_irrigation_season and not vineyard_groups" class="notification is-light">
+        No active management units found.
+      </div>
+
+      <!-- Legend -->
+      <div tal:condition="vineyard_groups" class="mb-4">
+        <span class="tag is-warning is-light mr-2">
+          <span class="icon is-small"><i class="fas fa-exclamation-circle"></i></span>
+          <span>Needs programming</span>
+        </span>
+        <span class="tag is-success is-light mr-2">
+          <span class="icon is-small"><i class="fas fa-check"></i></span>
+          <span>Up to date</span>
+        </span>
+        <span class="tag">
+          <span class="icon is-small"><i class="fas fa-minus"></i></span>
+          <span>No schedule</span>
+        </span>
+      </div>
+
+      <!-- Desktop table -->
+      <div tal:condition="vineyard_groups" class="desktop-only">
+        <table class="table is-fullwidth is-striped is-hoverable">
+          <thead>
+            <tr>
+              <th>Vineyard</th>
+              <th>Blocks scheduled</th>
+              <th>Status</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr tal:repeat="group vineyard_groups">
+              <td>
+                <strong>${group.vineyard.name}</strong>
+              </td>
+              <td>
+                ${group.programmed_count} / ${group.total_count}
+              </td>
+              <td>
+                <span tal:condition="group.needs_attention" class="tag is-warning is-light">
+                  <span class="icon is-small"><i class="fas fa-exclamation-circle"></i></span>
+                  <span>Needs programming</span>
+                </span>
+                <span tal:condition="not group.needs_attention and group.programmed_count > 0"
+                  class="tag is-success is-light">
+                  <span class="icon is-small"><i class="fas fa-check"></i></span>
+                  <span>Up to date</span>
+                </span>
+                <span tal:condition="not group.needs_attention and group.programmed_count == 0" class="tag is-dark">
+                  No schedules
+                </span>
+              </td>
+              <td>
+                <a href="/irrigation/program/${group.vineyard.id}" class="button is-small is-primary is-outlined">
+                  <span class="icon"><i class="fas fa-sliders-h"></i></span>
+                  <span>Program</span>
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Mobile cards -->
+      <div tal:condition="vineyard_groups" class="mobile-only">
+        <div tal:repeat="group vineyard_groups" class="box mb-3"
+          tal:attributes="style python:'border-left: 4px solid hsl(48,100%,67%)' if group.needs_attention else 'border-left: 4px solid hsl(141,53%,53%)' if group.programmed_count > 0 else 'border-left: 4px solid hsl(0,0%,48%)'">
+
+          <div class="is-flex is-justify-content-space-between is-align-items-center mb-2">
+            <strong class="is-size-6">${group.vineyard.name}</strong>
+            <span tal:condition="group.needs_attention" class="tag is-warning is-light is-small">
+              <span class="icon is-small"><i class="fas fa-exclamation-circle"></i></span>
+              <span>Action needed</span>
+            </span>
+            <span tal:condition="not group.needs_attention and group.programmed_count > 0"
+              class="tag is-success is-light is-small">
+              <span class="icon is-small"><i class="fas fa-check"></i></span>
+              <span>Up to date</span>
+            </span>
+            <span tal:condition="not group.needs_attention and group.programmed_count == 0"
+              class="tag is-light is-small">
+              No schedules
+            </span>
+          </div>
+
+          <div class="is-size-7 has-text-grey mb-3">
+            ${group.programmed_count} of ${group.total_count} blocks programmed
+          </div>
+
+          <a href="/irrigation/program/${group.vineyard.id}"
+            class="button is-primary is-outlined is-fullwidth is-small">
+            <span class="icon"><i class="fas fa-sliders-h"></i></span>
+            <span>Program controllers</span>
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

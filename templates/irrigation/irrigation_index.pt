@@ -1,0 +1,153 @@
+<div metal:use-macro="load: ../shared/_layout.pt">
+  <div metal:fill-slot="content" tal:omit-tag="True">
+
+    <div class="section content">
+      <div
+        class="is-flex is-flex-direction-column is-flex-direction-row-tablet is-justify-content-space-between is-align-items-flex-start mb-4">
+        <div class="mb-3">
+          <h1 class="title is-size-3-mobile">Irrigation</h1>
+        </div>
+        <div class="buttons">
+          <a href="/irrigation/season/" class="button is-primary">
+            <span class="icon"><i class="fas fa-th-list"></i></span>
+            <span>Planner</span>
+          </a>
+          <a href="/irrigation/program/" class="button is-info">
+            <span class="icon"><i class="fas fa-sliders-h"></i></span>
+            <span>Program</span>
+          </a>
+        </div>
+      </div>
+
+
+      <!-- Season list -->
+      <div class="box">
+        <h2 class="title is-5">Seasons</h2>
+
+        <!-- No seasons yet -->
+        <div tal:condition="not seasons" class="notification is-light">
+          No irrigation seasons have been created yet.
+        </div>
+
+        <!-- Desktop table -->
+        <div tal:condition="seasons" class="desktop-only">
+          <table class="table is-fullwidth is-striped is-hoverable">
+            <thead>
+              <tr>
+                <th>Season</th>
+                <th>Start</th>
+                <th>End</th>
+                <th>Status</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr tal:repeat="season seasons">
+                <td>
+                  <strong>${season.name}</strong>
+                </td>
+                <td>${season.season_start.strftime('%d/%m/%Y')}</td>
+                <td>${season.season_end.strftime('%d/%m/%Y')}</td>
+                <td>
+                  <span tal:condition="season.is_current" class="tag is-success">Current</span>
+                  <span tal:condition="season.is_archived and not season.is_current"
+                    class="tag is-light">Archived</span>
+                </td>
+                <td>
+                  <div class="buttons are-small">
+                    <a tal:condition="season.is_current" href="/irrigation/season/"
+                      class="button is-primary is-outlined">
+                      <span class="icon"><i class="fas fa-th-list"></i></span>
+                      <span>View</span>
+                    </a>
+                    <a tal:condition="season.is_archived and not season.is_current"
+                      href="/irrigation/set_viewing_season/${season.id}" class="button is-light is-outlined">
+                      <span class="icon"><i class="fas fa-archive"></i></span>
+                      <span>View Archive</span>
+                    </a>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Mobile cards -->
+        <div tal:condition="seasons" class="mobile-only">
+          <div tal:repeat="season seasons" class="box mb-3" style="border-left: 4px solid hsl(204, 86%, 53%);">
+            <div class="is-flex is-justify-content-space-between is-align-items-center mb-2">
+              <strong class="is-size-6">${season.name}</strong>
+              <span tal:condition="season.is_current" class="tag is-success">Current</span>
+              <span tal:condition="season.is_archived and not season.is_current" class="tag is-light">Archived</span>
+            </div>
+            <div class="is-size-7 has-text-grey mb-3">
+              ${season.season_start.strftime('%d/%m/%Y')} &ndash; ${season.season_end.strftime('%d/%m/%Y')}
+            </div>
+            <div class="buttons are-small">
+              <a tal:condition="season.is_current" href="/irrigation/season/"
+                class="button is-primary is-outlined is-fullwidth">
+                <span class="icon"><i class="fas fa-th-list"></i></span>
+                <span>View</span>
+              </a>
+              <a tal:condition="season.is_archived and not season.is_current"
+                href="/irrigation/set_viewing_season/${season.id}" class="button is-light is-outlined is-fullwidth">
+                <span class="icon"><i class="fas fa-archive"></i></span>
+                <span>View Archive</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- New season form — admin only -->
+      <div tal:condition="is_admin" class="box">
+        <h2 class="title is-5">New Season</h2>
+        <form action="/irrigation/seasons/new" method="post">
+          <div class="columns is-multiline">
+            <div class="column is-12-mobile is-4-tablet">
+              <div class="field">
+                <label class="label">Season Name</label>
+                <div class="control">
+                  <input class="input" type="text" name="name" placeholder="e.g. 2025/2026" required />
+                </div>
+              </div>
+            </div>
+            <div class="column is-12-mobile is-4-tablet">
+              <div class="field">
+                <label class="label">Season Start</label>
+                <div class="control">
+                  <input class="input" type="date" name="season_start" required />
+                </div>
+              </div>
+            </div>
+            <div class="column is-12-mobile is-4-tablet">
+              <div class="field">
+                <label class="label">Season End</label>
+                <div class="control">
+                  <input class="input" type="date" name="season_end" required />
+                </div>
+              </div>
+            </div>
+            <div class="column is-12">
+              <div class="field">
+                <label class="label">Notes <span class="has-text-grey is-size-7">(optional)</span></label>
+                <div class="control">
+                  <input class="input" type="text" name="notes" />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="field">
+            <div class="control">
+              <button type="submit" class="button is-primary">
+                <span class="icon"><i class="fas fa-plus"></i></span>
+                <span>Create Season</span>
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>

@@ -1,0 +1,393 @@
+<div metal:use-macro="load: ../shared/_layout.pt">
+  <div metal:fill-slot="content" tal:omit-tag="True">
+
+    <style>
+      .stat-box {
+        text-align: center;
+        padding: 1.25rem;
+      }
+
+      .stat-value {
+        font-size: 2rem;
+        font-weight: 700;
+        line-height: 1;
+        margin-bottom: 0.25rem;
+      }
+
+      .stat-label {
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: hsl(0, 0%, 48%);
+      }
+
+      .config-history-row {
+        border-left: 3px solid hsl(204, 86%, 53%);
+        padding-left: 0.75rem;
+        margin-bottom: 0.75rem;
+      }
+
+      .config-history-row.is-current {
+        border-left-color: hsl(141, 53%, 53%);
+      }
+    </style>
+
+    <div class="section content">
+
+      <!-- Header -->
+      <div
+        class="is-flex is-flex-direction-column is-flex-direction-row-tablet is-justify-content-space-between is-align-items-flex-start mb-4">
+        <div class="mb-3">
+          <h1 class="title is-size-3-mobile">
+            ${management_unit.name}
+          </h1>
+          <p class="subtitle is-6 has-text-grey">
+            <span tal:condition="management_unit.vineyard">${management_unit.vineyard.name}</span>
+            <span tal:condition="management_unit.variety"> &mdash; ${management_unit.variety.name}</span>
+            <span> &mdash; ${management_unit.area} ha</span>
+          </p>
+        </div>
+        <div class="buttons">
+          <a href="/irrigation/season/" class="button is-light">
+            <span class="icon"><i class="fas fa-arrow-left"></i></span>
+            <span>Planner</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Season stats -->
+      <div tal:condition="season_stats and current_irrigation_season" class="box mb-5">
+        <h2 class="title is-5 mb-4">
+          ${current_irrigation_season.name} Season Statistics
+        </h2>
+
+        <div tal:condition="not season_stats.has_emitter_config" class="notification is-warning is-light mb-4">
+          <span class="icon"><i class="fas fa-exclamation-triangle"></i></span>
+          No emitter configuration recorded. Volume calculations are unavailable until one is added below.
+        </div>
+
+        <div class="columns is-multiline">
+          <div class="column is-12-mobile is-4-tablet">
+            <div class="box stat-box">
+              <div class="stat-value has-text-primary">
+                ${len(schedule_rows)}
+              </div>
+              <div class="stat-label">Schedules this season</div>
+            </div>
+          </div>
+
+          <div class="column is-12-mobile is-4-tablet">
+            <div class="box stat-box">
+              <div tal:condition="season_stats.has_emitter_config" class="stat-value has-text-info">
+                ${'{:.1f}'.format(float(season_stats.total_closed_hours))}
+              </div>
+              <div tal:condition="not season_stats.has_emitter_config" class="stat-value has-text-grey">
+                —
+              </div>
+              <div class="stat-label">Closed schedule hours</div>
+            </div>
+          </div>
+
+          <div class="column is-12-mobile is-4-tablet">
+            <div class="box stat-box">
+              <div tal:condition="season_stats.has_emitter_config and season_stats.total_volume_m3 > 0"
+                class="stat-value has-text-success">
+                ${'{:.1f}'.format(float(season_stats.total_volume_m3))}
+                <span class="is-size-6 has-text-grey">m³</span>
+              </div>
+              <div tal:condition="not season_stats.has_emitter_config or season_stats.total_volume_m3 == 0"
+                class="stat-value has-text-grey">
+                —
+              </div>
+              <div class="stat-label">Volume delivered (closed schedules)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Schedule history -->
+      <div tal:condition="current_irrigation_season" class="box mb-5">
+        <h2 class="title is-5 mb-4">
+          Schedule History
+          <span class="tag is-light ml-2">${current_irrigation_season.name}</span>
+        </h2>
+
+        <div tal:condition="not schedule_rows" class="has-text-grey is-italic">
+          No schedules recorded for this season.
+        </div>
+
+        <!-- Desktop table -->
+        <div tal:condition="schedule_rows" class="desktop-only">
+          <table class="table is-fullwidth is-striped">
+            <thead>
+              <tr>
+                <th>From</th>
+                <th>Until</th>
+                <th>Schedule</th>
+                <th>Days active</th>
+                <th>Volume (m³)</th>
+                <th>Set by</th>
+                <th>Notes</th>
+                <th>Edit</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr tal:repeat="row schedule_rows">
+                <td>${row.schedule.effective_from.strftime('%d/%m/%Y')}</td>
+                <td>
+                  <span tal:condition="row.is_active" class="tag is-success is-light is-small">
+                    Active
+                  </span>
+                  <span tal:condition="not row.is_active">
+                    ${row.schedule.effective_until.strftime('%d/%m/%Y')}
+                  </span>
+                </td>
+                <td>
+                  <span tal:condition="row.schedule.applications_per_week > 0">
+                    ${row.schedule.schedule_summary}
+                  </span>
+                  <span tal:condition="row.schedule.applications_per_week == 0" class="has-text-grey is-italic">
+                    No irrigation
+                  </span>
+                </td>
+                <td>
+                  <span tal:condition="row.days_active is not None">
+                    ${row.days_active}
+                  </span>
+                  <span tal:condition="row.days_active is None" class="has-text-grey">—</span>
+                </td>
+                <td>
+                  <span tal:condition="row.volume_m3 is not None">
+                    ${'{:.2f}'.format(float(row.volume_m3))}
+                  </span>
+                  <span tal:condition="row.volume_m3 is None" class="has-text-grey">—</span>
+                </td>
+                <td class="is-size-7 has-text-grey">
+                  <span tal:condition="row.schedule.created_by">
+                    ${row.schedule.created_by.name}
+                  </span>
+                  <span tal:condition="not row.schedule.created_by">—</span>
+                </td>
+                <td class="is-size-7 is-italic has-text-grey">
+                  <span tal:condition="row.schedule.notes">${row.schedule.notes}</span>
+                </td>
+                <td><a href="/irrigation/schedule/${row.schedule.id}/edit" class="button is-info is-outlined">
+                    <span class="icon"><i class="fas fa-pencil-alt"></i></span>
+                  </a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Mobile cards -->
+        <div tal:condition="schedule_rows" class="mobile-only">
+          <div tal:repeat="row schedule_rows" class="box mb-3"
+            tal:attributes="style python:'border-left: 4px solid hsl(141,53%,53%)' if row.is_active else 'border-left: 4px solid hsl(0,0%,86%)'">
+
+            <div class="is-flex is-justify-content-space-between mb-2">
+              <div>
+                <div class="has-text-weight-semibold">
+                  ${row.schedule.effective_from.strftime('%d/%m/%Y')}
+                  <span class="has-text-grey"> &rarr; </span>
+                  <span tal:condition="row.is_active" class="tag is-success is-light is-small">Active</span>
+                  <span tal:condition="not row.is_active">
+                    ${row.schedule.effective_until.strftime('%d/%m/%Y')}
+                  </span>
+                </div>
+                <div class="is-size-7 has-text-grey mt-1">
+                  <span tal:condition="row.days_active is not None">${row.days_active} days</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="columns is-mobile is-multiline is-size-7">
+              <div class="column is-6">
+                <div class="has-text-grey">Schedule</div>
+                <div class="has-text-weight-semibold">
+                  <span tal:condition="row.schedule.applications_per_week > 0">
+                    ${row.schedule.schedule_summary}
+                  </span>
+                  <span tal:condition="row.schedule.applications_per_week == 0" class="has-text-grey is-italic">
+                    No irrigation
+                  </span>
+                </div>
+              </div>
+              <div class="column is-6">
+                <div class="has-text-grey">Volume</div>
+                <div class="has-text-weight-semibold">
+                  <span tal:condition="row.volume_m3 is not None">
+                    ${'{:.2f}'.format(float(row.volume_m3))} m³
+                  </span>
+                  <span tal:condition="row.volume_m3 is None" class="has-text-grey">—</span>
+                </div>
+              </div>
+              <div tal:condition="row.schedule.notes" class="column is-12">
+                <div class="has-text-grey">Notes</div>
+                <div class="is-italic">${row.schedule.notes}</div>
+              </div>
+              <div class="column is-6">
+                <a href="/irrigation/schedule/${row.schedule.id}/edit" class="button is-info is-outlined">
+                  <span class="icon"><i class="fas fa-pencil-alt"></i></span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Emitter configuration -->
+      <div class="box mb-5">
+        <h2 class="title is-5 mb-4">Emitter Configuration</h2>
+
+        <!-- Current config summary -->
+        <div tal:condition="current_emitter_config" class="notification is-info is-light mb-4">
+          <div class="columns is-mobile">
+            <div class="column">
+              <div class="is-size-7 has-text-grey">Emitter spacing</div>
+              <div class="has-text-weight-semibold">${current_emitter_config.emitter_spacing_m} m</div>
+            </div>
+            <div class="column">
+              <div class="is-size-7 has-text-grey">Flow rate</div>
+              <div class="has-text-weight-semibold">${current_emitter_config.flow_rate_lph} L/h</div>
+            </div>
+            <div class="column">
+              <div class="is-size-7 has-text-grey">Emitters / ha</div>
+              <div class="has-text-weight-semibold">
+                ${'{:.0f}'.format(float(current_emitter_config.emitters_per_ha(management_unit.row_width)))}
+              </div>
+            </div>
+            <div class="column">
+              <div class="is-size-7 has-text-grey">Flow rate / ha / hr</div>
+              <div class="has-text-weight-semibold">
+                ${'{:.2f}'.format(float(current_emitter_config.volume_per_hour(management_unit.area,
+                management_unit.row_width)))} m³
+              </div>
+            </div>
+          </div>
+          <div class="is-size-7 has-text-grey mt-2">
+            Effective from ${current_emitter_config.effective_from.strftime('%d/%m/%Y')}
+            <span tal:condition="current_emitter_config.notes">
+              &mdash; ${current_emitter_config.notes}
+            </span>
+          </div>
+        </div>
+
+        <div tal:condition="not current_emitter_config" class="notification is-warning is-light mb-4">
+          <span class="icon"><i class="fas fa-exclamation-triangle"></i></span>
+          No emitter configuration recorded for this block.
+        </div>
+
+        <!-- Add new config form -->
+        <details class="details">
+          <summary class="summary p-3 is-clickable box">
+            <div class="level is-mobile">
+              <div class="level-left">
+                <div class="level-item">
+                  <strong>
+                    <span tal:condition="current_emitter_config">Add new emitter configuration</span>
+                    <span tal:condition="not current_emitter_config">Record emitter configuration</span>
+                  </strong>
+                </div>
+              </div>
+              <div class="level-right">
+                <div class="level-item">
+                  <span class="icon"><i class="fas fa-chevron-down"></i></span>
+                </div>
+              </div>
+            </div>
+          </summary>
+
+          <div class="box mt-0" style="border-top: none; border-radius: 0 0 4px 4px;">
+            <div tal:condition="current_emitter_config" class="notification is-warning is-light is-size-7 mb-4">
+              Adding a new configuration does not remove the previous one — it takes effect from the date you specify.
+              Previous volume calculations remain accurate.
+            </div>
+
+            <form action="/irrigation/block/${management_unit_id}/emitter/new" method="post">
+              <div class="columns is-multiline">
+                <div class="column is-12-mobile is-4-tablet">
+                  <div class="field">
+                    <label class="label">Effective From</label>
+                    <div class="control">
+                      <input class="input" type="date" name="effective_from"
+                        value="${emitter_config_effective_from.isoformat()}" required />
+                    </div>
+                    <p class="help">Date the new emitter configuration was installed.</p>
+                  </div>
+                </div>
+                <div class="column is-12-mobile is-4-tablet">
+                  <div class="field">
+                    <label class="label">Emitter spacing (m)</label>
+                    <div class="control">
+                      <input class="input" type="number" name="emitter_spacing_m" min="0.1" max="10" step="0.01"
+                        placeholder="e.g. 0.5"
+                        value="${current_emitter_config.emitter_spacing_m if current_emitter_config else ''}"
+                        required />
+                    </div>
+                    <p class="help">Distance between emitters along the row.</p>
+                  </div>
+                </div>
+                <div class="column is-12-mobile is-4-tablet">
+                  <div class="field">
+                    <label class="label">Flow rate (L/h per emitter)</label>
+                    <div class="control">
+                      <input class="input" type="number" name="flow_rate_lph" min="0.1" max="100" step="0.01"
+                        placeholder="e.g. 0.5"
+                        value="${current_emitter_config.flow_rate_lph if current_emitter_config else ''}" required />
+                    </div>
+                  </div>
+                </div>
+                <div class="column is-12">
+                  <div class="field">
+                    <label class="label">Notes <span class="has-text-grey is-size-7">(optional)</span></label>
+                    <div class="control">
+                      <input class="input" type="text" name="notes"
+                        placeholder="e.g. Upgraded to 0.6 L/h after replumbing" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="field">
+                <div class="control">
+                  <button type="submit" class="button is-primary">
+                    <span class="icon"><i class="fas fa-plus"></i></span>
+                    <span>Save Configuration</span>
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </details>
+
+        <!-- Configuration history -->
+        <div tal:condition="python:len(emitter_configs) > 1" class="mt-4">
+          <h3 class="title is-6">Configuration History</h3>
+          <div tal:repeat="config emitter_configs">
+            <div
+              tal:attributes="class python:'config-history-row is-current' if repeat.config.index == 0 else 'config-history-row'">
+              <div class="is-flex is-justify-content-space-between">
+                <div>
+                  <span class="has-text-weight-semibold">
+                    ${config.emitter_spacing_m}m spacing &mdash; ${config.flow_rate_lph} L/h
+                  </span>
+                  <span tal:condition="repeat.config.index == 0"
+                    class="tag is-success is-light is-small ml-2">Current</span>
+                </div>
+                <div class="is-size-7 has-text-grey">
+                  from ${config.effective_from.strftime('%d/%m/%Y')}
+                </div>
+              </div>
+              <div tal:condition="config.notes" class="is-size-7 is-italic has-text-grey mt-1">
+                ${config.notes}
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>

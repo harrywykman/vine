@@ -1,5 +1,3 @@
-
-
 #map { height: 500px; }
 
 .marker-label {
@@ -60,6 +58,24 @@
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
+}
+
+/* -------------------------------------------------------------------------
+   Responsive utility classes
+   desktop-only: visible on tablet and above, hidden on mobile
+   mobile-only:  visible on mobile only, hidden on tablet and above
+   ------------------------------------------------------------------------- */
+
+@media screen and (min-width: 769px) {
+    .mobile-only {
+        display: none !important;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .desktop-only {
+        display: none !important;
+    }
 }
 
 /* Mobile Optimizations */
@@ -123,4 +139,3 @@
     transform: translateY(1px);
   }
 }
-

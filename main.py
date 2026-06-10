@@ -25,6 +25,7 @@ from data.admin import (
     WineColourAdmin,
 )
 from database import engine
+from irrigation import include_irrigation
 from routers import (
     account,
     administration,
@@ -42,6 +43,8 @@ if SETTINGS.deploy == "True":
     app = FastAPI(docs_url=None, redoc_url=None)
 else:
     app = FastAPI()
+
+include_irrigation(app)
 
 # Chameleon templates
 
@@ -100,3 +103,6 @@ if SETTINGS.deploy != "True":
     admin.add_view(SprayChemicalAdmin)
     admin.add_view(SprayRecordChemicalAdmin)
     admin.add_view(SprayProgramAdmin)
+
+
+# IRRIGATION MODULE
