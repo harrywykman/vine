@@ -188,6 +188,87 @@
                         </a>
                     </div>
                 </div>
+                <div class="vineyard container">
+                <div class="box">
+
+                    <h2 class="title is-4">Operations</h2>
+
+                    <div class="columns">
+
+                        <div class="column">
+                            <div class="card">
+                                <div class="card-content">
+                                    <p class="title is-5">
+                                        <span class="icon">
+                                            <i class="fas fa-spray-can"></i>
+                                        </span>
+                                        Spray Program
+                                    </p>
+
+                                    <p class="has-text-grey">
+                                        View current spray program and records.
+                                    </p>
+
+                                    <br>
+
+                                    <a href="/vineyards/${vineyard.id}/sprays"
+                                    class="button is-primary is-fullwidth">
+                                        Open
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div tal:condition="is_logged_in and modules['monitoring']" class="column">
+                            <div class="card">
+                                <div class="card-content">
+                                    <p class="title is-5">
+                                        <span class="icon">
+                                            <i class="fas fa-clipboard"></i>
+                                        </span>
+                                        Monitoring
+                                    </p>
+
+                                    <p class="has-text-grey">
+                                        View current monitoring records.
+                                    </p>
+
+                                    <br>
+
+                                    <a href="/monitoring/${vineyard.id}/"
+                                    class="button is-primary is-fullwidth">
+                                        Open
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div tal:condition="is_logged_in and modules['irrigation']" class="column">
+                            <div class="card">
+                                <div class="card-content">
+                                    <p class="title is-5">
+                                        <span class="icon">
+                                            <i class="fas fa-droplet"></i>
+                                        </span>
+                                        Irrigation
+                                    </p>
+
+                                    <p class="has-text-grey">
+                                        View current irrigation program and records.
+                                    </p>
+
+                                    <br>
+
+                                    <a href="/irrigation/${vineyard.id}"
+                                    class="button is-primary is-fullwidth">
+                                        Open
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
 
                 <!-- Spray Records Section -->
                 <div class="content">

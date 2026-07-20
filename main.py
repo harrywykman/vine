@@ -44,7 +44,19 @@ if SETTINGS.deploy == "True":
 else:
     app = FastAPI()
 
+# Set default state for modules prior to inclusion
+app.state.modules = {
+    "irrigation": False,
+    "monitoring": False,
+}
+
+# Include Irrigation Module
+
 include_irrigation(app)
+
+# Include Monitoring Module
+
+# include_monitoring(app)
 
 # Chameleon templates
 

@@ -15,3 +15,4 @@ def include_irrigation(app: FastAPI) -> None:
     The irrigation tables will remain in the database but be inert.
     """
     app.include_router(router)
+    app.state.modules["irrigation"] = True
