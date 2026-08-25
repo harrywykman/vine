@@ -28,11 +28,11 @@
                     </div>
                     <div class="level-right">
                         <div class="level-item">
-                            <a href="/vineyards/${vineyard.id}" class="button">
+                            <a href="/vineyards/${vineyard.id}/sprays" class="button">
                                 <span class="icon">
                                     <i class="fas fa-arrow-left"></i>
                                 </span>
-                                <span>Back to Vineyard</span>
+                                <span>Back to ${vineyard.name} Spray Records</span>
                             </a>
                         </div>
                     </div>

@@ -1,0 +1,642 @@
+<div metal:use-macro="load: ../shared/_layout.pt">
+    <div metal:fill-slot="content" tal:omit-tag="True">
+        <style>
+            /* Custom styling for the collapsible details */
+            .details summary {
+                cursor: pointer;
+                border-radius: 4px;
+                transition: background-color 0.2s ease;
+            }
+
+            .details summary:hover {
+                background-color: hsl(0, 0%, 21%) !important;
+            }
+
+            .details[open] summary .fa-chevron-down {
+                transform: rotate(180deg);
+                transition: transform 0.2s ease;
+            }
+
+            .details summary .fa-chevron-down {
+                transition: transform 0.2s ease;
+            }
+
+            /* Remove default browser styling */
+            .details summary::-webkit-details-marker {
+                display: none;
+            }
+
+            .details summary::marker {
+                display: none;
+            }
+
+            /* Mobile optimizations */
+            @media screen and (max-width: 768px) {
+
+                /* Management Units Mobile Cards */
+                .management-unit-card {
+                    background: hsl(0, 0%, 21%);
+                    border-left: 4px solid hsl(204, 86%, 53%);
+                    margin-bottom: 1rem;
+                    padding: 1rem;
+                    border-radius: 6px;
+                    border: 1px solid hsl(0, 0%, 29%);
+                }
+
+                .management-unit-card h3 {
+                    margin-bottom: 0.5rem;
+                    color: hsl(0, 0%, 96%);
+                }
+
+                .management-unit-info {
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    gap: 0.5rem;
+                    font-size: 0.9rem;
+                }
+
+                .management-unit-info>div {
+                    display: flex;
+                    flex-direction: column;
+                }
+
+                .management-unit-info .label {
+                    font-weight: 600;
+                    color: hsl(0, 0%, 71%);
+                    font-size: 0.8rem;
+                }
+
+                .management-unit-info>div>span:not(.label) {
+                    color: hsl(0, 0%, 86%);
+                }
+
+                /* Spray records mobile optimization */
+                .spray-details-mobile {
+                    display: grid;
+                    gap: 1rem;
+                }
+
+                .spray-info-card {
+                    background: hsl(0, 0%, 18%);
+                    padding: 1rem;
+                    border-radius: 6px;
+                    border: 1px solid hsl(0, 0%, 29%);
+                }
+
+                .spray-chemicals-mobile {
+                    background: hsl(0, 0%, 14%);
+                    border-radius: 6px;
+                    padding: 0.75rem;
+                    margin-top: 0.5rem;
+                    border: 1px solid hsl(0, 0%, 29%);
+                }
+
+                .chemical-item {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    padding: 0.5rem 0;
+                    border-bottom: 1px solid hsl(0, 0%, 29%);
+                }
+
+                .chemical-item:last-child {
+                    border-bottom: none;
+                }
+
+                .chemical-name {
+                    font-weight: 600;
+                    flex: 1;
+                    color: hsl(0, 0%, 96%);
+                }
+
+                .chemical-rate {
+                    font-size: 0.9rem;
+                    color: hsl(0, 0%, 71%);
+                }
+
+                /* Management unit spray records */
+                .mu-spray-record {
+                    background: hsl(0, 0%, 18%);
+                    border: 1px solid hsl(0, 0%, 29%);
+                    border-radius: 6px;
+                    padding: 1rem;
+                    margin-bottom: 0.75rem;
+                }
+
+                .mu-header {
+                    display: flex;
+                    align-items: center;
+                    margin-bottom: 0.5rem;
+                }
+
+                .mu-header .has-text-weight-semibold {
+                    color: hsl(0, 0%, 96%);
+                }
+
+                .mu-header .has-text-grey {
+                    color: hsl(0, 0%, 71%) !important;
+                }
+
+                .mu-status {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    margin-top: 0.5rem;
+                }
+
+                /* Make buttons more touch-friendly */
+                .button.is-small {
+                    min-height: 40px;
+                    padding: 0.5rem 1rem;
+                }
+
+                /* Map container responsive */
+                #map {
+                    height: 400px !important;
+                    border-radius: 6px;
+                }
+            }
+
+            /* Desktop styles */
+            @media screen and (min-width: 769px) {
+                .mobile-only {
+                    display: none !important;
+                }
+
+                #map {
+                    height: 400px;
+                }
+            }
+
+            /* Mobile only styles */
+            @media screen and (max-width: 768px) {
+                .desktop-only {
+                    display: none !important;
+                }
+            }
+        </style>
+
+        <div class="section content">
+            <div class="vineyard container">
+                <h1 class="title is-size-3-mobile">${vineyard.name} Spray Records</h1>
+                <div class="level-right">
+                    <div class="level-item">
+                        <a href="/vineyards/${vineyard.id}" class="button">
+                            <span class="icon">
+                                <i class="fas fa-arrow-left"></i>
+                            </span>
+                            <span>Back to ${vineyard.name}</span>
+                        </a>
+                    </div>
+                </div>
+
+
+
+
+                <!-- Spray Records Section -->
+                <div class="content">
+                    <div class="container spray_record_list">
+                        <div class="section content">
+                            <div class="level-right">
+                                <div class="level-item">
+                                    <a href="/vineyards/${vineyard.id}/full_spray_history" class="button">
+                                        <span class="icon">
+                                            <i class="fas fa-history"></i>
+                                        </span>
+                                        <span>View Full Spray History</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="" tal:repeat="sp sprays" id="spray_container_${sp.id}">
+
+                            <!-- Collapsible details element -->
+                            <details class="details box"
+                                tal:attributes="open python:'open' if not spray_completion_status[sp.id] else None">
+                                <summary class="summary p-4 is-clickable">
+                                    <div class="level">
+                                        <div class="level-left">
+                                            <div class="level-item">
+                                                <strong class="title is-5 is-size-6-mobile">${sp.name}</strong>
+                                            </div>
+                                            <div class="level-item">
+                                                <span class="tag is-success ml-2"
+                                                    tal:condition="spray_completion_status[sp.id]">
+                                                    Complete - ${spray_completion_dates[sp.id]}
+                                                </span>
+                                                <div tal:condition="not spray_completion_status[sp.id]">
+                                                    <span class="tag is-warning ml-2">
+                                                        Incomplete
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="level-right">
+                                            <div class="level-item">
+                                                <span class="icon">
+                                                    <i class="fas fa-chevron-down"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </summary>
+
+                                <!-- Desktop detailed content -->
+                                <div class="mt-4 desktop-only">
+                                    <table class="table is-fullwidth">
+                                        <thead>
+                                            <tr>
+                                                <th></th>
+                                                <th>Water Spray Rate / ha</th>
+                                                <th>Ideal EL</th>
+                                                <th>Spray Details</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>
+                                                    <strong>
+                                                        <a
+                                                            href="/vineyards/${vineyard.id}/spray_records/${sp.id}/new">${sp.name}</a>
+                                                    </strong>
+                                                </td>
+                                                <td>${sp.water_spray_rate_per_hectare} L</td>
+                                                <td>${sp.growth_stage.el_number}</td>
+                                                <td>
+                                                    <div class="box">
+                                                        <table class="table is-narrow is-fullwidth is-striped">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th></th>
+                                                                    <th>Mix Rate / 100L</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr tal:repeat="spc sp.spray_chemicals">
+                                                                    <td>${spc.chemical.name}</td>
+                                                                    <td>${spc.calculated_mix_rate_per_100L()}
+                                                                        ${spc.chemical.rate_unit.value}</td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <!-- Mobile detailed content -->
+                                <div class="mt-4 mobile-only">
+                                    <div class="spray-details-mobile">
+                                        <div class="spray-info-card">
+                                            <h4 class="is-size-6 has-text-weight-semibold mb-2">
+                                                <a
+                                                    href="/vineyards/${vineyard.id}/spray_records/${sp.id}/new">${sp.name}</a>
+                                            </h4>
+                                            <div class="columns is-mobile">
+                                                <div class="column">
+                                                    <div class="is-size-7 has-text-grey-light">Water Rate</div>
+                                                    <div class="has-text-weight-semibold has-text-light">
+                                                        ${sp.water_spray_rate_per_hectare} L/ha</div>
+                                                </div>
+                                                <div class="column">
+                                                    <div class="is-size-7 has-text-grey-light">Ideal EL</div>
+                                                    <div class="has-text-weight-semibold has-text-light">
+                                                        ${sp.growth_stage.el_number}</div>
+                                                </div>
+                                            </div>
+
+                                            <tal:block
+                                                tal:condition="python:any(sr.note for mu in management_units for sr in mu.spray_records if sr.spray.id == sp.id)">
+                                                <span class="icon has-text-info ml-2"
+                                                    title="Notes exist for one or more management units">
+                                                    <i class="fas fa-sticky-note"></i>
+                                                </span>
+                                                <span class="is-italic">There is a note on one or more management units
+                                                    for this spray.</span>
+                                            </tal:block>
+
+                                            <div class="spray-chemicals-mobile">
+                                                <div class="is-size-7 has-text-grey-light mb-2">CHEMICALS</div>
+                                                <div tal:repeat="spc sp.spray_chemicals" class="chemical-item">
+                                                    <span class="chemical-name">${spc.chemical.name}</span>
+                                                    <span class="chemical-rate">${spc.calculated_mix_rate_per_100L()}
+                                                        ${spc.chemical.rate_unit.value}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Create Spray Record Button -->
+                                <div tal:condition="not spray_completion_status[sp.id]"
+                                    class="section has-text-centered">
+                                    <a hx-get="/vineyards/${vineyard.id}/spray_records/${sp.id}/new" hx-target="body"
+                                        hx-swap="outerHTML" hx-push-url="true"
+                                        class="button is-primary is-outlined loading-button">
+                                        <span class="icon loading-spinner">
+                                            <i class="fas fa-spinner"></i>
+                                        </span>
+                                        <span class="normal-text">Complete Spray Record</span>
+                                        <span class="loading-text">Loading...</span>
+                                    </a>
+                                </div>
+
+                                <!-- Management Unit Spray Records -->
+                                <div class="desktop-only">
+                                    <div class="box">
+                                        <table class="table is-fullwidth">
+                                            <thead>
+                                                <tr>
+                                                    <th>Management Unit</th>
+                                                    <th>Completed</th>
+                                                    <th></th>
+                                                    <th tal:condition="is_admin"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr tal:repeat="mu management_units">
+                                                <tr tal:repeat="sr mu.spray_records">
+                                                    <div tal:condition="sr.spray.id == sp.id">
+                                                        <td>
+                                                            <i tal:condition="mu.variety" class="fas fa-wine-bottle"
+                                                                tal:attributes="class python:'fas fa-wine-bottle has-text-danger' if mu.variety.wine_colour.name == 'Red' else 'fas fa-wine-bottle has-text-white'">
+                                                            </i>&nbsp;
+                                                            <a tal:condition="mu.variety"
+                                                                hx-get="/vineyards/${vineyard.id}/spray_record/${sr.id}"
+                                                                hx-target="body" hx-swap="outerHTML" hx-push-url="true"
+                                                                class="loading-button">
+                                                                <span class="icon loading-spinner">
+                                                                    <i class="fas fa-spinner"></i>
+                                                                </span>
+                                                                <span class="normal-text">${mu.name} &mdash;
+                                                                    ${mu.variety.name}</span>
+                                                                <span class="loading-text">Loading...</span>
+                                                            </a>
+                                                            <tal:block tal:condition="not mu.variety">
+                                                                <i
+                                                                    class="fas fa-wine-bottle has-text-grey"></i>&nbsp;${mu.name}
+                                                                &mdash; ${mu.status}
+                                                            </tal:block>
+
+                                                        </td>
+                                                        <td>
+                                                            <span class="tag is-success" tal:condition="sr.complete">
+                                                                Complete - ${sr.formatted_date_completed}
+                                                            </span>
+                                                            <span class="tag is-small is-danger"
+                                                                tal:condition="not sr.complete">
+                                                                Incomplete
+                                                            </span>
+                                                        </td>
+                                                        <td>
+                                                            <div tal:condition="sr.complete" class="buttons">
+                                                                <a hx-get="/vineyards/${vineyard.id}/spray_records/${sr.id}/edit"
+                                                                    hx-target="body" hx-swap="outerHTML"
+                                                                    hx-push-url="true"
+                                                                    class="button is-small is-info is-outlined loading-button">
+                                                                    <span class="icon loading-spinner">
+                                                                        <i class="fas fa-spinner"></i>
+                                                                    </span>
+                                                                    <span class="normal-text">Edit</span>
+                                                                    <span class="loading-text">Loading...</span>
+                                                                </a>
+                                                            </div>
+                                                            <div tal:condition="not sr.complete and is_admin"
+                                                                class="buttons">
+                                                                <a hx-delete="/vineyards/${vineyard.id}/spray_records/${sr.id}/delete"
+                                                                    hx-target="body"
+                                                                    hx-confirm="Are you sure you want to delete the incomplete spray record for ${mu.name} &mdash; ${mu.variety}?"
+                                                                    hx-swap="outerHTML" hx-push-url="false"
+                                                                    class="button is-small is-danger is-outlined loading-button">
+                                                                    <span class="icon loading-spinner">
+                                                                        <i class="fas fa-spinner"></i>
+                                                                    </span>
+                                                                    <span class="normal-text">Delete</span>
+                                                                    <span class="loading-text">Loading...</span>
+                                                                </a>
+                                                            </div>
+                                                        </td>
+                                                        <td tal:condition="is_admin">
+                                                            <button
+                                                                hx-get="/vineyards/${vineyard.id}/spray_records/${sr.id}/note_form"
+                                                                hx-target="#note-row-${sr.id}" hx-swap="outerHTML"
+                                                                class="button is-small is-primary is-outlined loading-button">
+                                                                <span class="icon loading-spinner">
+                                                                    <i class="fas fa-spinner"></i>
+                                                                </span>
+                                                                <span class="normal-text">${'Edit Note' if sr.note else
+                                                                    'Add Note'}</span>
+                                                                <span class="loading-text">Loading...</span>
+                                                            </button>
+                                                        </td>
+                                                    </div>
+                                                </tr>
+                                                <tal:block tal:repeat="sr mu.spray_records">
+                                                    <tal:block tal:condition="sr.spray.id == sp.id">
+                                                        <tr id="note-row-${sr.id}">
+                                                            <tal:block tal:condition="sr.note">
+                                                                <td></td>
+                                                                <td colspan="3" class="has-background-dark">
+                                                                    <span class="icon-text">
+                                                                        <span class="icon has-text-info">
+                                                                            <i class="fas fa-sticky-note"></i>
+                                                                        </span>
+                                                                        <span class="is-italic">${sr.note}</span>
+                                                                    </span>
+                                                                </td>
+                                                            </tal:block>
+                                                        </tr>
+                                                    </tal:block>
+                                                </tal:block>
+
+                                                </tr>
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <!-- Mobile Management Unit Spray Records -->
+                                <div class="mobile-only">
+                                    <div tal:repeat="mu management_units">
+                                        <div tal:repeat="sr mu.spray_records">
+                                            <div tal:condition="sr.spray.id == sp.id" class="mu-spray-record">
+                                                <div class="mu-header">
+                                                    <i tal:condition="mu.variety" class="fas fa-wine-bottle mr-2"
+                                                        tal:attributes="class python:'fas fa-wine-bottle has-text-danger mr-2' if mu.variety and mu.variety.wine_colour.name == 'Red' else 'fas fa-wine-bottle has-text-grey mr-2'">
+                                                    </i>
+                                                    <div class="is-flex-grow-1">
+                                                        <div class="has-text-weight-semibold">${mu.name}</div>
+                                                        <div class="is-size-7 has-text-grey">
+                                                            <span tal:condition="mu.variety">${mu.variety.name}</span>
+                                                            <span tal:condition="not mu.variety">${mu.status}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <tal:block tal:condition="sr.note">
+                                                        <span class="icon-text">
+                                                            <span class="icon has-text-info">
+                                                                <i class="fas fa-sticky-note"></i>
+                                                            </span>
+                                                            <span class="is-italic">${sr.note}</span>
+                                                        </span>
+                                                    </tal:block>
+                                                </div>
+                                                <div class="is-flex is-flex-direction-column is-align-items-center">
+                                                    <div class="mu-status">
+                                                        <div>
+                                                            <span class="tag is-success is-small"
+                                                                tal:condition="sr.complete">
+                                                                Complete - ${sr.formatted_date_completed}
+                                                            </span>
+                                                            <span class="tag is-danger is-small"
+                                                                tal:condition="not sr.complete">
+                                                                Incomplete
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="mt-5">
+                                                        <div tal:condition="sr.complete or mu.variety">
+                                                            <a tal:condition="sr.complete"
+                                                                hx-get="/vineyards/${vineyard.id}/spray_records/${sr.id}/edit"
+                                                                hx-target="body" hx-swap="outerHTML" hx-push-url="true"
+                                                                class="button is-small is-info is-outlined loading-button">
+                                                                <span class="normal-text">Edit</span>
+                                                            </a>
+                                                            <a tal:condition="not sr.complete and mu.variety"
+                                                                hx-get="/vineyards/${vineyard.id}/spray_record/${sr.id}"
+                                                                hx-target="body" hx-swap="outerHTML" hx-push-url="true"
+                                                                class="button is-small is-primary is-outlined loading-button">
+                                                                <span class="normal-text">View</span>
+                                                            </a>
+                                                            <div tal:condition="not sr.complete and is_admin"
+                                                                class="buttons">
+                                                                <a hx-delete="/vineyards/${vineyard.id}/spray_records/${sr.id}/delete"
+                                                                    hx-target="body"
+                                                                    hx-confirm="Are you sure you want to delete the incomplete spray record for ${mu.name} &mdash; ${mu.variety}?"
+                                                                    hx-swap="outerHTML" hx-push-url="false"
+                                                                    class="button is-small is-danger is-outlined loading-button">
+                                                                    <span class="icon loading-spinner">
+                                                                        <i class="fas fa-spinner"></i>
+                                                                    </span>
+                                                                    <span class="normal-text">Delete</span>
+                                                                    <span class="loading-text">Loading...</span>
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </details>
+                            <br>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Management Units Section -->
+                <div class="section content">
+                    <div class="container managements_unit_list">
+                        <h2 class="title is-size-4-mobile">Management Units</h2>
+
+                        <!-- Desktop Table -->
+                        <div class="desktop-only">
+                            <div class="table-container">
+                                <table class="table is-fullwidth is-striped is-hoverable">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Variety</th>
+                                            <th>Area</th>
+                                            <th>Row Width</th>
+                                            <th># Rows</th>
+                                            <th>Row Numbering</th>
+                                            <th>Vine Spacing</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr tal:repeat="mu management_units" id="management_unit_row_${mu.id}">
+                                            <th class="name"><a
+                                                    href="/management_unit/${mu.id}/spray_history">${mu.name}</a>
+                                                <div
+                                                    tal:condition="mu.variety_name_modifier and not 'null' in mu.variety_name_modifier.lower().strip()">
+                                                    (${mu.variety_name_modifier})
+                                                </div>
+                                            </th>
+                                            <td>
+                                                <div tal:condition="mu.variety"><a
+                                                        href="/management_unit/${mu.id}/spray_history">${mu.variety.name}</a>
+                                                </div>
+                                                <div tal:condition="not mu.variety">${mu.status}</div>
+                                            </td>
+                                            <td>${mu.area} ha</td>
+                                            <td>${mu.row_width} m</td>
+                                            <td>${mu.rows_total}</td>
+                                            <td>${mu.rows_start_number} - ${mu.rows_end_number}</td>
+                                            <td>${mu.vine_spacing} m</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Mobile Cards -->
+                        <div class="mobile-only">
+                            <div tal:repeat="mu management_units" class="management-unit-card">
+                                <h3 class="is-size-5">
+                                    <a href="/management_unit/${mu.id}/spray_history">${mu.name}</a>
+                                    <span
+                                        tal:condition="mu.variety_name_modifier and not 'null' in mu.variety_name_modifier.lower().strip()"
+                                        class="is-size-6 has-text-grey">
+                                        (${mu.variety_name_modifier})
+                                    </span>
+                                </h3>
+                                <div class="management-unit-info">
+                                    <div>
+                                        <span class="label">Variety</span>
+                                        <span tal:condition="mu.variety"><a
+                                                href="/management_unit/${mu.id}/spray_history">${mu.variety.name}</a></span>
+                                        <span tal:condition="not mu.variety">${mu.status}</span>
+                                    </div>
+                                    <div>
+                                        <span class="label">Area</span>
+                                        <span>${mu.area} ha</span>
+                                    </div>
+                                    <div>
+                                        <span class="label">Row Width</span>
+                                        <span>${mu.row_width} m</span>
+                                    </div>
+                                    <div>
+                                        <span class="label">Rows</span>
+                                        <span>${mu.rows_total} (${mu.rows_start_number}-${mu.rows_end_number})</span>
+                                    </div>
+                                    <div>
+                                        <span class="label">Vine Spacing</span>
+                                        <span>${mu.vine_spacing} m</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="level-right">
+                    <div class="level-item">
+                        <a href="/vineyards/${vineyard.id}" class="button">
+                            <span class="icon">
+                                <i class="fas fa-arrow-left"></i>
+                            </span>
+                            <span>Back to ${vineyard.name}</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -155,8 +155,8 @@
             <div class="field mt-4">
                 <div class="control">
                     <button class="button is-primary is-fullwidth" type="submit">Update Spray Records</button>
-                    <a class="button is-link is-fullwidth" href="/vineyards/${vineyard_id}">
-                        ← Back to Vineyard Details
+                    <a class="button is-link is-fullwidth" href="/vineyards/${vineyard_id}/sprays">
+                        ← Back to ${spray_record.management_unit.vineyard.name} Spray Records
                     </a>
                 </div>
             </div>

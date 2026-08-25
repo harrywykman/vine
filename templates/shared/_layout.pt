@@ -112,8 +112,10 @@
   <div tal:condition="is_viewing_archive" class="is-hidden-tablet" style="height: 80px;"></div>
   <div tal:condition="is_viewing_archive" class="is-hidden-mobile" style="height: 48px;"></div>
 
-  <div tal:condition="is_viewing_irrigation_archive" class="is-hidden-tablet" style="height: 80px;"></div>
-  <div tal:condition="is_viewing_irrigation_archive" class="is-hidden-mobile" style="height: 48px;"></div>
+  <div tal:condition="modules['irrigation'] and is_viewing_irrigation_archive" class="is-hidden-tablet"
+    style="height: 80px;"></div>
+  <div tal:condition="modules['irrigation'] and is_viewing_irrigation_archive" class="is-hidden-mobile"
+    style="height: 48px;"></div>
 
   <!-- Archive browsing banner -->
   <div tal:condition="is_viewing_archive" class="notification is-warning mb-0"
@@ -155,7 +157,7 @@
   </div>
 
   <!-- Archive browsing banner for irrigation-->
-  <div tal:condition="is_viewing_irrigation_archive" class="notification is-warning mb-0"
+  <div tal:condition="modules['irrigation'] and is_viewing_irrigation_archive" class="notification is-warning mb-0"
     style="border-radius: 0; position: fixed; top: 52px; left: 0; right: 0; z-index: 29; padding: 0.5rem 1rem;">
     <div class="is-flex is-flex-direction-column is-hidden-tablet">
       <div class="is-flex is-align-items-center mb-2">

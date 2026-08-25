@@ -25,7 +25,6 @@ from data.admin import (
     WineColourAdmin,
 )
 from database import engine
-from irrigation import include_irrigation
 from routers import (
     account,
     administration,
@@ -52,7 +51,7 @@ app.state.modules = {
 
 # Include Irrigation Module
 
-include_irrigation(app)
+# include_irrigation(app)
 
 # Include Monitoring Module
 

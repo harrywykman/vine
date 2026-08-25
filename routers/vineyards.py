@@ -93,6 +93,23 @@ def vineyard_details(
     return vm.to_dict()
 
 
+@router.get("/vineyards/{vineyard_id}/sprays", response_class=HTMLResponse)
+@require_user()
+@fastapi_chameleon.template("vineyard/vineyard_sprays.pt")
+def vineyard_sprays(
+    request: Request,
+    vineyard_id: int,
+    session: Session = Depends(get_session),
+    success: Optional[str] = None,
+):
+    vm = DetailsViewModel(vineyard_id, request, session)
+
+    if success:
+        vm.set_success(success)
+
+    return vm.to_dict()
+
+
 @router.get(
     "/vineyards/{vineyard_id}/spray_records/{spray_id}/new",
     response_class=HTMLResponse,
@@ -166,7 +183,7 @@ async def submit_spray_records(
         spray_program_ids=vm.current_spray_program_ids,
     ):
         response = fastapi.responses.RedirectResponse(
-            f"/vineyards/{vineyard_id}",
+            f"/vineyards/{vineyard_id}/sprays",
             status_code=status.HTTP_302_FOUND,
         )
         return response
@@ -351,10 +368,10 @@ async def submit_spray_records(
         ic("#### REDIRECTED ####")
         params = urlencode({"success": "Spray record edited successfully"})
         response = fastapi.responses.RedirectResponse(
-            url=f"/vineyards/{vineyard_id}?{params}",
+            url=f"/vineyards/{vineyard_id}/sprays?{params}",
             status_code=status.HTTP_302_FOUND,
         )
-        response.headers["HX-Push-Url"] = f"/vineyards/{vineyard_id}"
+        response.headers["HX-Push-Url"] = f"/vineyards/{vineyard_id}/sprays"
         return response
 
     vm = VineyardSprayRecordsFormEditViewModel(

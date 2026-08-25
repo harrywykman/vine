@@ -1,12 +1,14 @@
 from typing import Optional
 
+from icecream import ic
 from sqlalchemy.orm import Session
 from starlette.requests import Request
 
 from data.user import User, UserRole
 from infrastructure import cookie_auth
-from irrigation import irrigation_services
-from irrigation.models import IrrigationSeason
+
+# from irrigation import irrigation_services
+# from irrigation.models import IrrigationSeason
 from services import spray_program_service
 from services.user_service import get_user_by_id
 
@@ -38,6 +40,8 @@ class ViewModelBase:
         # dict of booleans for modules (eg. irrigation / monitoring)
         self.modules = request.app.state.modules
 
+        ic(self.modules)
+
         # --- Spray season context ---
         viewing_season_id = request.cookies.get("viewing_season_id")
 
@@ -53,24 +57,6 @@ class ViewModelBase:
         )
         self.current_spray_program_ids = {p.id for p in self.current_spray_programs}
         self.is_viewing_archive = bool(viewing_season_id)
-
-        # --- Irrigation season context (TODO - see if there is a way to check whether irrigation module is loaded or not---
-        viewing_irrigation_season_id = request.cookies.get(
-            "viewing_irrigation_season_id"
-        )
-
-        if viewing_irrigation_season_id:
-            self.current_irrigation_season: IrrigationSeason | None = (
-                irrigation_services.get_irrigation_season_by_id(
-                    self.session, int(viewing_irrigation_season_id)
-                )
-            )
-            self.is_viewing_irrigation_archive = True
-        else:
-            self.current_irrigation_season: IrrigationSeason | None = (
-                irrigation_services.get_current_irrigation_season(self.session)
-            )
-            self.is_viewing_irrigation_archive = False
 
     # Message helper methods
 
