@@ -52,7 +52,8 @@ class VineyardSprayRecordsFormViewModel(ViewModelBase):
         self.wind_directions = list(WindDirection)
 
         self.operator_id: int | None = None
-        self.growth_stage_id: int | None = None
+        # self.growth_stage_id: int | None = None
+        self.growth_stage_id = self.spray.growth_stage_id
         self.spray_start_time: datetime.time = datetime.datetime.now().strftime("%H:%M")
         self.spray_finish_time: datetime.time = datetime.datetime.now().strftime(
             "%H:%M"

@@ -256,8 +256,7 @@
                                             <tr>
                                                 <td>
                                                     <strong>
-                                                        <a
-                                                            href="/vineyards/${vineyard.id}/spray_records/${sp.id}/new">${sp.name}</a>
+                                                        ${sp.name}
                                                     </strong>
                                                 </td>
                                                 <td>${sp.water_spray_rate_per_hectare} L</td>
@@ -291,8 +290,7 @@
                                     <div class="spray-details-mobile">
                                         <div class="spray-info-card">
                                             <h4 class="is-size-6 has-text-weight-semibold mb-2">
-                                                <a
-                                                    href="/vineyards/${vineyard.id}/spray_records/${sp.id}/new">${sp.name}</a>
+                                                ${sp.name}
                                             </h4>
                                             <div class="columns is-mobile">
                                                 <div class="column">
@@ -307,15 +305,6 @@
                                                 </div>
                                             </div>
 
-                                            <tal:block
-                                                tal:condition="python:any(sr.note for mu in management_units for sr in mu.spray_records if sr.spray.id == sp.id)">
-                                                <span class="icon has-text-info ml-2"
-                                                    title="Notes exist for one or more management units">
-                                                    <i class="fas fa-sticky-note"></i>
-                                                </span>
-                                                <span class="is-italic">There is a note on one or more management units
-                                                    for this spray.</span>
-                                            </tal:block>
 
                                             <div class="spray-chemicals-mobile">
                                                 <div class="is-size-7 has-text-grey-light mb-2">CHEMICALS</div>
@@ -352,186 +341,192 @@
                                                     <th>Management Unit</th>
                                                     <th>Completed</th>
                                                     <th></th>
-                                                    <th tal:condition="is_admin"></th>
+                                                    <th tal:condition="is_logged_in"></th>
                                                 </tr>
                                             </thead>
-                                            <tbody>
-                                                <tr tal:repeat="mu management_units">
-                                                <tr tal:repeat="sr mu.spray_records">
-                                                    <div tal:condition="sr.spray.id == sp.id">
-                                                        <td>
-                                                            <i tal:condition="mu.variety" class="fas fa-wine-bottle"
-                                                                tal:attributes="class python:'fas fa-wine-bottle has-text-danger' if mu.variety.wine_colour.name == 'Red' else 'fas fa-wine-bottle has-text-white'">
-                                                            </i>&nbsp;
-                                                            <a tal:condition="mu.variety"
-                                                                hx-get="/vineyards/${vineyard.id}/spray_record/${sr.id}"
-                                                                hx-target="body" hx-swap="outerHTML" hx-push-url="true"
-                                                                class="loading-button">
-                                                                <span class="icon loading-spinner">
-                                                                    <i class="fas fa-spinner"></i>
-                                                                </span>
-                                                                <span class="normal-text">${mu.name} &mdash;
-                                                                    ${mu.variety.name}</span>
-                                                                <span class="loading-text">Loading...</span>
-                                                            </a>
-                                                            <tal:block tal:condition="not mu.variety">
-                                                                <i
-                                                                    class="fas fa-wine-bottle has-text-grey"></i>&nbsp;${mu.name}
-                                                                &mdash; ${mu.status}
-                                                            </tal:block>
-
-                                                        </td>
-                                                        <td>
-                                                            <span class="tag is-success" tal:condition="sr.complete">
-                                                                Complete - ${sr.formatted_date_completed}
-                                                            </span>
-                                                            <span class="tag is-small is-danger"
-                                                                tal:condition="not sr.complete">
-                                                                Incomplete
-                                                            </span>
-                                                        </td>
-                                                        <td>
-                                                            <div tal:condition="sr.complete" class="buttons">
-                                                                <a hx-get="/vineyards/${vineyard.id}/spray_records/${sr.id}/edit"
-                                                                    hx-target="body" hx-swap="outerHTML"
-                                                                    hx-push-url="true"
-                                                                    class="button is-small is-info is-outlined loading-button">
-                                                                    <span class="icon loading-spinner">
-                                                                        <i class="fas fa-spinner"></i>
-                                                                    </span>
-                                                                    <span class="normal-text">Edit</span>
-                                                                    <span class="loading-text">Loading...</span>
-                                                                </a>
-                                                            </div>
-                                                            <div tal:condition="not sr.complete and is_admin"
-                                                                class="buttons">
-                                                                <a hx-delete="/vineyards/${vineyard.id}/spray_records/${sr.id}/delete"
-                                                                    hx-target="body"
-                                                                    hx-confirm="Are you sure you want to delete the incomplete spray record for ${mu.name} &mdash; ${mu.variety}?"
-                                                                    hx-swap="outerHTML" hx-push-url="false"
-                                                                    class="button is-small is-danger is-outlined loading-button">
-                                                                    <span class="icon loading-spinner">
-                                                                        <i class="fas fa-spinner"></i>
-                                                                    </span>
-                                                                    <span class="normal-text">Delete</span>
-                                                                    <span class="loading-text">Loading...</span>
-                                                                </a>
-                                                            </div>
-                                                        </td>
-                                                        <td tal:condition="is_admin">
-                                                            <button
-                                                                hx-get="/vineyards/${vineyard.id}/spray_records/${sr.id}/note_form"
-                                                                hx-target="#note-row-${sr.id}" hx-swap="outerHTML"
-                                                                class="button is-small is-primary is-outlined loading-button">
-                                                                <span class="icon loading-spinner">
-                                                                    <i class="fas fa-spinner"></i>
-                                                                </span>
-                                                                <span class="normal-text">${'Edit Note' if sr.note else
-                                                                    'Add Note'}</span>
-                                                                <span class="loading-text">Loading...</span>
-                                                            </button>
-                                                        </td>
-                                                    </div>
-                                                </tr>
+                                            <tal:block tal:repeat="mu management_units">
                                                 <tal:block tal:repeat="sr mu.spray_records">
                                                     <tal:block tal:condition="sr.spray.id == sp.id">
-                                                        <tr id="note-row-${sr.id}">
-                                                            <tal:block tal:condition="sr.note">
+                                                        <tbody id="sr-block-${sr.id}">
+                                                            <tr>
+                                                                <td>
+                                                                    <i tal:condition="mu.variety"
+                                                                        class="fas fa-wine-bottle"
+                                                                        tal:attributes="class python:'fas fa-wine-bottle has-text-danger' if mu.variety.wine_colour.name == 'Red' else 'fas fa-wine-bottle has-text-white'">
+                                                                    </i>&nbsp;
+                                                                    <a tal:condition="mu.variety"
+                                                                        hx-get="/vineyards/${vineyard.id}/spray_record/${sr.id}"
+                                                                        hx-target="body" hx-swap="outerHTML"
+                                                                        hx-push-url="true" class="loading-button">
+                                                                        <span class="icon loading-spinner">
+                                                                            <i class="fas fa-spinner"></i>
+                                                                        </span>
+                                                                        <span class="normal-text">${mu.name} &mdash;
+                                                                            ${mu.variety.name}</span>
+                                                                        <span class="loading-text">Loading...</span>
+                                                                    </a>
+                                                                    <tal:block tal:condition="not mu.variety">
+                                                                        <i
+                                                                            class="fas fa-wine-bottle has-text-grey"></i>&nbsp;${mu.name}
+                                                                        &mdash; ${mu.status}
+                                                                    </tal:block>
+                                                                </td>
+                                                                <td>
+                                                                    <span class="tag is-success"
+                                                                        tal:condition="sr.complete">
+                                                                        Complete - ${sr.formatted_date_completed}
+                                                                    </span>
+                                                                    <span class="tag is-small is-danger"
+                                                                        tal:condition="not sr.complete">
+                                                                        Incomplete
+                                                                    </span>
+                                                                </td>
+                                                                <td>
+                                                                    <div tal:condition="sr.complete" class="buttons">
+                                                                        <a hx-get="/vineyards/${vineyard.id}/spray_records/${sr.id}/edit"
+                                                                            hx-target="body" hx-swap="outerHTML"
+                                                                            hx-push-url="true"
+                                                                            class="button is-small is-info is-outlined loading-button">
+                                                                            <span class="icon loading-spinner"><i
+                                                                                    class="fas fa-spinner"></i></span>
+                                                                            <span class="normal-text">Edit</span>
+                                                                            <span class="loading-text">Loading...</span>
+                                                                        </a>
+                                                                    </div>
+                                                                    <div tal:condition="not sr.complete and is_logged_in"
+                                                                        class="buttons">
+                                                                        <a hx-delete="/vineyards/${vineyard.id}/spray_records/${sr.id}/delete"
+                                                                            hx-target="body"
+                                                                            hx-confirm="Are you sure you want to delete the incomplete spray record for ${mu.name} &mdash; ${mu.variety}?"
+                                                                            hx-swap="outerHTML" hx-push-url="false"
+                                                                            class="button is-small is-danger is-outlined loading-button">
+                                                                            <span class="icon loading-spinner"><i
+                                                                                    class="fas fa-spinner"></i></span>
+                                                                            <span class="normal-text">Delete</span>
+                                                                            <span class="loading-text">Loading...</span>
+                                                                        </a>
+                                                                    </div>
+                                                                </td>
+                                                                <td tal:condition="is_logged_in">
+                                                                    <button
+                                                                        hx-get="/vineyards/${vineyard.id}/spray_records/${sr.id}/note_form"
+                                                                        hx-target="#sr-block-${sr.id}"
+                                                                        hx-swap="outerHTML"
+                                                                        class="button is-small is-primary is-outlined loading-button">
+                                                                        <span class="icon loading-spinner"><i
+                                                                                class="fas fa-spinner"></i></span>
+                                                                        <span class="normal-text">${'Edit Note' if
+                                                                            sr.note else 'Add Note'}</span>
+                                                                        <span class="loading-text">Loading...</span>
+                                                                    </button>
+                                                                </td>
+                                                            </tr>
+                                                            <tr tal:condition="sr.note">
                                                                 <td></td>
                                                                 <td colspan="3" class="has-background-dark">
                                                                     <span class="icon-text">
-                                                                        <span class="icon has-text-info">
-                                                                            <i class="fas fa-sticky-note"></i>
-                                                                        </span>
+                                                                        <span class="icon has-text-info"><i
+                                                                                class="fas fa-sticky-note"></i></span>
                                                                         <span class="is-italic">${sr.note}</span>
                                                                     </span>
                                                                 </td>
-                                                            </tal:block>
-                                                        </tr>
+                                                            </tr>
+                                                        </tbody>
                                                     </tal:block>
                                                 </tal:block>
-
-                                                </tr>
-
-                                            </tbody>
+                                            </tal:block>
                                         </table>
                                     </div>
                                 </div>
 
                                 <!-- Mobile Management Unit Spray Records -->
                                 <div class="mobile-only">
-                                    <div tal:repeat="mu management_units">
-                                        <div tal:repeat="sr mu.spray_records">
-                                            <div tal:condition="sr.spray.id == sp.id" class="mu-spray-record">
-                                                <div class="mu-header">
-                                                    <i tal:condition="mu.variety" class="fas fa-wine-bottle mr-2"
-                                                        tal:attributes="class python:'fas fa-wine-bottle has-text-danger mr-2' if mu.variety and mu.variety.wine_colour.name == 'Red' else 'fas fa-wine-bottle has-text-grey mr-2'">
-                                                    </i>
-                                                    <div class="is-flex-grow-1">
-                                                        <div class="has-text-weight-semibold">${mu.name}</div>
-                                                        <div class="is-size-7 has-text-grey">
-                                                            <span tal:condition="mu.variety">${mu.variety.name}</span>
-                                                            <span tal:condition="not mu.variety">${mu.status}</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div>
-                                                    <tal:block tal:condition="sr.note">
-                                                        <span class="icon-text">
-                                                            <span class="icon has-text-info">
-                                                                <i class="fas fa-sticky-note"></i>
-                                                            </span>
-                                                            <span class="is-italic">${sr.note}</span>
-                                                        </span>
-                                                    </tal:block>
-                                                </div>
-                                                <div class="is-flex is-flex-direction-column is-align-items-center">
-                                                    <div class="mu-status">
-                                                        <div>
-                                                            <span class="tag is-success is-small"
-                                                                tal:condition="sr.complete">
-                                                                Complete - ${sr.formatted_date_completed}
-                                                            </span>
-                                                            <span class="tag is-danger is-small"
-                                                                tal:condition="not sr.complete">
-                                                                Incomplete
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                    <div class="mt-5">
-                                                        <div tal:condition="sr.complete or mu.variety">
-                                                            <a tal:condition="sr.complete"
-                                                                hx-get="/vineyards/${vineyard.id}/spray_records/${sr.id}/edit"
-                                                                hx-target="body" hx-swap="outerHTML" hx-push-url="true"
-                                                                class="button is-small is-info is-outlined loading-button">
-                                                                <span class="normal-text">Edit</span>
-                                                            </a>
-                                                            <a tal:condition="not sr.complete and mu.variety"
-                                                                hx-get="/vineyards/${vineyard.id}/spray_record/${sr.id}"
-                                                                hx-target="body" hx-swap="outerHTML" hx-push-url="true"
-                                                                class="button is-small is-primary is-outlined loading-button">
-                                                                <span class="normal-text">View</span>
-                                                            </a>
-                                                            <div tal:condition="not sr.complete and is_admin"
-                                                                class="buttons">
-                                                                <a hx-delete="/vineyards/${vineyard.id}/spray_records/${sr.id}/delete"
-                                                                    hx-target="body"
-                                                                    hx-confirm="Are you sure you want to delete the incomplete spray record for ${mu.name} &mdash; ${mu.variety}?"
-                                                                    hx-swap="outerHTML" hx-push-url="false"
-                                                                    class="button is-small is-danger is-outlined loading-button">
-                                                                    <span class="icon loading-spinner">
-                                                                        <i class="fas fa-spinner"></i>
-                                                                    </span>
-                                                                    <span class="normal-text">Delete</span>
-                                                                    <span class="loading-text">Loading...</span>
-                                                                </a>
+                                    <tal:block tal:repeat="mu management_units">
+                                        <tal:block tal:repeat="sr mu.spray_records">
+                                            <tal:block tal:condition="sr.spray.id == sp.id">
+                                                <div id="mobile-sr-block-${sr.id}" class="mu-spray-record">
+                                                    <div class="mu-header">
+                                                        <i tal:condition="mu.variety" class="fas fa-wine-bottle mr-2"
+                                                            tal:attributes="class python:'fas fa-wine-bottle has-text-danger mr-2' if mu.variety and mu.variety.wine_colour.name == 'Red' else 'fas fa-wine-bottle has-text-grey mr-2'">
+                                                        </i>
+                                                        <div class="is-flex-grow-1">
+                                                            <div class="has-text-weight-semibold">${mu.name}</div>
+                                                            <div class="is-size-7 has-text-grey">
+                                                                <span
+                                                                    tal:condition="mu.variety">${mu.variety.name}</span>
+                                                                <span tal:condition="not mu.variety">${mu.status}</span>
                                                             </div>
                                                         </div>
                                                     </div>
+
+                                                    <div class="is-flex is-flex-direction-column is-align-items-center">
+                                                        <div class="mu-status">
+                                                            <div>
+                                                                <span class="tag is-success is-small"
+                                                                    tal:condition="sr.complete">
+                                                                    Complete - ${sr.formatted_date_completed}
+                                                                </span>
+                                                                <span class="tag is-danger is-small"
+                                                                    tal:condition="not sr.complete">
+                                                                    Incomplete
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="mt-5">
+                                                            <div tal:condition="sr.complete or mu.variety">
+                                                                <a tal:condition="sr.complete"
+                                                                    hx-get="/vineyards/${vineyard.id}/spray_records/${sr.id}/edit"
+                                                                    hx-target="body" hx-swap="outerHTML"
+                                                                    hx-push-url="true"
+                                                                    class="button is-small is-info is-outlined loading-button">
+                                                                    <span class="normal-text">Edit</span>
+                                                                </a>
+                                                                <a tal:condition="not sr.complete and mu.variety"
+                                                                    hx-get="/vineyards/${vineyard.id}/spray_record/${sr.id}"
+                                                                    hx-target="body" hx-swap="outerHTML"
+                                                                    hx-push-url="true"
+                                                                    class="button is-small is-primary is-outlined loading-button">
+                                                                    <span class="normal-text">View</span>
+                                                                </a>
+                                                                <div tal:condition="not sr.complete and is_logged_in"
+                                                                    class="buttons">
+                                                                    <a hx-delete="/vineyards/${vineyard.id}/spray_records/${sr.id}/delete"
+                                                                        hx-target="body"
+                                                                        hx-confirm="Are you sure you want to delete the incomplete spray record for ${mu.name} &mdash; ${mu.variety}?"
+                                                                        hx-swap="outerHTML" hx-push-url="false"
+                                                                        class="button is-small is-danger is-outlined loading-button">
+                                                                        <span class="icon loading-spinner">
+                                                                            <i class="fas fa-spinner"></i>
+                                                                        </span>
+                                                                        <span class="normal-text">Delete</span>
+                                                                        <span class="loading-text">Loading...</span>
+                                                                    </a>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                        <div class="mt-5">
+                                                            <div tal:condition="sr.note">
+                                                                <span class="icon-text">
+                                                                    <span class="icon has-text-info">
+                                                                        <i class="fas fa-sticky-note"></i>
+                                                                    </span>
+                                                                    <span class="is-italic">${sr.note}</span>
+                                                                </span>
+                                                            </div>
+                                                            <button tal:condition="is_logged_in"
+                                                                hx-get="/vineyards/${vineyard.id}/spray_records/${sr.id}/note_form"
+                                                                hx-swap="none"
+                                                                class="button is-small is-primary is-outlined loading-button mt-2">
+                                                                <span class="normal-text">${'Edit Note' if sr.note else
+                                                                    'Add Note'}</span>
+                                                            </button>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                            </tal:block>
+                                        </tal:block>
+                                    </tal:block>
                                 </div>
                             </details>
                             <br>

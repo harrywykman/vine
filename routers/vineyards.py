@@ -217,7 +217,7 @@ def vineyard_spray_records_form_edit(
 # GET note form
 @router.get(
     "/vineyards/{vineyard_id}/spray_records/{spray_record_id}/note_form",
-    response_class=HTMLResponseWithRefresh,
+    response_class=HTMLResponse,
 )
 # @require_admin()
 @fastapi_chameleon.template("vineyard/_vineyard_details_note_form.pt")
@@ -236,7 +236,7 @@ async def vineyard_spray_record_note_form(
     "/vineyards/{vineyard_id}/spray_records/{spray_record_id}/add_note",
     response_class=HTMLResponse,
 )
-@require_admin()
+# @require_admin()
 @fastapi_chameleon.template("vineyard/_vineyard_details_note_display.pt")
 async def vineyard_spray_record_add_note(
     request: Request,
@@ -256,7 +256,7 @@ async def vineyard_spray_record_add_note(
     "/vineyards/{vineyard_id}/spray_records/{spray_record_id}/note_cancel",
     response_class=HTMLResponse,
 )
-@require_admin()
+# @require_admin()
 @fastapi_chameleon.template("vineyard/_vineyard_details_note_display.pt")
 async def vineyard_spray_record_cancel_note(
     request: Request,
@@ -271,9 +271,9 @@ async def vineyard_spray_record_cancel_note(
 
 @router.post(
     "/vineyards/{vineyard_id}/spray_records/{spray_record_id}/delete_note",
-    response_class=HTMLResponseWithRefresh,
+    response_class=HTMLResponse,
 )
-@fastapi_chameleon.template("vineyard/_empty_note_row.pt")
+@fastapi_chameleon.template("vineyard/_vineyard_details_note_display.pt")
 async def delete_spray_record_note(
     request: Request,
     vineyard_id: int,

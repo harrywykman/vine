@@ -1,11 +1,83 @@
-<tr id="note-row-${spray_record.id}">
-    <td></td>
-    <td colspan="3" class="has-background-dark">
-        <span class="icon-text">
-            <span class="icon has-text-info">
-                <i class="fas fa-sticky-note"></i>
-            </span>
-            <span class="is-italic">${spray_record.note}</span>
-        </span>
-    </td>
-</tr>
+<tal:block tal:define="row_macros load: _spray_record_row_macro.pt;
+                        management_unit spray_record.management_unit">
+    <tbody id="sr-block-${spray_record.id}" hx-swap-oob="true">
+        <tal:block metal:use-macro="python: row_macros.macros['data_row']" />
+        <tr tal:condition="spray_record.note">
+            <td></td>
+            <td colspan="3" class="has-background-dark">
+                <span class="icon-text">
+                    <span class="icon has-text-info"><i class="fas fa-sticky-note"></i></span>
+                    <span class="is-italic">${spray_record.note}</span>
+                </span>
+            </td>
+        </tr>
+    </tbody>
+
+    <div id="mobile-sr-block-${spray_record.id}" hx-swap-oob="true" class="mu-spray-record">
+        <div class="mu-header">
+            <i tal:condition="management_unit.variety" class="fas fa-wine-bottle mr-2"
+                tal:attributes="class python:'fas fa-wine-bottle has-text-danger mr-2' if management_unit.variety and management_unit.variety.wine_colour.name == 'Red' else 'fas fa-wine-bottle has-text-grey mr-2'">
+            </i>
+            <div class="is-flex-grow-1">
+                <div class="has-text-weight-semibold">${management_unit.name}</div>
+                <div class="is-size-7 has-text-grey">
+                    <span tal:condition="management_unit.variety">${management_unit.variety.name}</span>
+                    <span tal:condition="not management_unit.variety">${management_unit.status}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="is-flex is-flex-direction-column is-align-items-center">
+            <div class="mu-status">
+                <div>
+                    <span class="tag is-success is-small" tal:condition="spray_record.complete">
+                        Complete - ${spray_record.formatted_date_completed}
+                    </span>
+                    <span class="tag is-danger is-small" tal:condition="not spray_record.complete">
+                        Incomplete
+                    </span>
+                </div>
+            </div>
+            <div class="mt-5">
+                <div tal:condition="spray_record.complete or management_unit.variety">
+                    <a tal:condition="spray_record.complete"
+                        hx-get="/vineyards/${vineyard_id}/spray_records/${spray_record.id}/edit" hx-target="body"
+                        hx-swap="outerHTML" hx-push-url="true"
+                        class="button is-small is-info is-outlined loading-button">
+                        <span class="normal-text">Edit</span>
+                    </a>
+                    <a tal:condition="not spray_record.complete and management_unit.variety"
+                        hx-get="/vineyards/${vineyard_id}/spray_record/${spray_record.id}" hx-target="body"
+                        hx-swap="outerHTML" hx-push-url="true"
+                        class="button is-small is-primary is-outlined loading-button">
+                        <span class="normal-text">View</span>
+                    </a>
+                    <div tal:condition="not spray_record.complete and is_logged_in" class="buttons">
+                        <a hx-delete="/vineyards/${vineyard_id}/spray_records/${spray_record.id}/delete"
+                            hx-target="body"
+                            hx-confirm="Are you sure you want to delete the incomplete spray record for ${management_unit.name} &mdash; ${management_unit.variety}?"
+                            hx-swap="outerHTML" hx-push-url="false"
+                            class="button is-small is-danger is-outlined loading-button">
+                            <span class="icon loading-spinner"><i class="fas fa-spinner"></i></span>
+                            <span class="normal-text">Delete</span>
+                            <span class="loading-text">Loading...</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="mt-5">
+                    <div tal:condition="spray_record.note">
+                        <span class="icon-text">
+                            <span class="icon has-text-info"><i class="fas fa-sticky-note"></i></span>
+                            <span class="is-italic">${spray_record.note}</span>
+                        </span>
+                    </div>
+                    <button tal:condition="is_logged_in"
+                        hx-get="/vineyards/${vineyard_id}/spray_records/${spray_record.id}/note_form" hx-swap="none"
+                        class="button is-small is-primary is-outlined loading-button mt-2">
+                        <span class="normal-text">${'Edit Note' if spray_record.note else 'Add Note'}</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</tal:block>

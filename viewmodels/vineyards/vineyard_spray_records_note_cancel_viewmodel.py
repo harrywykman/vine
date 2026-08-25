@@ -19,7 +19,7 @@ class VineyardSprayRecordCancelNote(ViewModelBase):
     ):
         super().__init__(request, session)
 
-        self.id: int = vineyard_id
+        self.vineyard_id: int = vineyard_id
         self.name: Optional[str] = None
         self.address: Optional[str] = None
         self.spray_record_id: int = spray_record_id

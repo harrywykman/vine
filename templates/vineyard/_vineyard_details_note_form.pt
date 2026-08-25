@@ -1,57 +1,125 @@
-<!-- <tr>
-    <form>
-        <div class="content">
-            <label class="label">Spray Record Note</label>
-            <div class="control">
-                <input type="hidden" name="note" value="" />
-                <input class="input" type="text" name="" />
-                <button class="btn" type="submit">Submit</button>
-                <button class="btn" hx-get="/contact/1">Cancel</button>
+<tal:block tal:define="row_macros load: _spray_record_row_macro.pt;
+                        management_unit spray_record.management_unit">
+    <tbody id="sr-block-${spray_record.id}" hx-swap-oob="true">
+        <tal:block metal:use-macro="python: row_macros.macros['data_row']" />
+        <tr>
+            <td></td>
+            <td colspan="3" class="has-background-dark">
+                <form hx-post="/vineyards/${vineyard_id}/spray_records/${spray_record.id}/add_note" hx-swap="none">
+                    <div class="field">
+                        <label class="label">Note</label>
+                        <div class="control">
+                            <textarea class="textarea" name="note" rows="3" placeholder="Enter note..."
+                                required>${spray_record.note if spray_record.note else ''}</textarea>
+                        </div>
+                    </div>
+                    <div class="field is-grouped">
+                        <div class="control">
+                            <button type="submit" class="button is-small is-primary">
+                                <span class="icon"><i class="fas fa-save"></i></span>
+                                <span>Save</span>
+                            </button>
+                        </div>
+                        <div class="control">
+                            <button type="button"
+                                hx-get="/vineyards/${vineyard_id}/spray_records/${spray_record.id}/note_cancel"
+                                hx-swap="none" class="button is-small is-light">
+                                <span>Cancel</span>
+                            </button>
+                        </div>
+                        <div class="control" tal:condition="spray_record.note">
+                            <button type="button"
+                                hx-post="/vineyards/${vineyard_id}/spray_records/${spray_record.id}/delete_note"
+                                hx-swap="none" hx-confirm="Delete this note?"
+                                class="button is-small is-danger is-outlined">
+                                <span class="icon"><i class="fas fa-trash"></i></span>
+                                <span>Delete</span>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </td>
+        </tr>
+    </tbody>
+
+    <div id="mobile-sr-block-${spray_record.id}" hx-swap-oob="true" class="mu-spray-record">
+        <div class="mu-header">
+            <i tal:condition="management_unit.variety" class="fas fa-wine-bottle mr-2"
+                tal:attributes="class python:'fas fa-wine-bottle has-text-danger mr-2' if management_unit.variety and management_unit.variety.wine_colour.name == 'Red' else 'fas fa-wine-bottle has-text-grey mr-2'">
+            </i>
+            <div class="is-flex-grow-1">
+                <div class="has-text-weight-semibold">${management_unit.name}</div>
+                <div class="is-size-7 has-text-grey">
+                    <span tal:condition="management_unit.variety">${management_unit.variety.name}</span>
+                    <span tal:condition="not management_unit.variety">${management_unit.status}</span>
+                </div>
             </div>
         </div>
-    </form>
-</tr> -->
+        <div class="is-flex is-flex-direction-column is-align-items-center">
+            <div class="mu-status">
+                <div>
+                    <span class="tag is-success is-small" tal:condition="spray_record.complete">
+                        Complete - ${spray_record.formatted_date_completed}
+                    </span>
+                    <span class="tag is-danger is-small" tal:condition="not spray_record.complete">
+                        Incomplete
+                    </span>
+                </div>
+            </div>
+            <div class="mt-5">
+                <div tal:condition="spray_record.complete or management_unit.variety">
+                    <div tal:condition="not spray_record.complete and is_logged_in" class="buttons">
+                        <a hx-delete="/vineyards/${vineyard_id}/spray_records/${spray_record.id}/delete"
+                            hx-target="body"
+                            hx-confirm="Are you sure you want to delete the incomplete spray record for ${management_unit.name} &mdash; ${management_unit.variety}?"
+                            hx-swap="outerHTML" hx-push-url="false"
+                            class="button is-small is-danger is-outlined loading-button">
+                            <span class="icon loading-spinner"><i class="fas fa-spinner"></i></span>
+                            <span class="normal-text">Delete</span>
+                            <span class="loading-text">Loading...</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-5">
+                <form id="mobile-note-form-${spray_record.id}">
+                    <div class="field">
+                        <label class="label">Note</label>
+                        <div class="control">
+                            <textarea id="note-${spray_record.id}" class="textarea" name="note" rows="3"
+                                placeholder="Enter note...">${spray_record.note if spray_record.note else ''}</textarea>
+                        </div>
+                    </div>
 
-<tr id="note-row-${spray_record.id}">
-    <td></td>
-    <td colspan="3" class="has-background-dark">
-        <form hx-post="/vineyards/${vineyard_id}/spray_records/${spray_record.id}/add_note"
-            hx-target="#note-row-${spray_record.id}" hx-swap="outerHTML" hx-refresh="true">
-            <div class="field">
-                <label class="label">Note</label>
-                <div class="control">
-                    <textarea class="textarea" name="note" rows="3" placeholder="Enter note..."
-                        required>${spray_record.note if spray_record.note else ''}</textarea>
-                </div>
+                    <div class="field is-grouped">
+                        <div class="control">
+                            <button type="button"
+                                hx-post="/vineyards/${vineyard_id}/spray_records/${spray_record.id}/add_note"
+                                hx-include="#note-${spray_record.id}" hx-swap="none" class="button is-small is-primary">
+                                <span class="icon"><i class="fas fa-save"></i></span>
+                                <span>Save</span>
+                            </button>
+                        </div>
+
+                        <div class="control">
+                            <button type="button"
+                                hx-get="/vineyards/${vineyard_id}/spray_records/${spray_record.id}/note_cancel"
+                                hx-swap="none" class="button is-small is-light">
+                                <span>Cancel</span>
+                            </button>
+                        </div>
+
+                        <div class="control" tal:condition="spray_record.note">
+                            <button type="button"
+                                hx-post="/vineyards/${vineyard_id}/spray_records/${spray_record.id}/delete_note"
+                                hx-swap="none" hx-confirm="Delete this note?"
+                                class="button is-small is-danger is-outlined">
+                                <span class="icon"><i class="fas fa-trash"></i></span>
+                            </button>
+                        </div>
+                    </div>
+                </form>
             </div>
-            <div class="field is-grouped">
-                <div class="control">
-                    <button type="submit" class="button is-small is-primary">
-                        <span class="icon">
-                            <i class="fas fa-save"></i>
-                        </span>
-                        <span>Save</span>
-                    </button>
-                </div>
-                <div class="control">
-                    <button type="button"
-                        hx-get="/vineyards/${vineyard_id}/spray_records/${spray_record.id}/note_cancel"
-                        hx-target="#note-row-${spray_record.id}" hx-swap="outerHTML" class="button is-small is-light">
-                        <span>Cancel</span>
-                    </button>
-                </div>
-                <div class="control" tal:condition="spray_record.note">
-                    <button type="button"
-                        hx-post="/vineyards/${vineyard_id}/spray_records/${spray_record.id}/delete_note"
-                        hx-target="#note-row-${spray_record.id}" hx-swap="outerHTML" hx-confirm="Delete this note?"
-                        hx-refresh="true" class="button is-small is-danger is-outlined">
-                        <span class="icon">
-                            <i class="fas fa-trash"></i>
-                        </span>
-                        <span>Delete</span>
-                    </button>
-                </div>
-            </div>
-        </form>
-    </td>
-</tr>
+        </div>
+    </div>
+</tal:block>

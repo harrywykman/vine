@@ -34,7 +34,7 @@
                 <label class="label">Growth Stage</label>
                 <div class="control">
                     <div class="select is-fullwidth">
-                        <select name="growth_stage_id" required>
+                        <select disabled>
                             <option value="">-- Select Growth Stage --</option>
                             <option tal:repeat="stage growth_stages" value="${stage.id}"
                                 tal:attributes="selected python:stage.id == growth_stage_id if growth_stage_id else False">
@@ -43,6 +43,7 @@
                         </select>
                     </div>
                 </div>
+                <input type="hidden" name="growth_stage_id" value="${growth_stage_id}" />
             </div>
 
             <div class="field">
